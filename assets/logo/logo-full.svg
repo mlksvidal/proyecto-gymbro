@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 100" role="img" aria-label="Proyecto Gymbro">
+  <title>Proyecto Gymbro</title>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&amp;display=swap');
+      .wordmark { font-family: 'Rajdhani', 'DIN Condensed', 'Impact', sans-serif; font-weight: 700; }
+    </style>
+  </defs>
+  <!--
+    Full lockup: G+bolt isotipo (left) + GYMBRO wordmark (right)
+    Color: #ABFF35 on transparent (use on #0A0A0A dark background)
+    Rajdhani 700 — brand display font (Google Fonts)
+    viewBox: 390x100 | isotipo: 100x100 | gap: 16px | wordmark: ~274x100
+  -->
+
+  <!-- ISOTIPO (G+bolt) scaled to 100x100 at x=0 -->
+  <g fill="#ABFF35">
+    <rect x="6" y="6" width="16" height="88"/>
+    <rect x="22" y="6" width="36" height="16"/>
+    <rect x="22" y="78" width="52" height="16"/>
+    <rect x="58" y="54" width="16" height="40"/>
+    <rect x="42" y="54" width="32" height="16"/>
+    <polygon points="58,6 94,6 94,22 80,22 90,54 74,54 44,54 54,22"/>
+  </g>
+
+  <!-- WORDMARK: GYMBRO — Rajdhani 700, uppercase, tracking +2 -->
+  <text
+    x="116"
+    y="76"
+    class="wordmark"
+    font-size="72"
+    letter-spacing="2"
+    fill="#ABFF35"
+    text-anchor="start"
+    dominant-baseline="auto"
+  >GYMBRO</text>
+</svg>

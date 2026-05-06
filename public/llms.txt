@@ -1,0 +1,51 @@
+# Proyecto Gymbro
+
+> App PWA de entrenamiento gamificado para mobile. Funciona offline, sin registro, sin backend.
+
+## Descripcion
+
+Proyecto Gymbro es una Progressive Web App (PWA) de fitness gamificado desarrollada con Vite, React 19 y Tailwind CSS v4. Esta disenada para ser instalada en el celular como una app nativa (iOS y Android) y funciona completamente offline gracias a Service Workers y almacenamiento local (Dexie/IndexedDB).
+
+El eje central es la gamificacion: cada entrenamiento completado suma puntos, mantiene rachas, desbloquea logros y sube al usuario de nivel. No requiere cuenta ni internet para funcionar.
+
+## URL principal
+
+https://proyecto-gymbro.vercel.app/
+
+## Caracteristicas principales
+
+- Rutinas de entrenamiento predefinidas: Full Body, Push, Pull, Legs
+- Sistema de rachas diarias (streak) con recordatorio visual
+- Logros y recompensas desbloqueables (achievements)
+- Estadisticas de progreso por semana/mes
+- Perfil de usuario con nivel y experiencia (XP)
+- Instalable como PWA en iOS y Android
+- Funciona 100% offline — datos locales en IndexedDB
+- Sin registro, sin cuenta, sin backend
+- Gratis
+
+## Tecnologia
+
+- Frontend: Vite + React 19 + TypeScript
+- Estilos: Tailwind CSS v4
+- Routing: React Router v7
+- Storage: Dexie (IndexedDB wrapper) + LocalStorage
+- PWA: vite-plugin-pwa + Workbox
+- Animaciones: GSAP
+- Deploy: Vercel
+
+## Secciones de la app
+
+- `/` — Pantalla de bienvenida y home con workout del dia
+- `/workouts` — Catalogo de rutinas disponibles
+- `/stats` — Estadisticas y progreso historico
+- `/profile` — Perfil de usuario, nivel y configuracion
+- `/achievements` — Logros desbloqueados y pendientes
+
+## Publico objetivo
+
+Usuarios hispanohablantes (Argentina y Latinoamerica) que quieren entrenar de forma consistente usando su celular, con motivacion extra a traves de mecánicas de juego (gamificacion).
+
+## Keywords de descubrimiento
+
+gym, fitness, entrenamiento gamificado, app de gym, PWA fitness, rutinas de ejercicio, logros gym, racha entrenamiento, app deporte Argentina, fitness app sin registro, entrenamiento offline

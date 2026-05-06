@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- Primary meta -->
+    <title>Proyecto Gymbro — App de entrenamiento gamificada</title>
+    <meta name="description" content="Entrená, subí de nivel y superá tus marcas con Gymbro. App PWA de fitness gamificado: rutinas, rachas, logros y estadísticas. Gratis, sin registro." />
+    <meta name="keywords" content="gym, fitness, entrenamiento, app, gamificado, PWA, rutinas, logros, ejercicio, deporte, Argentina" />
+    <meta name="author" content="Proyecto Gymbro" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="#0A0A0A" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://proyecto-gymbro.vercel.app/" />
+
+    <!-- Robots -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Proyecto Gymbro" />
+    <meta property="og:title" content="Proyecto Gymbro — App de entrenamiento gamificada" />
+    <meta property="og:description" content="Entrená, subí de nivel y superá tus marcas con Gymbro. App PWA de fitness gamificado: rutinas, rachas, logros y estadísticas. Gratis, sin registro." />
+    <meta property="og:url" content="https://proyecto-gymbro.vercel.app/" />
+    <meta property="og:image" content="https://proyecto-gymbro.vercel.app/images/hero.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Proyecto Gymbro — App de entrenamiento gamificada" />
+    <meta property="og:locale" content="es_AR" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Proyecto Gymbro — App de entrenamiento gamificada" />
+    <meta name="twitter:description" content="Entrená, subí de nivel y superá tus marcas con Gymbro. App PWA de fitness gamificado: rutinas, rachas, logros y estadísticas. Gratis, sin registro." />
+    <meta name="twitter:image" content="https://proyecto-gymbro.vercel.app/images/hero.png" />
+    <meta name="twitter:image:alt" content="Proyecto Gymbro — App de entrenamiento gamificada" />
+
+    <!-- Apple PWA meta tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Gymbro" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- iOS splash screens — device-specific startup images -->
+    <!-- iPhone 14 Pro Max (1290x2796) -->
+    <link rel="apple-touch-startup-image"
+      href="/splash/iphone-14-pro-max.svg"
+      media="screen and (device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <!-- iPhone 12/13/14 (1170x2532) -->
+    <link rel="apple-touch-startup-image"
+      href="/splash/iphone-12-13-14.svg"
+      media="screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <!-- iPhone X / XS / 11 Pro (1125x2436) -->
+    <link rel="apple-touch-startup-image"
+      href="/splash/iphone-x-11.svg"
+      media="screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <!-- iPad Pro 11" (1668x2388) -->
+    <link rel="apple-touch-startup-image"
+      href="/splash/ipad-pro-11.svg"
+      media="screen and (device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+    <!-- iPad Pro 12.9" (2048x2732) -->
+    <link rel="apple-touch-startup-image"
+      href="/splash/ipad-pro-12.svg"
+      media="screen and (device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- Performance: preload LCP hero image -->
+    <link rel="preload" as="image" href="/images/hero.png" />
+
+    <!-- Google Fonts: Rajdhani (display) + Sora (body) + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Structured Data — WebApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Proyecto Gymbro",
+      "alternateName": "Gymbro",
+      "description": "App PWA de entrenamiento gamificado. Seguí tus rutinas, mantené tu racha, desbloqueá logros y subí de nivel con cada entrenamiento.",
+      "url": "https://proyecto-gymbro.vercel.app/",
+      "applicationCategory": "HealthAndFitnessApplication",
+      "operatingSystem": "Web, Android, iOS",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "inLanguage": "es-AR",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "ARS"
+      },
+      "featureList": [
+        "Rutinas de entrenamiento (Full Body, Push, Pull, Legs)",
+        "Sistema de rachas diarias",
+        "Logros y recompensas gamificadas",
+        "Estadísticas de progreso",
+        "Funciona offline (PWA)",
+        "Sin registro ni cuenta requerida"
+      ],
+      "screenshot": "https://proyecto-gymbro.vercel.app/images/hero.png",
+      "image": "https://proyecto-gymbro.vercel.app/images/hero.png",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5",
+        "ratingCount": "1",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    }
+    </script>
+
+    <!-- Structured Data — Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Proyecto Gymbro",
+      "url": "https://proyecto-gymbro.vercel.app/",
+      "logo": "https://proyecto-gymbro.vercel.app/logo-full.svg",
+      "description": "Desarrollo de apps de fitness y bienestar gamificadas para el mercado hispanohablante.",
+      "sameAs": []
+    }
+    </script>
+
+    <!-- Structured Data — WebSite with SearchAction placeholder -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Proyecto Gymbro",
+      "url": "https://proyecto-gymbro.vercel.app/",
+      "description": "App PWA de entrenamiento gamificado. Rutinas, rachas, logros y estadísticas de fitness.",
+      "inLanguage": "es-AR"
+    }
+    </script>
+  </head>
+  <body>
+    <noscript>Este sitio requiere JavaScript para funcionar correctamente.</noscript>
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:p-4 focus:bg-[#ABFF35] focus:text-black focus:top-0 focus:left-0">
+      Saltar al contenido
+    </a>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

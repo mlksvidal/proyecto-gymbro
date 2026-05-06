@@ -1,0 +1,246 @@
+@import "tailwindcss";
+@import "./styles/tokens.css";
+@import "./styles/base.css";
+@import "./styles/animations.css";
+
+/* FAB pulse animation — complementa animations.css */
+@keyframes fab-pulse {
+  0%, 100% {
+    box-shadow: 0 0 32px rgba(171, 255, 53, 0.55), 0 0 64px rgba(171, 255, 53, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(171, 255, 53, 0.7), 0 0 80px rgba(171, 255, 53, 0.25), 0 0 120px rgba(171, 255, 53, 0.1);
+    transform: scale(1.03);
+  }
+}
+
+.anim-fab-pulse {
+  animation: fab-pulse 2s ease-in-out infinite;
+}
+
+/* FAB pulse premium — 3 capas de glow cinematográfico */
+@keyframes fab-pulse-premium {
+  0%, 100% {
+    box-shadow:
+      0 0 20px rgba(171, 255, 53, 0.6),
+      0 0 40px rgba(171, 255, 53, 0.25),
+      0 0 70px rgba(171, 255, 53, 0.08);
+    transform: scale(1);
+  }
+  33% {
+    box-shadow:
+      0 0 28px rgba(171, 255, 53, 0.75),
+      0 0 55px rgba(171, 255, 53, 0.32),
+      0 0 90px rgba(171, 255, 53, 0.12);
+    transform: scale(1.02);
+  }
+  66% {
+    box-shadow:
+      0 0 36px rgba(171, 255, 53, 0.85),
+      0 0 68px rgba(171, 255, 53, 0.38),
+      0 0 110px rgba(171, 255, 53, 0.14);
+    transform: scale(1.04);
+  }
+}
+
+.anim-fab-pulse-premium {
+  animation: fab-pulse-premium 2.5s ease-in-out infinite;
+}
+
+/* Ripple keyframe for Button */
+@keyframes btn-ripple {
+  0%   { transform: scale(0); opacity: 0.5; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+.btn-ripple-el {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: btn-ripple 600ms ease-out forwards;
+}
+
+/* Glow hover for primary buttons */
+@keyframes btn-glow-pulse {
+  0%, 100% { box-shadow: 0 0 16px rgba(171,255,53,0.35), 0 0 32px rgba(171,255,53,0.12); }
+  50%       { box-shadow: 0 0 28px rgba(171,255,53,0.55), 0 0 56px rgba(171,255,53,0.2); }
+}
+
+.btn-glow-hover {
+  animation: btn-glow-pulse 1.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-fab-pulse-premium,
+  .anim-fab-pulse,
+  .btn-glow-hover {
+    animation: none !important;
+  }
+}
+
+/* Audio bar ambient animation */
+@keyframes audio-bar-ambient {
+  0%, 100% { height: 20px; opacity: 0.25; }
+  50%       { height: 36px; opacity: 0.5; }
+}
+
+@keyframes audio-bar-ambient-2 {
+  0%, 100% { height: 16px; opacity: 0.2; }
+  50%       { height: 28px; opacity: 0.45; }
+}
+
+@keyframes audio-bar-ambient-3 {
+  0%, 100% { height: 24px; opacity: 0.3; }
+  50%       { height: 40px; opacity: 0.55; }
+}
+
+@keyframes audio-bar-ambient-4 {
+  0%, 100% { height: 18px; opacity: 0.22; }
+  50%       { height: 30px; opacity: 0.42; }
+}
+
+@keyframes audio-bar-ambient-5 {
+  0%, 100% { height: 22px; opacity: 0.28; }
+  50%       { height: 38px; opacity: 0.52; }
+}
+
+/* ── HYPE MODE Sprint 7 additions ─────────────────────────── */
+
+/* Tier-color glow for profile avatar (uses box-shadow with inline color) */
+@keyframes pulse-glow-tier {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; filter: brightness(1.15); }
+}
+
+
+/* Glow border pulse for TodayWorkoutCard and important cards */
+@keyframes card-glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(171,255,53,0.12), 0 0 20px rgba(171,255,53,0.06);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(171,255,53,0.28), 0 0 40px rgba(171,255,53,0.12), 0 0 60px rgba(171,255,53,0.05);
+  }
+}
+
+.card-glow-pulse {
+  animation: card-glow-pulse 3s ease-in-out infinite;
+}
+
+/* Animated underline — scale-x 0 → 1 on load */
+@keyframes underline-reveal {
+  0%   { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+
+.header-underline-anim::after {
+  content: '';
+  display: block;
+  height: 2px;
+  background: var(--color-primary);
+  border-radius: 2px;
+  transform-origin: left;
+  animation: underline-reveal 0.5s ease-out 0.3s both;
+  margin-top: 2px;
+  width: 100%;
+}
+
+/* Glow shadow on stat numbers when updating */
+@keyframes number-glow-pulse {
+  0%, 100% { text-shadow: 0 0 0px rgba(171,255,53,0); }
+  50%       { text-shadow: 0 0 12px rgba(171,255,53,0.6), 0 0 24px rgba(171,255,53,0.25); }
+}
+
+.number-glow {
+  animation: number-glow-pulse 1.5s ease-in-out 1;
+}
+
+/* Lightning bolt particle fall */
+@keyframes lightning-fall {
+  0%   { transform: translateY(-20px) rotate(15deg); opacity: 0.9; }
+  80%  { opacity: 0.7; }
+  100% { transform: translateY(60vh) rotate(25deg); opacity: 0; }
+}
+
+.lightning-particle {
+  position: fixed;
+  pointer-events: none;
+  font-size: 20px;
+  animation: lightning-fall linear forwards;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-glow-pulse,
+  .header-underline-anim::after,
+  .number-glow,
+  .lightning-particle {
+    animation: none !important;
+  }
+}
+
+/* Screen reader only — accesibilidad */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Glass surface utility */
+.glass-surface {
+  background: rgba(26, 26, 26, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Neon border utility */
+.neon-border {
+  border: 1px solid var(--color-primary);
+  box-shadow: 0 0 8px rgba(171, 255, 53, 0.3), inset 0 0 8px rgba(171, 255, 53, 0.05);
+}
+
+/* Tap target utility */
+.tap-target {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Numeric tabular utility */
+.numeric-tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-family: var(--font-display);
+  font-weight: var(--font-bold);
+  letter-spacing: -0.02em;
+}
+
+/* Scroll snap horizontal */
+.scroll-snap-x {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--space-page-x);
+  gap: var(--space-3);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.scroll-snap-x::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-snap-item {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+}

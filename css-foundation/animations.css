@@ -1,0 +1,448 @@
+/* ==========================================================================
+   GYMBRO — Animations
+   Keyframes CSS + utility classes
+   Copiar a: src/styles/animations.css
+   Importar DESPUÉS de tokens.css y base.css
+
+   NOTA: Las animaciones complejas de entrada de pantalla, level-up y workout
+   se manejan con GSAP / Framer Motion desde JS. Este archivo cubre:
+   - Micro-interactions de estado (hover, active, loading)
+   - Feedback de logro (glow pulse, bounce)
+   - Animaciones de UI declarativas (slide-up, fade-in)
+   - Looping ambient (flame, pulse)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   KEYFRAMES
+   -------------------------------------------------------------------------- */
+
+/* -- pulse-glow --
+   Pulso neon en botón CTA o elemento de logro activo.
+   Uso: botón "Completar Serie", XP bar al ganar XP, achievement badge.
+   Duración: 2s loop
+*/
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 16px rgba(171, 255, 53, 0.35),
+                0 0 32px rgba(171, 255, 53, 0.15);
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 32px rgba(171, 255, 53, 0.6),
+                0 0 64px rgba(171, 255, 53, 0.25),
+                0 0 96px rgba(171, 255, 53, 0.1);
+    opacity: 0.95;
+  }
+}
+
+/* -- pulse-glow-highlight --
+   Variante amarilla para streaks y logros gold.
+*/
+@keyframes pulse-glow-highlight {
+  0%, 100% {
+    box-shadow: 0 0 16px rgba(245, 221, 0, 0.4),
+                0 0 32px rgba(245, 221, 0, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 32px rgba(245, 221, 0, 0.65),
+                0 0 64px rgba(245, 221, 0, 0.25);
+  }
+}
+
+/* -- bounce-in --
+   Entrada desde scale(0) con overshoot. Para modales pequeños, badges, confirmaciones.
+   Duración: 400ms (una sola vez)
+*/
+@keyframes bounce-in {
+  0%   { opacity: 0; transform: scale(0.5); }
+  60%  { opacity: 1; transform: scale(1.08); }
+  80%  { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+
+/* -- bounce-in-up --
+   Entrada desde abajo con overshoot vertical. Para toasts, achievement cards.
+*/
+@keyframes bounce-in-up {
+  0%   { opacity: 0; transform: translateY(40px) scale(0.9); }
+  65%  { opacity: 1; transform: translateY(-8px) scale(1.02); }
+  80%  { transform: translateY(4px) scale(0.99); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* -- slide-up --
+   Entrada suave desde abajo. Para bottom sheets, cards, secciones en scroll.
+   Duración: 350-500ms (depende del contexto)
+*/
+@keyframes slide-up {
+  0%   { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* -- slide-down --
+   Para cierre de bottom sheets, dismiss de toasts.
+*/
+@keyframes slide-down {
+  0%   { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(32px); }
+}
+
+/* -- fade-in --
+   Fade simple. Para overlays, scrim, texto secundario.
+*/
+@keyframes fade-in {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* -- fade-in-scale --
+   Fade + scale sutil. Para cards de ejercicio al cargar.
+*/
+@keyframes fade-in-scale {
+  0%   { opacity: 0; transform: scale(0.96); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* -- flame-flicker --
+   Flameo del ícono de racha activa. Simula fuego con scale + rotate sutil.
+   Duración: 1.2s loop, ease-in-out
+*/
+@keyframes flame-flicker {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    filter: brightness(1);
+  }
+  20% {
+    transform: scale(1.06) rotate(-1.5deg);
+    filter: brightness(1.15);
+  }
+  40% {
+    transform: scale(0.98) rotate(1deg);
+    filter: brightness(0.95);
+  }
+  60% {
+    transform: scale(1.04) rotate(-0.5deg);
+    filter: brightness(1.1);
+  }
+  80% {
+    transform: scale(0.97) rotate(1.5deg);
+    filter: brightness(0.98);
+  }
+}
+
+/* -- level-up --
+   Animación épica de subida de nivel. Scale grande + glow explosivo.
+   Para el modal de LEVEL UP — combinar con GSAP para secuencia completa.
+   Duración: 600ms (una sola vez)
+*/
+@keyframes level-up {
+  0%   {
+    opacity: 0;
+    transform: scale(0.3) rotate(-10deg);
+    filter: brightness(0.5);
+  }
+  40%  {
+    opacity: 1;
+    transform: scale(1.2) rotate(2deg);
+    filter: brightness(1.5) drop-shadow(0 0 32px rgba(171, 255, 53, 0.8));
+  }
+  60%  {
+    transform: scale(0.95) rotate(-1deg);
+    filter: brightness(1.1);
+  }
+  80%  {
+    transform: scale(1.05) rotate(0.5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    filter: brightness(1);
+  }
+}
+
+/* -- xp-fill --
+   Llenado de barra XP. Se aplica al fill de la barra.
+   Requiere CSS custom property --xp-target (porcentaje final).
+   Duración: 800ms (una sola vez)
+*/
+@keyframes xp-fill {
+  0%   { width: var(--xp-start, 0%); }
+  100% { width: var(--xp-end, 100%); }
+}
+
+/* -- xp-glow-pulse --
+   Pulso en la barra XP mientras se anima el llenado.
+*/
+@keyframes xp-glow-pulse {
+  0%, 100% { box-shadow: var(--xp-bar-glow); }
+  50%       { box-shadow: 0 0 16px rgba(171, 255, 53, 0.7), 0 0 32px rgba(171, 255, 53, 0.3); }
+}
+
+/* -- shine --
+   Brillo de barrido (shimmer) horizontal. Para achievement cards, skeleton loaders.
+   Duración: 1.5s loop
+*/
+@keyframes shine {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* -- spin --
+   Rotación 360. Para loaders, spinners de carga.
+   Duración: 1s loop linear
+*/
+@keyframes spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* -- timer-countdown --
+   Animación del SVG circle para rest timer.
+   Se controla desde JS (stroke-dashoffset) — este keyframe es el fallback CSS.
+*/
+@keyframes timer-countdown {
+  0%   { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 283; }  /* 2πr con r=45 */
+}
+
+/* -- shake --
+   Vibración horizontal. Para errores de formulario, intentos fallidos.
+   Duración: 500ms (una sola vez)
+*/
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  15%       { transform: translateX(-6px); }
+  30%       { transform: translateX(6px); }
+  45%       { transform: translateX(-4px); }
+  60%       { transform: translateX(4px); }
+  75%       { transform: translateX(-2px); }
+  90%       { transform: translateX(2px); }
+}
+
+/* -- float --
+   Flotación sutil vertical. Para íconos decorativos, mascota.
+   Duración: 3s loop ease-in-out
+*/
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* -- ripple --
+   Expansión radial desde punto de tap. Para botones con ripple effect.
+   Duración: 600ms (una sola vez)
+*/
+@keyframes ripple {
+  0%   { transform: scale(0); opacity: 0.4; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+/* -- counter-pop --
+   Micro-bounce en números al cambiar (reps, sets, peso).
+   Duración: 200ms
+*/
+@keyframes counter-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* --------------------------------------------------------------------------
+   UTILITY CLASSES — Aplicar directamente en JSX/HTML
+   -------------------------------------------------------------------------- */
+
+/* Pulse neon en elementos primarios */
+.anim-pulse-glow {
+  animation: pulse-glow 2s var(--ease-in-out) infinite;
+}
+
+.anim-pulse-glow-highlight {
+  animation: pulse-glow-highlight 2s var(--ease-in-out) infinite;
+}
+
+/* Entrada con bounce — modales pequeños, badges */
+.anim-bounce-in {
+  animation: bounce-in var(--duration-slow) var(--ease-bounce) both;
+}
+
+.anim-bounce-in-up {
+  animation: bounce-in-up var(--duration-slow) var(--ease-bounce) both;
+}
+
+/* Entrada desde abajo — cards, secciones */
+.anim-slide-up {
+  animation: slide-up var(--duration-slow) var(--ease-out) both;
+}
+
+/* Salida hacia abajo */
+.anim-slide-down {
+  animation: slide-down var(--duration-base) var(--ease-in) both;
+}
+
+/* Fade simple */
+.anim-fade-in {
+  animation: fade-in var(--duration-base) var(--ease-out) both;
+}
+
+/* Fade + scale */
+.anim-fade-in-scale {
+  animation: fade-in-scale var(--duration-slow) var(--ease-out) both;
+}
+
+/* Flameo de racha */
+.anim-flame {
+  animation: flame-flicker 1.2s var(--ease-in-out) infinite;
+  display: inline-block;    /* Necesario para transforms en inline elements */
+}
+
+/* Level up épico */
+.anim-level-up {
+  animation: level-up var(--duration-very-slow) var(--ease-bounce) both;
+}
+
+/* Shimmer / shine */
+.anim-shine {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(171, 255, 53, 0.15) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shine 1.5s linear infinite;
+}
+
+/* Skeleton loader shimmer */
+.anim-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface) 25%,
+    var(--color-surface-elevated) 50%,
+    var(--color-surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: shine 1.5s linear infinite;
+}
+
+/* Spinner de carga */
+.anim-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Shake de error */
+.anim-shake {
+  animation: shake 500ms var(--ease-in-out) both;
+}
+
+/* Flotación decorativa */
+.anim-float {
+  animation: float 3s var(--ease-in-out) infinite;
+}
+
+/* Counter pop */
+.anim-counter-pop {
+  animation: counter-pop var(--duration-base) var(--ease-bounce) both;
+}
+
+/* XP fill */
+.anim-xp-fill {
+  animation: xp-fill 800ms var(--ease-out) both,
+             xp-glow-pulse 800ms var(--ease-in-out) both;
+}
+
+/* --------------------------------------------------------------------------
+   STAGGER — Delay para listas animadas
+   Aplicar en combinación con .anim-slide-up, .anim-fade-in-scale, etc.
+   Hasta 10 items — para más usar GSAP stagger desde JS.
+   -------------------------------------------------------------------------- */
+
+.stagger-children > * { animation-fill-mode: both; }
+.stagger-children > *:nth-child(1) { animation-delay: calc(var(--stagger-sm) * 0); }
+.stagger-children > *:nth-child(2) { animation-delay: calc(var(--stagger-sm) * 1); }
+.stagger-children > *:nth-child(3) { animation-delay: calc(var(--stagger-sm) * 2); }
+.stagger-children > *:nth-child(4) { animation-delay: calc(var(--stagger-sm) * 3); }
+.stagger-children > *:nth-child(5) { animation-delay: calc(var(--stagger-sm) * 4); }
+.stagger-children > *:nth-child(6) { animation-delay: calc(var(--stagger-sm) * 5); }
+.stagger-children > *:nth-child(7) { animation-delay: calc(var(--stagger-sm) * 6); }
+.stagger-children > *:nth-child(8) { animation-delay: calc(var(--stagger-sm) * 7); }
+.stagger-children > *:nth-child(9) { animation-delay: calc(var(--stagger-sm) * 8); }
+.stagger-children > *:nth-child(10){ animation-delay: calc(var(--stagger-sm) * 9); }
+
+/* Stagger denso (listas de sets) */
+.stagger-dense > * { animation-fill-mode: both; }
+.stagger-dense > *:nth-child(1) { animation-delay: calc(var(--stagger-xs) * 0); }
+.stagger-dense > *:nth-child(2) { animation-delay: calc(var(--stagger-xs) * 1); }
+.stagger-dense > *:nth-child(3) { animation-delay: calc(var(--stagger-xs) * 2); }
+.stagger-dense > *:nth-child(4) { animation-delay: calc(var(--stagger-xs) * 3); }
+.stagger-dense > *:nth-child(5) { animation-delay: calc(var(--stagger-xs) * 4); }
+
+/* --------------------------------------------------------------------------
+   TRANSITION UTILITIES — CSS transitions para hover/focus states
+   Aplicar en componentes React vía className
+   -------------------------------------------------------------------------- */
+
+/* Transición de color rápida */
+.transition-color {
+  transition: color var(--duration-fast) var(--ease-out),
+              background-color var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+}
+
+/* Transición de transforms */
+.transition-transform {
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+/* Transición completa (para botones, cards) */
+.transition-all {
+  transition: color var(--duration-fast) var(--ease-out),
+              background-color var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-base) var(--ease-out),
+              transform var(--duration-base) var(--ease-spring),
+              opacity var(--duration-fast) var(--ease-out);
+}
+
+/* Haptic feedback visual — escala en active */
+.haptic {
+  transition: transform var(--duration-instant) var(--ease-spring),
+              opacity var(--duration-instant) var(--ease-out);
+}
+.haptic:active {
+  transform: scale(0.95);
+  opacity: 0.85;
+}
+
+/* --------------------------------------------------------------------------
+   REDUCED MOTION OVERRIDES
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-pulse-glow,
+  .anim-pulse-glow-highlight,
+  .anim-flame,
+  .anim-float,
+  .anim-spin,
+  .anim-shine,
+  .anim-skeleton {
+    animation: none !important;
+  }
+
+  .anim-bounce-in,
+  .anim-bounce-in-up,
+  .anim-slide-up,
+  .anim-slide-down,
+  .anim-fade-in,
+  .anim-fade-in-scale,
+  .anim-level-up,
+  .anim-shake,
+  .anim-counter-pop,
+  .anim-xp-fill {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+  }
+
+  .haptic:active {
+    transform: none !important;
+  }
+}

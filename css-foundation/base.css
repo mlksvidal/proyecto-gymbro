@@ -1,0 +1,506 @@
+/* ==========================================================================
+   GYMBRO — Base Styles
+   Reset + body + typographic defaults + layout shell
+   Copiar a: src/styles/base.css
+   Importar DESPUÉS de tokens.css
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   RESET — Modern CSS reset adaptado para PWA mobile
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Safari: eliminar outline en botones al hacer click (mantener en focus-visible) */
+:where(button):focus:not(:focus-visible) {
+  outline: 0;
+}
+
+/* Eliminar estilos de lista solo cuando se usan como UI (no semántica) */
+:where(ul, ol)[role="list"] {
+  list-style: none;
+}
+
+/* Imágenes responsivas por defecto */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Herencia de fuente en inputs */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* Prevenir overflow de texto largo */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* --------------------------------------------------------------------------
+   DOCUMENT — Viewport y color scheme
+   -------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: dark;                    /* Scrollbars e inputs nativos en dark */
+  font-size: 16px;                       /* Base para cálculos rem */
+  -webkit-text-size-adjust: 100%;        /* Prevenir auto-scale en iOS rotation */
+  text-size-adjust: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   BODY — App shell base
+   -------------------------------------------------------------------------- */
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--font-normal);
+  line-height: var(--leading-normal);
+  letter-spacing: 0.01em;
+
+  /* Font rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+
+  /* Mobile PWA */
+  -webkit-tap-highlight-color: transparent;   /* Eliminar flash azul en tap */
+  overscroll-behavior: contain;               /* Bloquear pull-to-refresh nativo */
+  touch-action: manipulation;                 /* Eliminar delay de 300ms en tap */
+  -webkit-overflow-scrolling: touch;          /* Scroll momentum en iOS */
+
+  /* Altura con barras dinámicas (mejor que 100vh en mobile) */
+  min-height: 100dvh;
+}
+
+/* --------------------------------------------------------------------------
+   SELECTION — Selección de texto con brand color
+   -------------------------------------------------------------------------- */
+
+::selection {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+::-moz-selection {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+/* --------------------------------------------------------------------------
+   SCROLLBAR — Delgada y discreta (tono dark)
+   -------------------------------------------------------------------------- */
+
+/* Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-surface-hover);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+/* --------------------------------------------------------------------------
+   FOCUS VISIBLE — Accesibilidad: outline lima
+   Solo visible con navegación por teclado, no en click/touch
+   -------------------------------------------------------------------------- */
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Botones y elementos interactivos: radio acorde al componente */
+button:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-md);
+}
+
+/* --------------------------------------------------------------------------
+   TIPOGRAFÍA — Jerarquía base
+   -------------------------------------------------------------------------- */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text);
+}
+
+h1 { font-size: var(--text-4xl); }
+h2 { font-size: var(--text-3xl); }
+h3 { font-size: var(--text-2xl); }
+h4 { font-size: var(--text-xl); }
+h5 { font-size: var(--text-lg); }
+h6 { font-size: var(--text-base); }
+
+p {
+  color: var(--color-text);
+  line-height: var(--leading-normal);
+}
+
+small {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+strong,
+b {
+  font-weight: var(--font-bold);
+}
+
+/* Números tabulares — para contadores, timers, stats */
+.numeric,
+[data-numeric],
+time {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  font-family: var(--font-display);
+  font-weight: var(--font-bold);
+}
+
+/* --------------------------------------------------------------------------
+   LINKS
+   -------------------------------------------------------------------------- */
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+a:hover {
+  color: var(--color-primary-bright);
+}
+
+/* --------------------------------------------------------------------------
+   MEDIA — Responsive defaults
+   -------------------------------------------------------------------------- */
+
+img {
+  object-fit: cover;
+}
+
+/* --------------------------------------------------------------------------
+   APP SHELL — Layout de PWA mobile
+   -------------------------------------------------------------------------- */
+
+/* Wrapper principal de la app */
+#root,
+#app,
+.app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background-color: var(--color-bg);
+  overflow: hidden;         /* Contiene scroll horizontal accidental */
+  position: relative;
+}
+
+/* Header sticky */
+.app-header {
+  position: sticky;
+  top: 0;
+  top: var(--safe-area-top);
+  z-index: var(--z-sticky);
+  height: var(--header-height);
+  background-color: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  padding-inline: var(--space-page-x);
+  padding-top: var(--safe-area-top);
+}
+
+/* Main scrollable */
+.app-main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  /* Espacio para el bottom nav fijo */
+  padding-bottom: calc(var(--bottom-nav-height) + var(--safe-area-bottom) + var(--space-4));
+}
+
+/* Bottom navigation bar fija */
+.app-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-bottom-nav);
+  height: calc(var(--bottom-nav-height) + var(--safe-area-bottom));
+  background-color: var(--nav-bg);
+  backdrop-filter: blur(var(--nav-backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--nav-backdrop-blur));
+  border-top: var(--nav-border-top);
+  padding-bottom: var(--safe-area-bottom);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding-inline: var(--space-2);
+}
+
+/* Workout mode: sin bottom nav, full screen */
+.app-main--workout {
+  padding-bottom: var(--safe-area-bottom);
+}
+
+/* --------------------------------------------------------------------------
+   CONTENEDORES — Mobile-first fluid
+   -------------------------------------------------------------------------- */
+
+.container {
+  width: 100%;
+  padding-inline: var(--space-page-x);
+  margin-inline: auto;
+}
+
+/* A partir de 480px: ancho máximo centrado */
+@media (min-width: 480px) {
+  .container {
+    max-width: var(--container-sm);
+    padding-inline: var(--space-6);
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: var(--container-md);
+    padding-inline: var(--space-8);
+  }
+}
+
+/* Full bleed (ignora padding del contenedor) */
+.full-bleed {
+  margin-inline: calc(var(--space-page-x) * -1);
+}
+
+/* --------------------------------------------------------------------------
+   GRID UTILITIES — Para listas de cards
+   -------------------------------------------------------------------------- */
+
+.grid-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+/* 2 columnas a partir de 480px */
+@media (min-width: 480px) {
+  .grid-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 3 columnas para tablet */
+@media (min-width: 768px) {
+  .grid-cards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+  }
+}
+
+/* Grid para stats (2 cols siempre en mobile) */
+.grid-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+/* Grid para ejercicios en detalle de rutina */
+.grid-exercises {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+/* --------------------------------------------------------------------------
+   STACK — Utilidades de layout vertical
+   -------------------------------------------------------------------------- */
+
+.stack-sm  { display: flex; flex-direction: column; gap: var(--space-2); }
+.stack-md  { display: flex; flex-direction: column; gap: var(--space-4); }
+.stack-lg  { display: flex; flex-direction: column; gap: var(--space-6); }
+.stack-xl  { display: flex; flex-direction: column; gap: var(--space-8); }
+
+/* --------------------------------------------------------------------------
+   INLINE — Utilidades de layout horizontal
+   -------------------------------------------------------------------------- */
+
+.inline-sm  { display: flex; align-items: center; gap: var(--space-2); }
+.inline-md  { display: flex; align-items: center; gap: var(--space-4); }
+.inline-between { display: flex; align-items: center; justify-content: space-between; }
+.inline-center  { display: flex; align-items: center; justify-content: center; }
+
+/* --------------------------------------------------------------------------
+   SECTION PADDING — Espaciado de secciones de pantalla
+   -------------------------------------------------------------------------- */
+
+.section {
+  padding-block: var(--space-section);
+}
+
+.section-sm {
+  padding-block: var(--space-8);
+}
+
+/* --------------------------------------------------------------------------
+   SAFE AREA HELPERS — Para componentes que necesitan padding de notch
+   -------------------------------------------------------------------------- */
+
+.pt-safe  { padding-top: var(--safe-area-top); }
+.pb-safe  { padding-bottom: var(--safe-area-bottom); }
+.pl-safe  { padding-left: var(--safe-area-left); }
+.pr-safe  { padding-right: var(--safe-area-right); }
+
+/* --------------------------------------------------------------------------
+   REDUCED MOTION — Accesibilidad: respeta preferencias del sistema
+   Todas las animaciones se reducen a near-instant.
+   Las animaciones complejas (GSAP, Framer) deben checar esta media query.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   UTILITY PATTERNS — Documentados para ui-designer y frontend-developer
+   Los patterns siguientes son clases de utilidad reutilizables.
+   Implementación completa en components.css cuando se construyan los componentes.
+   -------------------------------------------------------------------------- */
+
+/*
+  .glass-surface
+  Superficie semitransparente con blur para overlays, sheets, header.
+  Uso: bottom sheet headers, modales, cards en modo workout.
+  Implementación:
+    background: rgba(26, 26, 26, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+*/
+
+/*
+  .neon-border
+  Border 1px lima con glow — para cards activas, CTA buttons, elementos seleccionados.
+  Uso: workout card activa, exercise seleccionado, tab activo.
+  Implementación:
+    border: 1px solid var(--color-primary);
+    box-shadow: 0 0 8px rgba(171, 255, 53, 0.3), inset 0 0 8px rgba(171, 255, 53, 0.05);
+*/
+
+/*
+  .tap-target
+  Área mínima de toque 44x44px (WCAG 2.5.5, iOS HIG).
+  Uso: TODOS los botones, links y elementos interactivos en mobile.
+  Implementación:
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+*/
+
+/*
+  .haptic-feedback
+  Feedback visual de tap — scale comprimido al active state.
+  Combinar con navigator.vibrate() en JS para haptic real.
+  Uso: botones principales, sets completados, cualquier acción confirmada.
+  Implementación:
+    transition: transform var(--duration-instant) var(--ease-spring),
+                opacity var(--duration-instant) var(--ease-out);
+    &:active {
+      transform: scale(0.95);
+      opacity: 0.85;
+    }
+*/
+
+/*
+  .scroll-snap-x
+  Carrusel horizontal con scroll snap — exercises, screenshots, rutinas.
+  Uso: carrusel de días de rutina, galería de ejercicios.
+  Implementación (contenedor):
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--space-page-x);
+    gap: var(--space-3);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  Implementación (item):
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+*/
+
+/*
+  .numeric-tabular
+  Números de ancho fijo para contadores, timers, pesos, sets.
+  Previene layout shift al cambiar dígitos.
+  Uso: timer de descanso, contador de reps, XP total, pesos.
+  Implementación:
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1, "lnum" 1;
+    font-family: var(--font-display);
+    font-weight: var(--font-bold);
+    letter-spacing: -0.02em;
+*/

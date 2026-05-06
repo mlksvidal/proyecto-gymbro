@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1290" height="2796" viewBox="0 0 1290 2796">
+  <rect width="1290" height="2796" fill="#0A0A0A"/>
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="40%">
+      <stop offset="0%" stop-color="#ABFF35" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#ABFF35" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1290" height="2796" fill="url(#glow)"/>
+  <!-- Logo G placeholder -->
+  <text x="50%" y="48%" dominant-baseline="middle" text-anchor="middle"
+    font-family="Arial" font-weight="bold" font-size="258"
+    fill="#ABFF35">G</text>
+  <!-- Wordmark -->
+  <text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle"
+    font-family="Arial" font-weight="bold" font-size="64"
+    fill="#ABFF35" letter-spacing="4">PROYECTO GYMBRO</text>
+  <!-- Tagline -->
+  <text x="50%" y="63%" dominant-baseline="middle" text-anchor="middle"
+    font-family="Arial" font-size="40"
+    fill="rgba(255,255,255,0.5)">Entrená. Subí de nivel. Superate.</text>
+</svg>

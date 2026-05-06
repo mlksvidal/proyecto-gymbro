@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Proyecto Gymbro isotipo">
+  <title>Proyecto Gymbro</title>
+  <!--
+    G+Lightning isotipo — Proyecto Gymbro
+    Color: #ABFF35 on transparent background
+    Use on dark (#0A0A0A) backgrounds in production
+    Bold geometric | Sharp angles | Sports/energy brand
+  -->
+  <g fill="#ABFF35">
+    <!-- G FRAME -->
+    <rect x="6" y="6" width="16" height="88"/>
+    <rect x="22" y="6" width="36" height="16"/>
+    <rect x="22" y="78" width="52" height="16"/>
+    <rect x="58" y="54" width="16" height="40"/>
+    <rect x="42" y="54" width="32" height="16"/>
+    <!--
+      LIGHTNING BOLT — fills the G's top-right gap
+      Zigzag creates classic lightning visual integrated into the G
+      Points clockwise: TL → TR → right-side jog → bottom-right → bottom-left → left-diagonal
+    -->
+    <polygon points="58,6 94,6 94,22 80,22 90,54 74,54 44,54 54,22"/>
+  </g>
+</svg>

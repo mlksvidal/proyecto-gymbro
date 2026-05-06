@@ -1,0 +1,320 @@
+{
+  "project": "proyecto-gymbro",
+  "name": "Proyecto Gymbro",
+  "version": 1,
+  "created_at": "2026-05-05",
+  "tagline": "Entrená. Subí de nivel. Superate.",
+  "tagline_secondary": "No es solo este proyecto. Eres tú.",
+  "concept": "App gamificada de entrenamiento que convierte el fitness en una misión diaria. El usuario combina entrenos, gana puntos de experiencia, desbloquea logros y se convierte en su mejor versión. Cada sesión es un nivel más. Cada PR es una victoria real.",
+
+  "identity": {
+    "name": "Proyecto Gymbro",
+    "slogan": "Entrená. Subí de nivel. Superate.",
+    "tone": "bro motivacional rioplatense, retador pero accesible, intenso y auténtico",
+    "personality": ["única", "intensa", "enérgica", "auténtica", "vibrante", "motivadora"],
+    "target": "Hombres y mujeres de 18–35 años que van al gym o entrenan en casa, buscan progreso real, se identifican con la cultura gym sin pretensiones, y quieren una app que los motive como lo haría un buen compañero de entrenamiento",
+    "voice": {
+      "formality": 1,
+      "complexity": 2,
+      "character": 4,
+      "emotion": 5
+    }
+  },
+
+  "tone": {
+    "language": "es-AR",
+    "register": "bro motivacional rioplatense",
+    "vocabulary_examples": ["Dale", "Rompé", "Subí de nivel", "Vamos", "Una más", "Sin excusas", "¡Listo!", "¡Dale!", "Gymbro", "PR", "Crush it"],
+    "do": [
+      "Usar voseo rioplatense (vos, subí, rompé, dale)",
+      "Ser directo y enérgico — cada microcopy debe impulsar acción",
+      "Celebrar los logros con intensidad genuina",
+      "Hablar como un buen compañero de entrenamiento, no como una app corporativa",
+      "Usar puntuación de impacto: puntos suspensivos dramáticos, frases cortas",
+      "Mezclar vocabulario gym nativo con rioplatense natural"
+    ],
+    "dont": [
+      "No traducir el tagline al inglés",
+      "No usar 'gym bro' en inglés — siempre 'gymbro' como una sola palabra",
+      "No sonar como app corporativa de salud o bienestar genérico",
+      "No usar lenguaje médico o clínico",
+      "No usar el tuteo castellano (tú, puedes) — solo voseo",
+      "No minimizar los logros del usuario con eufemismos"
+    ]
+  },
+
+  "colors": {
+    "primary":          { "hex": "#ABFF35", "use": "CTA principal, elementos activos, borde lima, FAB, nav activo, XP bar fill" },
+    "primary_bright":   { "hex": "#D8FF3D", "use": "Hover states, acentos de energía, glow intenso en momentos épicos" },
+    "primary_dim":      { "hex": "#7ACC1F", "use": "Active/pressed state de primary, variante apagada para feedback de tap" },
+    "highlight":        { "hex": "#F5DD00", "use": "Flags de PR (Personal Record), achievements gold, warnings visuales" },
+    "bg":               { "hex": "#0A0A0A", "use": "Fondo OLED principal — único dark background del MVP" },
+    "surface":          { "hex": "#1A1A1A", "use": "Cards default, inputs, ExerciseCard bg" },
+    "surface_elevated": { "hex": "#2D2D2D", "use": "Cards elevated, steppers, chips, border visible" },
+    "text":             { "hex": "#FFFFFF", "use": "Texto principal sobre fondos oscuros" },
+    "text_muted":       { "hex": "#888888", "use": "Texto secundario, labels, metadatos — solo sobre fondos oscuros a 18px+" },
+    "border":           { "hex": "#2D2D2D", "use": "Bordes sutiles de cards, separadores, nav border-top" },
+    "success":          { "hex": "#ABFF35", "use": "Set completado, logro desbloqueado, estado saludable — alias de primary" },
+    "danger":           { "hex": "#FF4D4D", "use": "Acciones destructivas, últimos 3 segundos del timer, estados de error" },
+    "warning":          { "hex": "#F5DD00", "use": "Racha en riesgo, dificultad avanzada — alias de highlight" },
+    "tier_bronze":      { "hex": "#CD7F32", "use": "Achievement tier Bronce" },
+    "tier_silver":      { "hex": "#C0C0C0", "use": "Achievement tier Plata" },
+    "tier_gold":        { "hex": "#FFD700", "use": "Achievement tier Oro" },
+    "tier_diamond":     { "hex": "#B9F2FF", "use": "Achievement tier Diamante — efecto cristal" }
+  },
+
+  "typography": {
+    "display": {
+      "family": "Rajdhani",
+      "role": "Titulares, nombres de rutinas, contadores, valores numéricos grandes, botones CTA principales",
+      "google_fonts": true,
+      "weights": [400, 500, 600, 700],
+      "source": "google_fonts",
+      "url": "https://fonts.google.com/specimen/Rajdhani",
+      "characteristics": "Condensed sans-serif con carácter técnico/deportivo. Excelente para displays grandes y contadores. Alto impacto visual en pesos 600-700."
+    },
+    "body": {
+      "family": "Sora",
+      "role": "Cuerpo de texto, labels, chips, metadata, UI elements secundarios, micro-copy",
+      "google_fonts": true,
+      "weights": [400, 500, 600, 700],
+      "source": "google_fonts",
+      "url": "https://fonts.google.com/specimen/Sora",
+      "characteristics": "Sans-serif geométrico con personalidad. Legible en tamaños pequeños. Peso 600 para labels en uppercase."
+    },
+    "mono": {
+      "family": "JetBrains Mono",
+      "role": "Contadores de tiempo (timer circular), valores numéricos de precisión, cronómetros",
+      "google_fonts": true,
+      "weights": [400, 500, 700],
+      "source": "google_fonts",
+      "url": "https://fonts.google.com/specimen/JetBrains+Mono",
+      "use": "Timers, counters, datos tabulares de rendimiento"
+    }
+  },
+
+  "logo": {
+    "concept": "Letra G con rayo / lightning bolt integrado. Energía, fuerza, electricidad. El rayo atraviesa o reemplaza parte de la G, fusionando el símbolo atlético con la identidad de poder y progreso.",
+    "style": "Bold geometric, esquinas definidas, trazo grueso, minimalista pero con impacto. No redondeado en exceso — el proyecto es intenso, no amigable-genérico.",
+    "variants": ["full_lockup", "isotipo", "mono_white", "mono_black"],
+    "primary_combination": "Lima #ABFF35 sobre fondo negro #0A0A0A",
+    "secondary_combination": "Blanco #FFFFFF sobre fondo negro #0A0A0A",
+    "print_combination": "Negro #0A0A0A sobre fondo blanco",
+    "files_to_generate": [
+      {
+        "name": "logo-full.svg",
+        "use": "Full lockup: isotipo G+rayo a la izquierda + wordmark 'GYMBRO' a la derecha. Colores: lima sobre OLED. Contexto: header de la app, splash screen, about."
+      },
+      {
+        "name": "logo-isotipo.svg",
+        "use": "G+rayo solo, sin wordmark. Colores: lima sobre negro. Contexto: favicon PWA, nav header compacto, notificaciones push."
+      },
+      {
+        "name": "logo-mono-white.svg",
+        "use": "Isotipo + wordmark en blanco puro, sin color. Contexto: impresión sobre fondo oscuro, watermarks sutiles, merchandising negro."
+      },
+      {
+        "name": "logo-mono-black.svg",
+        "use": "Isotipo + wordmark en negro puro. Contexto: impresión sobre fondo claro/blanco, documentos, facturas."
+      }
+    ],
+    "asset_spec": {
+      "width": 800,
+      "height": 800,
+      "bg": "transparent",
+      "formats": ["SVG", "PNG"]
+    },
+    "logo_prompt": "Minimal bold geometric logo: letter G with integrated lightning bolt / electric strike. The bolt cuts through the G creating a unified symbol. Bold strokes, no serifs, no rounded ends — sharp angles. Neon lime green #ABFF35 on black #0A0A0A. Sports/energy/gaming aesthetic. Clean vector style, no gradients, no 3D, no shadows. Wordmark 'GYMBRO' in condensed sans-serif bold caps to the right of the symbol."
+  },
+
+  "image_specs": {
+    "hero": {
+      "purpose": "Splash cinematográfico fullscreen — primera imagen que ve el usuario al abrir la app",
+      "subject": "Atleta en gym oscuro, luz lima neón lateral (key light), expresión de foco/intensidad, detalle de sudor visible, gym equipment difuminado al fondo (barbell, rack, weights)",
+      "style": "Cinematográfico, dramatic side lighting, shallow depth of field, neon lime green accent light, dark moody background OLED-level black, high contrast, editorial quality, sports magazine aesthetic",
+      "aspect_ratio": "9:16 (mobile portrait fullscreen 390x844px)",
+      "color_palette": "OLED black background #0A0A0A, neon lime green key light #ABFF35, deep shadows, no fill light",
+      "mood": "Intenso, premium, motivacional, pre-competencia, concentración total",
+      "file_name": "hero.png",
+      "width": 390,
+      "height": 844,
+      "negative_prompt": "bright ambient lighting, multiple colors, cartoonish, cheesy gym selfie, generic stock photo, smiling friendly, soft light, pastel colors, Instagram filter, gym logo visible, face too sharp/recognizable, text overlay, watermark"
+    },
+    "exercise_thumbnails": {
+      "purpose": "Cards de rutinas estilo magazine — foto de fondo de RoutineCard/WorkoutCard components",
+      "subjects": [
+        "push: bench press o overhead press, atleta en el momento de máximo esfuerzo, luz lateral",
+        "pull: bent-over row o pull-up, espalda definida visible, dramatismo en el movimiento",
+        "legs: squat pesado o deadlift, composición desde abajo hacia arriba (worm's eye), barbell prominente",
+        "fullbody: functional movement o atlas stone carry, silueta completa en acción dinámica"
+      ],
+      "style": "Dark moody photography, lime accent lighting, athletic figures in motion, magazine sports editorial, no smiling — pure focus and effort",
+      "aspect_ratio": "16:9 (landscape, 400x225px para cards)",
+      "color_palette": "OLED black + lime accent fill light",
+      "mood": "Esfuerzo real, no pose perfecta — autenticidad de gym",
+      "count": 4,
+      "negative_prompt": "stock photo quality, multiple colors, cartoonish, gym selfie, smiling, bright studio lighting, text overlay, watermark, logo visible"
+    },
+    "achievement_backgrounds": {
+      "purpose": "Backgrounds opcionales para modales de achievement unlock (baja prioridad MVP)",
+      "style": "Abstract geometric patterns en lima sobre negro, particle burst circular, energía radiante",
+      "count": 0,
+      "note": "No generar en MVP — los achievements usan CSS animations sobre fondo oscuro"
+    }
+  },
+
+  "video_specs": {
+    "hero_loop": {
+      "purpose": "Loop de fondo opcional en splash screen / onboarding — diferencia la app de competidores genéricos",
+      "duration_s": 4,
+      "subject": "Atleta en gym moviéndose en slow motion: rack de pesas, barbell descent en slow-mo, dust/chalk particles flotando, luz lima pulsante sutil",
+      "style": "Cinematográfico, particle dust floating, dynamic motion blur, slow motion 60fps → 24fps output, OLED-level blacks",
+      "aspect_ratio": "9:16",
+      "width": 390,
+      "height": 844,
+      "loop_seamless": true,
+      "codec": "H264",
+      "max_size_mb": 12,
+      "fps": 24,
+      "based_on_image": "hero.png generado por image-agent",
+      "note": "Opcional — solo generar si la performance en gama baja Android es viable (fallback: hero.png estático)"
+    }
+  },
+
+  "motion_principles": {
+    "intensity": "10/10 — stadium cinematic. Sin animaciones decorativas vacías: cada animación tiene propósito emocional o de feedback.",
+    "easing_default": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "easing_bounce": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+    "easing_spring": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+    "duration_instant": "120ms",
+    "duration_fast": "200ms",
+    "duration_base": "300ms",
+    "duration_slow": "400ms",
+    "duration_epic": "800ms",
+    "haptic_visual": "scale(0.96) + glow-primary en active. Escala mayor para elementos más importantes.",
+    "scroll_library": "Lenis (smooth scroll) + GSAP ScrollTrigger",
+    "key_animations": [
+      "counter rolling — odómetro Rajdhani para XP y números que suben",
+      "circular timer SVG stroke-dashoffset — lima a danger en últimos 3s",
+      "achievement unlock sequence — grayscale→color, scale bounce, shine sweep, glow pulse",
+      "level up modal — confetti de partículas lima/highlight + chord sonoro",
+      "screen shake al PR — transform translate(x) 3 veces, haptic intenso",
+      "audio reactive bars en onboarding sound-opt-in",
+      "FAB pulse loop — scale 1→1.03→1 con glow-xl 2s infinite",
+      "tab change bounce — incoming icon scale 0.8→1.1→1 ease-bounce",
+      "card stagger reveal — GSAP stagger 60-80ms fade-in-scale + slide-up",
+      "splash to home — fullscreen transition con clip-path o opacity cascade"
+    ],
+    "prefers_reduced_motion": "Obligatorio: detener todas las animaciones decorativas. Mantener feedback instantáneo (scale tap) y transiciones de estado imprescindibles."
+  },
+
+  "sound_principles": {
+    "engine": "Tone.js + Web Audio API",
+    "default_state": "muted — opt-in explícito en pantalla de onboarding con audio reactive bars como preview",
+    "storage_key": "gymbro_sound_enabled",
+    "key_sounds": [
+      "countdown_beep: G4 sine 30ms cada segundo del timer",
+      "last_3s_ascending: G4→A4→B4 (150ms cada uno) al entrar en últimos 3s",
+      "set_complete_pop: A4+E5 chord 80ms, soft sine",
+      "pr_fanfare: A4+C5+E5+A5 arpeggio ascendente 400ms, triumphant",
+      "level_up_chord: C4+E4+G4+C5 major chord 600ms con reverb",
+      "button_tick: sine 200Hz 50ms, subtle",
+      "achievement_unlock: D4+F#4+A4+D5 fanfare 800ms",
+      "timer_finish: A4+C5+E5 triad 400ms + vibration pattern"
+    ]
+  },
+
+  "platform_targets": {
+    "primary": "PWA mobile-first installable",
+    "stack": "Vite + React 19 + TypeScript + Tailwind v4",
+    "viewport": "390px portrait",
+    "theme": "OLED dark only — sin light mode en MVP",
+    "browser_support": "Chrome 100+, Safari 15+, Firefox 100+",
+    "pwa_install": true,
+    "safe_areas": "Obligatorio — padding con safe-area-inset-top/bottom para notch y home indicator"
+  },
+
+  "asset_specs": {
+    "logo": {
+      "width": 800,
+      "height": 800,
+      "bg": "transparent",
+      "formats": ["SVG", "PNG"]
+    },
+    "hero": {
+      "width": 390,
+      "height": 844,
+      "format": "PNG",
+      "variants": ["portrait_390x844"]
+    },
+    "exercise_thumbnails": {
+      "width": 400,
+      "height": 225,
+      "format": "PNG",
+      "count": 4
+    },
+    "bg_video": {
+      "width": 390,
+      "height": 844,
+      "duration_s": 4,
+      "fps": 24,
+      "loop": true,
+      "codec": "H264",
+      "max_size_mb": 12
+    }
+  },
+
+  "prompt_ingredients": {
+    "style_tags": [
+      "cinematic sports photography",
+      "OLED dark aesthetic",
+      "neon lime green accent lighting",
+      "gym editorial",
+      "dramatic side lighting",
+      "high contrast black and green",
+      "athletic intensity",
+      "magazine sports cover",
+      "shallow depth of field",
+      "moody dark background",
+      "gaming HUD vibes",
+      "Latin American fitness culture"
+    ],
+    "photo_style": "Cinematic dark gym photography with neon lime green side lighting. OLED-level blacks, high contrast, shallow depth of field. Athletes in motion or peak effort. Editorial quality, sports magazine aesthetic. No studio lighting, no smiling — pure intensity and focus.",
+    "logo_style": "Minimal bold geometric letter G with integrated lightning bolt. Sharp angles, no serifs, no roundness. Neon lime #ABFF35 on black. Sports/energy/gaming feel. Clean SVG vector, no gradients.",
+    "avoid_global": "watermark, text overlay, logo visible, UI elements, borders, frame, cartoon, 3D render, multiple competing colors, bright ambient lighting, generic stock photo look, smiling cheerful expression, gym selfie aesthetic, pastel colors, Instagram filter effect"
+  },
+
+  "anti_patterns": [
+    "no usar paletas alternativas — solo el lima #ABFF35 oficial como color de marca",
+    "no light mode en MVP — OLED dark only",
+    "no logos genéricos de gym (mancuernas vista frontal, silueta corriendo) — el logo es la G+rayo o nada",
+    "no fotos con caras demasiado nítidas/reconocibles — preferir siluetas dramáticas o detalles corporales (manos en barra, espalda en movimiento)",
+    "no emojis en producción salvo: llama 🔥 (streak), rayo ⚡ (energía), trofeo 🏆 (achievement)",
+    "no traducir tagline al inglés",
+    "no usar 'gym bro' en inglés — siempre 'gymbro' como una palabra",
+    "no gradientes de colores — solo gradientes de opacidad (negro→transparente para overlays de cards)",
+    "no reemplazar Rajdhani en displays — es parte central de la identidad",
+    "no #888888 para texto debajo de 18px sobre fondo oscuro (falla WCAG)",
+    "no placeholder genéricos picsum/lorem — solo brand assets o SVG/Lottie"
+  ],
+
+  "css_token_reference": {
+    "note": "Tokens completos en /css-foundation/tokens.css y documentados en /.pipeline/css-foundation.md",
+    "key_tokens": {
+      "--color-primary": "#ABFF35",
+      "--color-primary-bright": "#D8FF3D",
+      "--color-primary-dim": "#7ACC1F",
+      "--color-bg": "#0A0A0A",
+      "--color-surface": "#1A1A1A",
+      "--color-surface-elevated": "#2D2D2D",
+      "--color-text": "#FFFFFF",
+      "--color-text-muted": "#888888",
+      "--color-border": "#2D2D2D",
+      "--color-danger": "#FF4D4D",
+      "--color-warning": "#F5DD00",
+      "--font-display": "Rajdhani",
+      "--font-body": "Sora",
+      "--font-mono": "JetBrains Mono"
+    }
+  }
+}

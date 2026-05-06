@@ -1,0 +1,500 @@
+/* ==========================================================================
+   GYMBRO — Design Tokens
+   Tailwind v4 CSS-first (@theme directive)
+   Copiar a: src/styles/tokens.css
+   ========================================================================== */
+
+/* Note: Google Fonts @import is in index.css (must precede @import "tailwindcss") */
+
+@theme {
+
+  /* --------------------------------------------------------------------------
+     COLORS — Paleta oficial Gymbro (OLED dark-only MVP)
+     Lima eléctrico + negro OLED + grises surface
+     -------------------------------------------------------------------------- */
+
+  /* Brand primary */
+  --color-primary:         #ABFF35;   /* Lima eléctrico — CTAs, XP bars, confirmaciones */
+  --color-primary-bright:  #D8FF3D;   /* Acento lima brillante — hovers, estados activos */
+  --color-primary-dim:     #7ACC1F;   /* Lima oscurecido — pressed state, borders activos */
+  --color-highlight:       #F5DD00;   /* Amarillo highlight — warnings, streaks, medallas gold */
+
+  /* Backgrounds (OLED — max contrast con brillo mínimo) */
+  --color-bg:              #0A0A0A;   /* Background principal — OLED negro puro */
+  --color-surface:         #1A1A1A;   /* Surface de cards, sheets */
+  --color-surface-elevated:#2D2D2D;   /* Surface elevated — modales, bottom sheets */
+  --color-surface-hover:   #363636;   /* Surface en hover/pressed */
+
+  /* Text */
+  --color-text:            #FFFFFF;   /* Text primary — AAA sobre bg */
+  --color-text-muted:      #888888;   /* Text muted — labels secundarios, metadata */
+  --color-text-disabled:   #444444;   /* Text deshabilitado */
+  --color-text-inverse:    #0A0A0A;   /* Text sobre fondo lima (botones primary) */
+
+  /* Semantic */
+  --color-success:         #ABFF35;   /* = primary — completado, check */
+  --color-danger:          #FF4D4D;   /* Rojo — destructive, error, PR fallido */
+  --color-danger-dim:      #CC2222;   /* Rojo oscuro — pressed danger */
+  --color-warning:         #F5DD00;   /* = highlight — advertencia, streak en riesgo */
+  --color-info:            #60A5FA;   /* Azul info — tooltips, hints */
+
+  /* Border */
+  --color-border:          #2D2D2D;   /* Border default — = surface-elevated */
+  --color-border-subtle:   #1F1F1F;   /* Border muy sutil — divisores */
+  --color-border-primary:  #ABFF35;   /* Border neon lima — neon-border pattern */
+
+  /* Overlay */
+  --color-overlay:         rgba(0, 0, 0, 0.7);  /* Fondo de modales */
+  --color-scrim:           rgba(0, 0, 0, 0.5);  /* Scrim de bottom sheets */
+
+  /* RGB companions (para alpha compositing con rgba()) */
+  --color-primary-rgb:     171, 255, 53;
+  --color-highlight-rgb:   245, 221, 0;
+  --color-danger-rgb:      255, 77, 77;
+  --color-text-rgb:        255, 255, 255;
+  --color-bg-rgb:          10, 10, 10;
+
+  /* Gamification palette */
+  --color-xp-bar:          #ABFF35;   /* Barra de XP */
+  --color-tier-bronze:     #CD7F32;
+  --color-tier-silver:     #C0C0C0;
+  --color-tier-gold:       #FFD700;
+  --color-tier-diamond:    #B9F2FF;
+  --color-tier-legend:     #ABFF35;   /* Top tier = primary */
+  --color-streak:          #FF6B35;   /* Racha activa — naranja fuego */
+  --color-streak-cold:     #888888;   /* Racha fría */
+
+  /* --------------------------------------------------------------------------
+     TYPOGRAPHY
+     Rajdhani: display, headings, números grandes
+     Sora: body, UI, labels
+     -------------------------------------------------------------------------- */
+
+  --font-display: "Rajdhani", system-ui, sans-serif;
+  --font-body:    "Sora", system-ui, sans-serif;
+  --font-mono:    ui-monospace, "JetBrains Mono", "Fira Code", monospace;
+
+  /* Type scale — mobile-first (390px viewport base)
+     Rajdhani es condensado y denso: admite tamaños más grandes sin saturar el viewport.
+     Sora es más abierta: usar en rangos 12-18px para legibilidad. */
+  --text-xs:       0.75rem;    /* 12px — badges, timestamps, micro labels */
+  --text-sm:       0.875rem;   /* 14px — metadata, secondary labels, captions */
+  --text-base:     1rem;       /* 16px — body copy, UI inputs */
+  --text-lg:       1.125rem;   /* 18px — texto prominente, descripciones */
+  --text-xl:       1.25rem;    /* 20px — subtítulos, section headers */
+  --text-2xl:      1.5rem;     /* 24px — card titles, screen headers */
+  --text-3xl:      1.875rem;   /* 30px — headings de sección */
+  --text-4xl:      2.25rem;    /* 36px — headings principales */
+  --text-5xl:      3rem;       /* 48px — números grandes (peso, sets) */
+  --text-display:  4rem;       /* 64px — hero counters, XP totales, nivel */
+
+  /* Line heights */
+  --leading-tight:   1.2;   /* Headings Rajdhani */
+  --leading-snug:    1.35;  /* Subheadings */
+  --leading-normal:  1.5;   /* Body Sora */
+  --leading-relaxed: 1.625; /* Texto largo, instrucciones */
+
+  /* Letter spacing */
+  --tracking-tight:  -0.02em;  /* Headings grandes */
+  --tracking-normal:  0;
+  --tracking-wide:    0.04em;  /* CAPS labels, badges */
+  --tracking-widest:  0.1em;   /* TIER labels, ALL CAPS UI */
+
+  /* Font weights */
+  --font-normal:    400;
+  --font-medium:    500;
+  --font-semibold:  600;
+  --font-bold:      700;
+
+  /* --------------------------------------------------------------------------
+     SPACING — Base 4px
+     Escala lineal hasta space-6, luego progresión 8px.
+     Gym app: densidad media — suficiente aire para scan rápido en workout.
+     -------------------------------------------------------------------------- */
+
+  --space-0:   0;
+  --space-px:  1px;
+  --space-0-5: 0.125rem;  /* 2px */
+  --space-1:   0.25rem;   /* 4px */
+  --space-2:   0.5rem;    /* 8px */
+  --space-3:   0.75rem;   /* 12px */
+  --space-4:   1rem;      /* 16px — gap base de cards */
+  --space-5:   1.25rem;   /* 20px */
+  --space-6:   1.5rem;    /* 24px — padding interno de cards */
+  --space-8:   2rem;      /* 32px — separación entre secciones cortas */
+  --space-10:  2.5rem;    /* 40px */
+  --space-12:  3rem;      /* 48px — separación entre secciones grandes */
+  --space-16:  4rem;      /* 64px — = bottom nav height */
+  --space-20:  5rem;      /* 80px */
+  --space-24:  6rem;      /* 96px */
+
+  /* Espaciado semántico */
+  --space-section:        2rem;    /* 32px — entre secciones de una misma screen */
+  --space-page-x:         1rem;    /* 16px — padding horizontal de page */
+  --space-page-x-safe:    1.25rem; /* 20px — con safe area mínima lateral */
+  --space-card-padding:   1.25rem; /* 20px — padding interno estándar de card */
+  --space-tap-gap:        0.75rem; /* 12px — gap entre elementos tapeables */
+
+  /* --------------------------------------------------------------------------
+     BORDER RADIUS — Bold + orgánico (tono: energético/consumer)
+     Gym apps modernas: radios generosos para percepción de energía
+     -------------------------------------------------------------------------- */
+
+  --radius-sm:   0.5rem;   /* 8px  — chips, badges, tags */
+  --radius-md:   0.75rem;  /* 12px — botones, inputs */
+  --radius-lg:   1rem;     /* 16px — cards estándar */
+  --radius-xl:   1.5rem;   /* 24px — hero cards, media cards */
+  --radius-2xl:  2rem;     /* 32px — modales, bottom sheets */
+  --radius-3xl:  2.5rem;   /* 40px — surfaces premium */
+  --radius-full: 9999px;   /* pill — avatar, XP bar, botón CTA principal */
+
+  /* --------------------------------------------------------------------------
+     SHADOWS — Cinematic dark + neon glow para acentos
+     Dark app: sombras sutiles (black on black no aporta) +
+     glow neon en elementos de acción/logro.
+     -------------------------------------------------------------------------- */
+
+  /* Sombras de elevación */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5), 0 4px 8px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 16px 40px rgba(0, 0, 0, 0.6), 0 8px 16px rgba(0, 0, 0, 0.4);
+
+  /* Glow neon lima — para CTAs, XP bars, achievements */
+  --shadow-glow-primary:        0 0 16px rgba(171, 255, 53, 0.35);
+  --shadow-glow-primary-strong: 0 0 32px rgba(171, 255, 53, 0.55), 0 0 64px rgba(171, 255, 53, 0.2);
+  --shadow-glow-primary-xl:     0 0 48px rgba(171, 255, 53, 0.7), 0 0 96px rgba(171, 255, 53, 0.3);
+
+  /* Glow highlight amarillo — streaks, logros gold */
+  --shadow-glow-highlight:      0 0 16px rgba(245, 221, 0, 0.45);
+  --shadow-glow-highlight-strong: 0 0 32px rgba(245, 221, 0, 0.6);
+
+  /* Glow danger — errores, falls */
+  --shadow-glow-danger:         0 0 16px rgba(255, 77, 77, 0.4);
+
+  /* Inner glow para XP bar fill */
+  --shadow-glow-inner-primary:  inset 0 0 8px rgba(171, 255, 53, 0.3);
+
+  /* --------------------------------------------------------------------------
+     MOTION — Tono: enérgico/gamificado
+     Transiciones rápidas + bounce ocasional para logros.
+     GSAP/Framer manejan las animaciones complejas — estas variables son para
+     CSS transitions en micro-interactions y estados hover/focus/active.
+     -------------------------------------------------------------------------- */
+
+  /* Curvas de easing */
+  --ease-out:      cubic-bezier(0.16, 1, 0.3, 1);      /* Entrada rápida, salida suave — usado en slide-up, reveals */
+  --ease-in:       cubic-bezier(0.4, 0, 1, 1);          /* Salidas, dismiss */
+  --ease-in-out:   cubic-bezier(0.65, 0, 0.35, 1);      /* Transiciones de estado bidireccionales */
+  --ease-bounce:   cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Logros, level-up, confirmaciones */
+  --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);   /* Micro-interactions táctiles */
+
+  /* Duraciones */
+  --duration-instant:    100ms;  /* Feedback táctil inmediato (scale active) */
+  --duration-fast:       150ms;  /* Hover states, color transitions */
+  --duration-base:       250ms;  /* Transiciones de estado UI */
+  --duration-slow:       400ms;  /* Slide-up, reveals de cards */
+  --duration-very-slow:  600ms;  /* Level-up modal, route transitions */
+  --duration-epic:       1200ms; /* Animaciones de achievement, splash */
+
+  /* Stagger para listas/grids */
+  --stagger-xs: 40ms;   /* Listas densas (set rows) */
+  --stagger-sm: 60ms;   /* Cards de ejercicio */
+  --stagger-md: 100ms;  /* Secciones de dashboard */
+
+  /* --------------------------------------------------------------------------
+     Z-INDEX — Escala nombrada y centralizada
+     Nunca usar números z-index directos — referenciar estas variables.
+     -------------------------------------------------------------------------- */
+
+  --z-base:        0;
+  --z-raised:      10;    /* Cards elevadas sobre fondo */
+  --z-sticky:      20;    /* Headers sticky dentro de scroll */
+  --z-floating:    30;    /* FAB, floating buttons */
+  --z-bottom-nav:  50;    /* Bottom navigation bar */
+  --z-sheet:       60;    /* Bottom sheets */
+  --z-modal:       100;   /* Modales */
+  --z-toast:       200;   /* Toast notifications */
+  --z-loader:      300;   /* Full-screen loader, splash */
+  --z-top:         9999;  /* Overlay de nivel máximo */
+
+  /* --------------------------------------------------------------------------
+     LAYOUT — Mobile-first PWA
+     -------------------------------------------------------------------------- */
+
+  /* Safe areas (iOS notch + home indicator) */
+  --safe-area-top:    env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-left:   env(safe-area-inset-left, 0px);
+  --safe-area-right:  env(safe-area-inset-right, 0px);
+
+  /* Chrome fija de la app */
+  --bottom-nav-height: 4rem;    /* 64px */
+  --header-height:     3.5rem;  /* 56px */
+  --status-bar-height: 2.75rem; /* 44px — barra de status iOS estimada */
+
+  /* Contenedores */
+  --container-xs:  360px;  /* iPhone SE */
+  --container-sm:  480px;  /* Max width de la app */
+  --container-md:  768px;  /* Tablet portrait */
+  --container-lg:  1024px; /* Tablet landscape */
+  --container-xl:  1280px; /* Desktop (mejora, no break) */
+
+  /* --------------------------------------------------------------------------
+     BREAKPOINTS — Tailwind v4
+     -------------------------------------------------------------------------- */
+
+  --breakpoint-xs: 360px;
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
+  /* --------------------------------------------------------------------------
+     COMPONENTES — Variables semánticas por componente
+     Naming convention: --{component}-{state}-{property}
+     -------------------------------------------------------------------------- */
+
+  /* Botón primary */
+  --btn-primary-bg:           #ABFF35;
+  --btn-primary-color:        #0A0A0A;
+  --btn-primary-hover-bg:     #D8FF3D;
+  --btn-primary-active-bg:    #7ACC1F;
+  --btn-primary-shadow:       0 0 16px rgba(171, 255, 53, 0.35);
+  --btn-primary-active-shadow:0 0 4px rgba(171, 255, 53, 0.2);
+
+  /* Botón secondary */
+  --btn-secondary-bg:         #2D2D2D;
+  --btn-secondary-color:      #FFFFFF;
+  --btn-secondary-hover-bg:   #363636;
+  --btn-secondary-border:     #2D2D2D;
+
+  /* Botón danger */
+  --btn-danger-bg:            #FF4D4D;
+  --btn-danger-color:         #FFFFFF;
+  --btn-danger-hover-bg:      #FF6666;
+  --btn-danger-active-bg:     #CC2222;
+
+  /* Input */
+  --input-bg:               #1A1A1A;
+  --input-border:           #2D2D2D;
+  --input-focus-border:     #ABFF35;
+  --input-focus-shadow:     0 0 0 2px rgba(171, 255, 53, 0.2);
+  --input-color:            #FFFFFF;
+  --input-placeholder-color:#444444;
+
+  /* Card */
+  --card-bg:                #1A1A1A;
+  --card-border:            #2D2D2D;
+  --card-hover-border:      #ABFF35;
+  --card-hover-shadow:      0 0 16px rgba(171, 255, 53, 0.15);
+  --card-radius:            var(--radius-lg);
+
+  /* XP Bar */
+  --xp-bar-bg:              #2D2D2D;
+  --xp-bar-fill:            #ABFF35;
+  --xp-bar-glow:            0 0 8px rgba(171, 255, 53, 0.5);
+  --xp-bar-radius:          var(--radius-full);
+
+  /* Bottom Nav */
+  --nav-bg:                 rgba(10, 10, 10, 0.92);
+  --nav-backdrop-blur:      12px;
+  --nav-border-top:         1px solid #2D2D2D;
+  --nav-item-color:         #444444;
+  --nav-item-active-color:  #ABFF35;
+  --nav-item-active-bg:     rgba(171, 255, 53, 0.08);
+
+  /* Badge / Chip */
+  --badge-default-bg:       #2D2D2D;
+  --badge-default-color:    #888888;
+  --badge-primary-bg:       rgba(171, 255, 53, 0.12);
+  --badge-primary-color:    #ABFF35;
+  --badge-danger-bg:        rgba(255, 77, 77, 0.12);
+  --badge-danger-color:     #FF4D4D;
+  --badge-warning-bg:       rgba(245, 221, 0, 0.12);
+  --badge-warning-color:    #F5DD00;
+
+  /* Rest Timer */
+  --timer-track-color:      #2D2D2D;
+  --timer-progress-color:   #ABFF35;
+  --timer-glow:             0 0 20px rgba(171, 255, 53, 0.4);
+
+  /* Heatmap (Stats 365d) */
+  --heatmap-empty:          #1A1A1A;
+  --heatmap-level-1:        rgba(171, 255, 53, 0.2);
+  --heatmap-level-2:        rgba(171, 255, 53, 0.4);
+  --heatmap-level-3:        rgba(171, 255, 53, 0.65);
+  --heatmap-level-4:        #ABFF35;
+
+  /* Tier BRO colors */
+  --tier-rookie-color:      #888888;
+  --tier-gym-rat-color:     #CD7F32;
+  --tier-lifter-color:      #C0C0C0;
+  --tier-beast-color:       #FFD700;
+  --tier-goat-color:        #ABFF35;
+
+}
+
+/* ==========================================================================
+   LIGHT MODE OVERRIDES
+   Only color tokens are overridden — typography, spacing, motion stay the same.
+   --color-primary-bright: #ABFF35 remains for backgrounds / fills / glows.
+   --color-primary: #5C9914 (dark lime) for text / icons on white (5.4:1 contrast).
+   ========================================================================== */
+
+[data-theme="light"] {
+
+  /* Surfaces */
+  --color-bg:               #FAFAFA;
+  --color-surface:          #FFFFFF;
+  --color-surface-elevated: #FFFFFF;
+  --color-surface-hover:    #F0F0F0;
+
+  /* Text */
+  --color-text:             #0A0A0A;
+  --color-text-muted:       #666666;
+  --color-text-disabled:    #BBBBBB;
+  --color-text-inverse:     #FFFFFF;
+
+  /* Borders */
+  --color-border:           #E5E5E5;
+  --color-border-subtle:    #F0F0F0;
+  --color-border-primary:   #5C9914;
+
+  /* Brand — adjusted for white backgrounds */
+  --color-primary:          #5C9914;   /* dark lime — text/icons on white, 5.4:1 */
+  --color-primary-bright:   #ABFF35;   /* original lima — backgrounds, fills, glows */
+  --color-primary-dim:      #3D7C0F;
+
+  /* Accent */
+  --color-highlight:        #B89800;   /* dark amber — replaces F5DD00 on white */
+  --color-accent:           #5C9914;
+
+  /* Semantic */
+  --color-success:          #5C9914;
+  --color-danger:           #CC2618;
+  --color-danger-dim:       #A31F0F;
+  --color-warning:          #B89800;
+  --color-info:             #1D70B0;
+
+  /* Overlay */
+  --color-overlay:          rgba(0, 0, 0, 0.45);
+  --color-scrim:            rgba(0, 0, 0, 0.3);
+
+  /* RGB companions */
+  --color-primary-rgb:      92, 153, 20;
+  --color-highlight-rgb:    184, 152, 0;
+  --color-danger-rgb:       204, 38, 24;
+  --color-text-rgb:         10, 10, 10;
+  --color-bg-rgb:           250, 250, 250;
+
+  /* Gamification palette (keep tier/streak colors as-is — they're always on colored backgrounds) */
+  --color-xp-bar:           #5C9914;
+
+  /* Shadows — visible on light backgrounds */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 16px 40px rgba(0, 0, 0, 0.15), 0 8px 16px rgba(0, 0, 0, 0.08);
+
+  /* Glow neon — use dark lime color for shadows */
+  --shadow-glow-primary:        0 0 24px rgba(92, 153, 20, 0.25);
+  --shadow-glow-primary-strong: 0 0 32px rgba(92, 153, 20, 0.35);
+  --shadow-glow-primary-xl:     0 0 48px rgba(92, 153, 20, 0.45);
+  --shadow-glow-highlight:      0 0 16px rgba(184, 152, 0, 0.3);
+  --shadow-glow-highlight-strong: 0 0 32px rgba(184, 152, 0, 0.4);
+  --shadow-glow-danger:         0 0 16px rgba(204, 38, 24, 0.35);
+  --shadow-glow-inner-primary:  inset 0 0 8px rgba(92, 153, 20, 0.2);
+
+  /* Component overrides */
+
+  /* Button primary — still lima-bright bg, keeps high contrast (black text on #ABFF35 = 10:1) */
+  --btn-primary-bg:           #ABFF35;
+  --btn-primary-color:        #0A0A0A;
+  --btn-primary-hover-bg:     #C8FF4A;
+  --btn-primary-active-bg:    #8FCC1A;
+  --btn-primary-shadow:       0 0 16px rgba(92, 153, 20, 0.3);
+  --btn-primary-active-shadow:0 0 4px rgba(92, 153, 20, 0.2);
+
+  /* Button secondary — white bg, dark lime border/text */
+  --btn-secondary-bg:         #FFFFFF;
+  --btn-secondary-color:      #0A0A0A;
+  --btn-secondary-hover-bg:   #F0F0F0;
+  --btn-secondary-border:     #E5E5E5;
+
+  /* Input */
+  --input-bg:               #FFFFFF;
+  --input-border:           #E5E5E5;
+  --input-focus-border:     #5C9914;
+  --input-focus-shadow:     0 0 0 2px rgba(92, 153, 20, 0.2);
+  --input-color:            #0A0A0A;
+  --input-placeholder-color:#BBBBBB;
+
+  /* Card */
+  --card-bg:                #FFFFFF;
+  --card-border:            #E5E5E5;
+  --card-hover-border:      #5C9914;
+  --card-hover-shadow:      0 0 16px rgba(92, 153, 20, 0.15);
+
+  /* XP Bar */
+  --xp-bar-bg:              #E5E5E5;
+  --xp-bar-fill:            #5C9914;
+  --xp-bar-glow:            0 0 8px rgba(92, 153, 20, 0.4);
+
+  /* Bottom Nav */
+  --nav-bg:                 rgba(255, 255, 255, 0.92);
+  --nav-border-top:         1px solid #E5E5E5;
+  --nav-item-color:         #BBBBBB;
+  --nav-item-active-color:  #5C9914;
+  --nav-item-active-bg:     rgba(92, 153, 20, 0.08);
+
+  /* Badge / Chip */
+  --badge-default-bg:       #F0F0F0;
+  --badge-default-color:    #666666;
+  --badge-primary-bg:       rgba(92, 153, 20, 0.1);
+  --badge-primary-color:    #5C9914;
+  --badge-danger-bg:        rgba(204, 38, 24, 0.1);
+  --badge-danger-color:     #CC2618;
+  --badge-warning-bg:       rgba(184, 152, 0, 0.1);
+  --badge-warning-color:    #B89800;
+
+  /* Rest Timer */
+  --timer-track-color:      #E5E5E5;
+  --timer-progress-color:   #5C9914;
+  --timer-glow:             0 0 20px rgba(92, 153, 20, 0.3);
+
+  /* Heatmap — lighter empty cell for light backgrounds */
+  --heatmap-empty:          #F0F0F0;
+  --heatmap-level-1:        rgba(92, 153, 20, 0.2);
+  --heatmap-level-2:        rgba(92, 153, 20, 0.4);
+  --heatmap-level-3:        rgba(92, 153, 20, 0.65);
+  --heatmap-level-4:        #5C9914;
+
+  /* ── LIGHT MODE VIBRANTE — Aurora multi-color palette ──────
+     Used for aurora blobs, gradient text, rainbow borders,
+     animated buttons, multi-color particles. Light mode ONLY. */
+  --color-accent-cyan:      #00D9E5;  /* cyan eléctrico — second accent */
+  --color-accent-magenta:   #FF2D9C;  /* magenta — third accent (sparingly) */
+  --color-accent-orange:    #FF7B00;  /* orange — energy moments */
+  --color-aurora-1:         #ABFF35;  /* lima brillante */
+  --color-aurora-2:         #00D9E5;  /* cyan */
+  --color-aurora-3:         #FF2D9C;  /* magenta */
+
+  /* RGB companions for aurora (alpha compositing) */
+  --color-aurora-1-rgb:     171, 255, 53;
+  --color-aurora-2-rgb:     0, 217, 229;
+  --color-aurora-3-rgb:     255, 45, 156;
+
+  /* Glassmorphism card (light mode) */
+  --card-glass-bg:          rgba(255, 255, 255, 0.7);
+  --card-glass-border:      rgba(255, 255, 255, 0.5);
+  --card-glass-shadow:      0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --card-glass-blur:        20px;
+
+  /* Gradient text (light mode headlines) */
+  --gradient-text-light:    linear-gradient(135deg, #5C9914 0%, #00B5BF 50%, #5C9914 100%);
+  --gradient-text-light-bg-size: 200% 100%;
+
+  /* Button gradient animated (light mode primary) */
+  --btn-primary-gradient-light: linear-gradient(135deg, var(--color-aurora-1) 0%, var(--color-aurora-2) 50%, var(--color-aurora-1) 100%);
+}

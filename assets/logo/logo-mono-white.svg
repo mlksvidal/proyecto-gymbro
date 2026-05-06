@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 100" role="img" aria-label="Proyecto Gymbro — White">
+  <title>Proyecto Gymbro (mono white)</title>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&amp;display=swap');
+      .wordmark { font-family: 'Rajdhani', 'DIN Condensed', 'Impact', sans-serif; font-weight: 700; }
+    </style>
+  </defs>
+  <!--
+    Mono white variant: all white (#FFFFFF) — for printing on dark backgrounds,
+    watermarks on dark surfaces, merchandising on black.
+    Use on any dark background.
+  -->
+  <g fill="#FFFFFF">
+    <rect x="6" y="6" width="16" height="88"/>
+    <rect x="22" y="6" width="36" height="16"/>
+    <rect x="22" y="78" width="52" height="16"/>
+    <rect x="58" y="54" width="16" height="40"/>
+    <rect x="42" y="54" width="32" height="16"/>
+    <polygon points="58,6 94,6 94,22 80,22 90,54 74,54 44,54 54,22"/>
+  </g>
+  <text
+    x="116"
+    y="76"
+    class="wordmark"
+    font-size="72"
+    letter-spacing="2"
+    fill="#FFFFFF"
+    text-anchor="start"
+    dominant-baseline="auto"
+  >GYMBRO</text>
+</svg>
