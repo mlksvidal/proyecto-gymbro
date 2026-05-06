@@ -1,20 +1,28 @@
 // ============================================================
-// GYMBRO — WorkoutSummary Page (T26)
+// GYMBRO — WorkoutSummary Page (T26 + Sprint 15)
 // Route: /workout/summary
-// XP counter + confetti on level up
+// XP counter + confetti on level up + Instagram Story sticker
 // ============================================================
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, lazy, Suspense } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Trophy, Clock, Zap, BarChart3, Check, Home } from 'lucide-react'
+import { Trophy, Clock, Zap, BarChart3, Check, Home, Camera } from 'lucide-react'
 import confetti from 'canvas-confetti'
 import { getTierForXP, getXPBreakdown } from '@/lib/xp'
+import { getTierForXP as getTierFullInfo } from '@/lib/tiers'
 import { useUserStore } from '@/store/userStore'
 import { useAudio } from '@/hooks/useAudio'
+import { useCurrentStreak } from '@/hooks/useDb'
+import { haptics } from '@/lib/haptics'
 import { CounterRolling } from '@/components/ui/CounterRolling'
 import { Button } from '@/components/ui/Button'
 import type { Workout } from '@/types'
+
+// Lazy load the share modal — only loaded when user taps share button
+const ShareStickerModal = lazy(() =>
+  import('@/components/share/ShareStickerModal').then((m) => ({ default: m.ShareStickerModal }))
+)
 
 // ── Level up modal ────────────────────────────────────────────
 function LevelUpModal({
@@ -134,9 +142,11 @@ export default function WorkoutSummary() {
   const { addXP, currentUser } = useUserStore()
   const totalXP = currentUser?.xp ?? 0
   const { play } = useAudio()
+  const streak = useCurrentStreak()
 
   const [showLevelUp, setShowLevelUp] = useState(false)
   const [xpAnimationDone, setXpAnimationDone] = useState(false)
+  const [showShareModal, setShowShareModal] = useState(false)
   const processedRef = useRef(false)
 
   const state = location.state as { workout: Workout; xpEarned: number; prCount?: number } | null
@@ -199,6 +209,27 @@ export default function WorkoutSummary() {
   const durationStr = workout.durationMinutes
     ? `${workout.durationMinutes}min`
     : 'Completado'
+
+  // Sticker data — computed from workout + current user state
+  const tierInfo = getTierFullInfo(totalXP + xpEarned)
+  const stickerData = {
+    routineName: workout.routineName,
+    dayName: workout.dayName,
+    volume: workout.totalVolumeKg,
+    durationMinutes: workout.durationMinutes ?? 0,
+    setsCompleted: workout.setsCompleted,
+    xpGained: xpEarned,
+    prCount,
+    streak,
+    tierName: tierInfo.name,
+    tierLevel: tierInfo.level,
+  }
+
+  const handleOpenShare = () => {
+    haptics.confirm()
+    play('success').catch(() => {})
+    setShowShareModal(true)
+  }
 
   return (
     <div className="flex flex-col min-h-[100dvh] bg-[var(--color-bg)] px-4 pb-safe">
@@ -371,28 +402,42 @@ export default function WorkoutSummary() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="flex gap-3 mt-auto pb-8"
+        className="flex flex-col gap-3 mt-auto"
         style={{ paddingBottom: 'max(32px, env(safe-area-inset-bottom))' }}
       >
-        <Button
-          variant="secondary"
-          size="lg"
-          fullWidth
-          onClick={() => navigate('/stats')}
-        >
-          <BarChart3 size={16} />
-          VER STATS
-        </Button>
-
+        {/* Share to Instagram — primary CTA */}
         <Button
           variant="primary"
           size="lg"
           fullWidth
-          onClick={() => navigate('/')}
+          onClick={handleOpenShare}
         >
-          <Home size={16} />
-          INICIO
+          <Camera size={18} />
+          COMPARTIR EN HISTORIA
         </Button>
+
+        {/* Secondary actions row */}
+        <div className="flex gap-3">
+          <Button
+            variant="secondary"
+            size="lg"
+            fullWidth
+            onClick={() => navigate('/stats')}
+          >
+            <BarChart3 size={16} />
+            VER STATS
+          </Button>
+
+          <Button
+            variant="secondary"
+            size="lg"
+            fullWidth
+            onClick={() => navigate('/')}
+          >
+            <Home size={16} />
+            INICIO
+          </Button>
+        </div>
       </motion.div>
 
       {/* Level Up Modal */}
@@ -403,6 +448,15 @@ export default function WorkoutSummary() {
           onDismiss={() => setShowLevelUp(false)}
         />
       )}
+
+      {/* Instagram Story Sticker Modal — lazy loaded */}
+      <Suspense fallback={null}>
+        <ShareStickerModal
+          open={showShareModal}
+          onClose={() => setShowShareModal(false)}
+          data={stickerData}
+        />
+      </Suspense>
     </div>
   )
 }

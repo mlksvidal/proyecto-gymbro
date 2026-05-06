@@ -50,3 +50,4 @@ coverage/
 # PWA generated
 sw.js
 workbox-*.js
+.vercel
