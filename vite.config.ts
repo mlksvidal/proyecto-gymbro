@@ -46,6 +46,12 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        // Force new SW to take control immediately — fixes "old version cached"
+        // on iOS Safari standalone PWA after deploy
+        skipWaiting: true,
+        clientsClaim: true,
+        // Clean up obsolete caches from prior deploys
+        cleanupOutdatedCaches: true,
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
