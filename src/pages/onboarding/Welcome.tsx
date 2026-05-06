@@ -395,8 +395,14 @@ export default function Welcome() {
         aria-hidden="true"
       />
 
-      {/* Hero logo area */}
-      <div className="relative flex flex-col items-center pt-[12vh] gap-5 px-6" style={{ zIndex: 10 }}>
+      {/* Hero logo area — safe-area-inset-top + 16px breathing room (Dynamic Island ~47px) */}
+      <div
+        className="relative flex flex-col items-center gap-5 px-6"
+        style={{
+          zIndex: 10,
+          paddingTop: 'max(32px, calc(env(safe-area-inset-top, 0px) + 16px))',
+        }}
+      >
         <picture>
           <source srcSet="/images/logo-hero.webp" type="image/webp" />
           <img
@@ -447,8 +453,12 @@ export default function Welcome() {
       {/* CTA */}
       <div
         ref={btnRef}
-        className="relative w-full px-6 pb-[max(2.5rem,env(safe-area-inset-bottom,0px))] pt-8 flex flex-col items-center gap-3"
-        style={{ opacity: 1, zIndex: 10 }}
+        className="relative w-full px-6 pt-8 flex flex-col items-center gap-3"
+        style={{
+          paddingBottom: 'max(2rem, calc(env(safe-area-inset-bottom, 0px) + 24px))',
+          opacity: 1,
+          zIndex: 10,
+        }}
       >
         <Button
           variant="primary"

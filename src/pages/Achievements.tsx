@@ -97,12 +97,14 @@ export default function Achievements() {
 
       {/* Header */}
       <div
-        className="sticky top-0 z-10 flex items-center gap-3 px-4 h-14"
+        className="sticky top-0 z-10 flex items-center gap-3 px-4"
         style={{
           background: 'rgba(10,10,10,0.92)',
           backdropFilter: 'blur(12px)',
           borderBottom: '1px solid var(--color-border)',
-          paddingTop: 'env(safe-area-inset-top)',
+          paddingTop: 'max(12px, env(safe-area-inset-top, 0px))',
+          paddingBottom: '12px',
+          minHeight: '56px',
         }}
       >
         <button

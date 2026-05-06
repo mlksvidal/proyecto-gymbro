@@ -301,7 +301,6 @@ export default function Goal() {
   return (
     <div
       className="relative min-h-[100dvh] flex flex-col bg-[var(--color-bg)] overflow-hidden"
-      style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom, 0px))' }}
     >
       {/* ── Interactive particle background ── */}
       <InteractiveBackground particleCount={35} />
@@ -339,8 +338,8 @@ export default function Goal() {
 
       {/* ── Content ── */}
       <div className="relative z-10 flex flex-col flex-1">
-        {/* Progress dots */}
-        <div className="flex justify-center pt-[max(1.5rem,env(safe-area-inset-top,0px))] pb-2">
+        {/* Progress dots — safe-area-inset-top + 12px buffer for Dynamic Island */}
+        <div className="flex justify-center pb-2" style={{ paddingTop: 'max(1.5rem, calc(env(safe-area-inset-top, 0px) + 12px))' }}>
           <ProgressDots total={4} current={2} />
         </div>
 
@@ -454,7 +453,10 @@ export default function Goal() {
         )}
 
         {/* CTA */}
-        <div className="px-6 pt-2 mt-auto">
+        <div
+          className="px-6 pt-2 mt-auto"
+          style={{ paddingBottom: 'max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 16px))' }}
+        >
           <MagneticButton enabled={!!selected} onClick={handleNext} />
         </div>
       </div>

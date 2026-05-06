@@ -25,8 +25,9 @@ export function AppShell() {
             ? 'flex-1 overflow-y-auto overflow-x-hidden app-main--workout relative'
             : 'flex-1 overflow-y-auto overflow-x-hidden app-main relative'
         }
+        style={{ overscrollBehaviorX: 'none' }}
       >
-        <div className="mx-auto w-full max-w-[480px] relative min-h-full">
+        <div className="mx-auto w-full max-w-[480px] relative min-h-full overflow-x-hidden">
           <Outlet />
         </div>
       </main>

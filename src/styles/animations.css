@@ -1064,6 +1064,27 @@
 }
 
 /* ==========================================================================
+   SPRINT 16 — SAFE AREA UTILITIES
+   Utility classes for consistent safe-area padding across all screens.
+   Dynamic Island (iPhone 14+) has ~47px safe-area-inset-top.
+   ========================================================================== */
+
+/* Top padding: safe-area-inset-top + 12px extra breathing room */
+.safe-top-pad {
+  padding-top: max(16px, calc(env(safe-area-inset-top, 0px) + 12px));
+}
+
+/* Bottom padding: safe-area-inset-bottom + 16px extra */
+.safe-bottom-pad {
+  padding-bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 16px));
+}
+
+/* Bottom padding accounting for bottom nav (64px) + safe area */
+.safe-bottom-pad-with-nav {
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+}
+
+/* ==========================================================================
    REDUCED MOTION OVERRIDES — Sprint 12 additions
    ========================================================================== */
 

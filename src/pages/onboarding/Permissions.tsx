@@ -319,7 +319,6 @@ export default function Permissions() {
   return (
     <div
       className="relative min-h-[100dvh] flex flex-col bg-[var(--color-bg)] overflow-hidden"
-      style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom, 0px))' }}
     >
       {/* ── Interactive particle background ── */}
       <InteractiveBackground particleCount={35} />
@@ -357,8 +356,8 @@ export default function Permissions() {
 
       {/* ── Content ── */}
       <div className="relative z-10 flex flex-col flex-1">
-        {/* Progress */}
-        <div className="flex justify-center pt-[max(1.5rem,env(safe-area-inset-top,0px))] pb-2">
+        {/* Progress — safe-area-inset-top + 12px buffer for Dynamic Island */}
+        <div className="flex justify-center pb-2" style={{ paddingTop: 'max(1.5rem, calc(env(safe-area-inset-top, 0px) + 12px))' }}>
           <ProgressDots total={4} current={4} />
         </div>
 
@@ -609,7 +608,10 @@ export default function Permissions() {
         </div>
 
         {/* CTA */}
-        <div className="px-6 mt-auto">
+        <div
+          className="px-6 mt-auto"
+          style={{ paddingBottom: 'max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 16px))' }}
+        >
           <MagneticCTA onClick={handleFinish} loading={loading} />
         </div>
       </div>

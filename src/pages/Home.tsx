@@ -375,11 +375,13 @@ function HomeHeader() {
 
   return (
     <header
-      className="sticky top-0 z-[var(--z-sticky)] flex items-center justify-between px-4 py-3"
+      className="sticky top-0 z-[var(--z-sticky)] flex items-center justify-between px-4"
       style={{
         background: 'color-mix(in srgb, var(--color-bg) 90%, transparent)',
         backdropFilter: 'blur(8px)',
         WebkitBackdropFilter: 'blur(8px)',
+        paddingTop: 'max(14px, calc(env(safe-area-inset-top, 0px) + 10px))',
+        paddingBottom: '12px',
       }}
     >
       <div>
@@ -474,7 +476,7 @@ export default function Home() {
   const isLight = resolvedTheme === 'light'
 
   return (
-    <div className="flex flex-col h-full relative overflow-hidden">
+    <div className="flex flex-col h-full relative overflow-x-hidden">
       {/* Aurora background — light mode only (handled internally by AuroraBackground) */}
       <AuroraBackground zIndex={0} />
 
@@ -487,13 +489,13 @@ export default function Home() {
         </div>
       )}
 
-      <div className="relative flex flex-col h-full" style={{ zIndex: 1 }}>
-        {/* Motivational marquee banner */}
+      <div className="relative flex flex-col h-full overflow-x-hidden" style={{ zIndex: 1 }}>
+        {/* Motivational marquee banner — overflow-hidden contains the scrolling track */}
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="overflow-hidden"
+          className="overflow-hidden w-full"
           style={{ borderBottom: '1px solid rgba(171,255,53,0.08)' }}
           aria-hidden="true"
         >
@@ -525,7 +527,8 @@ export default function Home() {
         <PullToRefresh onRefresh={fakeRefresh} className="flex-1">
           <main
             id="main-content"
-            className="flex flex-col gap-4 px-4 pt-2 pb-6"
+            className="flex flex-col gap-4 px-4 pt-2"
+            style={{ paddingBottom: 'max(24px, calc(env(safe-area-inset-bottom, 0px) + 16px))' }}
           >
             {/* Stat cards row — stagger entrance */}
             <section aria-label="Estadísticas rápidas" className="flex gap-3">

@@ -451,7 +451,7 @@ export default function Profile() {
       </div>
 
       {/* Safe area top */}
-      <div style={{ paddingTop: 'max(16px, env(safe-area-inset-top))' }} />
+      <div style={{ paddingTop: 'max(16px, calc(env(safe-area-inset-top, 0px) + 8px))' }} />
 
       <div className="relative space-y-5 px-4" style={{ zIndex: 1 }}>
         {/* ── Profile Hero Cinema ───────────────────────── */}

@@ -30,7 +30,7 @@ export function Marquee({
 
   return (
     <div
-      className={`marquee-container overflow-hidden whitespace-nowrap select-none ${className ?? ''}`}
+      className={`marquee-container overflow-hidden whitespace-nowrap select-none w-full ${className ?? ''}`}
       style={style}
       aria-hidden="true"
     >

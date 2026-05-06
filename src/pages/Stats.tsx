@@ -183,11 +183,12 @@ export default function Stats() {
 
       {/* Header */}
       <div
-        className="sticky top-0 z-10 flex items-center gap-2 py-4 -mx-4 px-4"
+        className="sticky top-0 z-10 flex items-center gap-2 -mx-4 px-4"
         style={{
           background: 'color-mix(in srgb, var(--color-bg) 92%, transparent)',
           backdropFilter: 'blur(12px)',
-          paddingTop: 'max(16px, env(safe-area-inset-top))',
+          paddingTop: 'max(16px, calc(env(safe-area-inset-top, 0px) + 8px))',
+          paddingBottom: '14px',
         }}
       >
         <BarChart3 size={20} style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
