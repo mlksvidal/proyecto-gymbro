@@ -242,7 +242,7 @@ export function RestTimer({
       {/* OMITIR DESCANSO — ghost lima button */}
       <button
         onClick={onSkip}
-        className="mt-5 px-8 rounded-2xl text-[14px] font-semibold transition-all active:scale-95 min-h-[44px] flex items-center justify-center"
+        className="mt-9 px-8 rounded-2xl text-[14px] font-semibold transition-all active:scale-95 min-h-[44px] flex items-center justify-center"
         style={{
           fontFamily: 'var(--font-display)',
           background: 'transparent',

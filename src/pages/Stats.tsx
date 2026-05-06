@@ -207,7 +207,7 @@ export default function Stats() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: 'easeOut' }}
           ref={tabsRef}
-          className="relative flex gap-0 p-1 rounded-2xl"
+          className="relative flex gap-px p-1 rounded-2xl"
           style={{ background: 'var(--color-surface)' }}
           role="tablist"
           aria-label="Período de estadísticas"

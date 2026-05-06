@@ -650,7 +650,7 @@ export default function Profile() {
           </p>
           <button
             onClick={handleOpenReset}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-[var(--font-body)] font-semibold w-full justify-center transition-all duration-200 active:scale-95"
+            className="flex items-center gap-2 px-4 rounded-xl text-[13px] font-[var(--font-body)] font-semibold w-full justify-center transition-all duration-200 active:scale-95 min-h-[44px]"
             style={{
               background: 'rgba(255,59,48,0.12)',
               color: 'rgba(255,59,48,0.9)',

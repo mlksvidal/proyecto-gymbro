@@ -383,7 +383,7 @@ export default function Experience() {
 
         {/* Cards */}
         <div
-          className="flex flex-col gap-2.5 px-6 pb-3"
+          className="flex flex-col gap-3 px-6 pb-3"
           role="radiogroup"
           aria-label="Nivel de experiencia"
         >

@@ -231,7 +231,7 @@ export default function Achievements() {
               key={f}
               onClick={() => handleFilterChange(f)}
               whileTap={{ scale: 0.95 }}
-              className="flex-shrink-0 px-4 py-2 rounded-full text-[11px] font-semibold uppercase tracking-wider transition-all duration-200"
+              className="flex-shrink-0 px-4 rounded-full text-[11px] font-semibold uppercase tracking-wider transition-all duration-200 min-h-[44px] flex items-center justify-center"
               style={{
                 fontFamily: 'var(--font-display)',
                 letterSpacing: '0.08em',

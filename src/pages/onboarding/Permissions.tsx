@@ -609,7 +609,7 @@ export default function Permissions() {
 
         {/* CTA */}
         <div
-          className="px-6 mt-auto"
+          className="px-6 mt-auto pt-4"
           style={{ paddingBottom: 'max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 16px))' }}
         >
           <MagneticCTA onClick={handleFinish} loading={loading} />

@@ -216,8 +216,7 @@ function ChallengeCard({ challenge }: { challenge: Challenge }) {
   const Icon = CHALLENGE_ICONS[challenge.icon]
   return (
     <div
-      className="flex items-center gap-3 py-3"
-      style={{ borderBottom: '1px solid var(--color-border-subtle)' }}
+      className="flex items-center gap-3 py-2"
     >
       <div
         className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 relative overflow-hidden"
@@ -345,7 +344,7 @@ function ChallengesSection() {
       </div>
 
       <div
-        className="rounded-2xl px-4 py-1"
+        className="rounded-2xl px-4 py-2 flex flex-col gap-3"
         style={{
           background: 'var(--color-surface)',
           border: '1px solid var(--color-border)',

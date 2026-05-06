@@ -239,7 +239,7 @@ export default function RoutineDetail() {
 
       {/* Day tabs */}
       <div className="px-4 pt-4 pb-2">
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
           {routine.days.map((day, idx) => (
             <button
               key={idx}

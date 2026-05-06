@@ -44,13 +44,14 @@ export function SetRow({
         opacity: set.completed ? 0.5 : 1,
       }}
       transition={{ duration: 0.3 }}
-      className="flex items-center gap-3 py-3 pl-2 transition-all"
+      className="flex items-center gap-2 py-3 transition-all"
       style={{
         borderBottom: '1px solid rgba(255,255,255,0.05)',
         borderLeft: isActive && !set.completed
           ? '3px solid var(--color-primary)'
           : '3px solid transparent',
-        paddingLeft: isActive && !set.completed ? '10px' : '8px',
+        paddingLeft: isActive && !set.completed ? '6px' : '4px',
+        paddingRight: '4px',
         borderRadius: isActive && !set.completed ? '0 4px 4px 0' : undefined,
         background: isActive && !set.completed
           ? 'rgba(171,255,53,0.03)'
@@ -58,49 +59,14 @@ export function SetRow({
         transition: 'border-color 0.2s ease, background 0.2s ease',
       }}
     >
-      {/* Set number */}
-      <span
-        className="text-[14px] font-[var(--font-display)] font-bold w-8 text-center flex-shrink-0 transition-colors duration-300"
-        style={{ color: isActive ? 'var(--color-primary)' : 'var(--color-text-muted)' }}
-      >
-        {setIndex + 1}
-      </span>
-
-      {/* Reps stepper */}
-      <div className={`flex-1 transition-opacity duration-300 ${set.completed ? 'line-through opacity-70' : ''}`}>
-        <NumberStepper
-          value={set.actualReps}
-          onChange={(v) => onUpdate({ actualReps: v })}
-          min={1}
-          max={100}
-          step={1}
-          label="Reps"
-          disabled={set.completed}
-        />
-      </div>
-
-      {/* Weight stepper */}
-      <div className={`flex-1 transition-opacity duration-300 ${set.completed ? 'line-through opacity-70' : ''}`}>
-        <NumberStepper
-          value={set.actualWeight}
-          onChange={(v) => onUpdate({ actualWeight: v })}
-          min={0}
-          max={500}
-          step={2.5}
-          label="Peso"
-          unit="kg"
-          disabled={set.completed}
-        />
-      </div>
-
-      {/* Checkbox with animated fill */}
+      {/* Checkbox with animated fill — FIRST (fix: was overflowing right at 390px) */}
       <motion.button
         onClick={handleCheckbox}
         disabled={set.completed}
         aria-label={set.completed ? 'Set completado' : 'Marcar set como completado'}
         whileTap={set.completed || REDUCED_MOTION ? {} : { scale: 0.85 }}
         transition={{ type: 'spring', stiffness: 600, damping: 25 }}
-        className="w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0 border-2 cursor-pointer select-none relative overflow-hidden"
+        className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 border-2 cursor-pointer select-none relative overflow-hidden"
         style={{
           background: set.completed ? 'var(--color-primary)' : 'transparent',
           borderColor: set.completed ? 'var(--color-primary)' : 'rgba(255,255,255,0.25)',
@@ -135,11 +101,54 @@ export function SetRow({
               transition={{ type: 'spring', stiffness: 500, damping: 20, delay: 0.05 }}
               className="relative z-10"
             >
-              <Check size={18} color="#000" strokeWidth={3} />
+              <Check size={16} color="#000" strokeWidth={3} />
             </motion.span>
           )}
         </AnimatePresence>
       </motion.button>
+
+      {/* Set number */}
+      <span
+        className="text-[13px] font-[var(--font-display)] font-bold w-6 text-center flex-shrink-0 transition-colors duration-300"
+        style={{ color: isActive ? 'var(--color-primary)' : 'var(--color-text-muted)' }}
+      >
+        {setIndex + 1}
+      </span>
+
+      {/* Reps stepper */}
+      <div className={`flex-1 transition-opacity duration-300 ${set.completed ? 'line-through opacity-70' : ''}`}>
+        <NumberStepper
+          value={set.actualReps}
+          onChange={(v) => onUpdate({ actualReps: v })}
+          min={1}
+          max={100}
+          step={1}
+          label="Reps"
+          disabled={set.completed}
+        />
+      </div>
+
+      {/* Divider between Reps and Peso steppers */}
+      <div
+        className="flex-shrink-0 self-stretch"
+        style={{ width: '1px', background: 'rgba(171,255,53,0.2)', margin: '6px 0' }}
+        aria-hidden="true"
+      />
+
+      {/* Weight stepper */}
+      <div className={`flex-1 transition-opacity duration-300 ${set.completed ? 'line-through opacity-70' : ''}`}>
+        <NumberStepper
+          value={set.actualWeight}
+          onChange={(v) => onUpdate({ actualWeight: v })}
+          min={0}
+          max={500}
+          step={2.5}
+          label="Peso"
+          unit="kg"
+          disabled={set.completed}
+        />
+      </div>
+
     </motion.div>
   )
 }
