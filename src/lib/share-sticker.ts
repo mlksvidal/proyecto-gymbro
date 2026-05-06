@@ -1,6 +1,8 @@
 // ============================================================
-// GYMBRO — Share Sticker utility (Sprint 15 — v3 EXPLOSIVE Canvas 2D)
-// Generates PNG with transparent bg via Canvas 2D API.
+// GYMBRO — Share Sticker utility (Sprint 17 — v4 FRAME layout)
+// Generates 1080×1920 PNG with TRANSPARENT CENTER for IG Stories.
+// Top frame (0-300): logo + routine. Middle (300-1500): pure transparent.
+// Bottom frame (1500-1920): stats, tier, tagline.
 // No html-to-image, no CORS, no Google Fonts — iOS safe.
 // Gaming/cyberpunk aesthetic: lightning bolts, glows, sparks, HUD chips.
 // ============================================================
@@ -24,7 +26,6 @@ export interface StickerData {
 const LIMA         = '#ABFF35'
 const LIMA_DARK    = '#6AAA00'
 const WHITE        = '#FFFFFF'
-const ORANGE       = '#FF8A00'
 
 // ─── System fonts — guaranteed on iOS / Android / Desktop ───
 const DISPLAY_FONT = '"Impact", "Arial Narrow", "Arial Black", sans-serif'
@@ -276,41 +277,6 @@ export function drawRoundedRect(
   ctx.restore()
 }
 
-// ─── Helper: Glow border on rounded rect ────────────────────
-function drawGlowBorder(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-  r: number,
-  color: string,
-  outerBlur: number,
-  innerBlur: number,
-  lineWidth: number
-): void {
-  // Outer glow
-  ctx.save()
-  ctx.beginPath()
-  ctx.moveTo(x + r, y)
-  ctx.arcTo(x + w, y,     x + w, y + h, r)
-  ctx.arcTo(x + w, y + h, x,     y + h, r)
-  ctx.arcTo(x,     y + h, x,     y,     r)
-  ctx.arcTo(x,     y,     x + w, y,     r)
-  ctx.closePath()
-  ctx.strokeStyle = color
-  ctx.lineWidth   = lineWidth
-  ctx.shadowColor = color
-  ctx.shadowBlur  = outerBlur
-  ctx.globalAlpha = 0.6
-  ctx.stroke()
-  // Inner glow pass
-  ctx.shadowBlur  = innerBlur
-  ctx.globalAlpha = 1
-  ctx.stroke()
-  ctx.restore()
-}
-
 // ─── Helper: Faded icon paths (drawn behind chip text) ───────
 function drawIconBolt(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number): void {
   // Simplified bolt icon faded behind chip
@@ -424,10 +390,53 @@ function drawStar(
   ctx.restore()
 }
 
-// ─── HUD chip (gaming) ───────────────────────────────────────
+// ─── HUD chip icon type ──────────────────────────────────────
 type ChipIcon = 'clock' | 'check' | 'trophy' | 'bolt'
 
-function drawHUDChip(
+// ─── Helper: Corner bracket (sci-fi viewfinder L-shape) ──────
+function drawCornerBracket(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  size: number,
+  color: string,
+  /** 'tl' | 'tr' | 'bl' | 'br' */
+  corner: 'tl' | 'tr' | 'bl' | 'br'
+): void {
+  const L = size          // arm length
+  const T = 4             // line thickness
+  ctx.save()
+  ctx.strokeStyle = color
+  ctx.lineWidth   = T
+  ctx.shadowColor = color
+  ctx.shadowBlur  = 18
+  ctx.globalAlpha = 0.85
+  ctx.lineCap     = 'square'
+
+  ctx.beginPath()
+  if (corner === 'tl') {
+    ctx.moveTo(x + L, y)
+    ctx.lineTo(x, y)
+    ctx.lineTo(x, y + L)
+  } else if (corner === 'tr') {
+    ctx.moveTo(x - L, y)
+    ctx.lineTo(x, y)
+    ctx.lineTo(x, y + L)
+  } else if (corner === 'bl') {
+    ctx.moveTo(x, y - L)
+    ctx.lineTo(x, y)
+    ctx.lineTo(x + L, y)
+  } else {
+    ctx.moveTo(x, y - L)
+    ctx.lineTo(x, y)
+    ctx.lineTo(x - L, y)
+  }
+  ctx.stroke()
+  ctx.restore()
+}
+
+// ─── Helper: Compact HUD chip (horizontal row) ───────────────
+function drawCompactHUDChip(
   ctx: CanvasRenderingContext2D,
   x: number,
   y: number,
@@ -437,62 +446,68 @@ function drawHUDChip(
   label: string,
   icon: ChipIcon
 ): void {
-  const CUT = 14
+  const CUT = 10
 
-  // Subtle outer glow behind the chip
+  // Subtle outer glow
   ctx.save()
   ctx.shadowColor = LIMA
-  ctx.shadowBlur  = 22
-  ctx.globalAlpha = 0.35
+  ctx.shadowBlur  = 18
+  ctx.globalAlpha = 0.3
   drawHUDRect(ctx, x - 2, y - 2, w + 4, h + 4, CUT + 2, undefined, LIMA, 1)
   ctx.restore()
 
   // Dark background
   drawHUDRect(ctx, x, y, w, h, CUT, 'rgba(6,14,8,0.93)')
 
-  // Faded icon background
+  // Faded icon background (centered)
   const icx = x + w / 2
   const icy = y + h / 2
-  const iconSize = h * 0.58
+  const iconSize = h * 0.55
   if (icon === 'clock')  drawIconClock(ctx, icx, icy, iconSize / 2)
   if (icon === 'check')  drawIconCheckStack(ctx, icx, icy, iconSize)
   if (icon === 'trophy') drawIconTrophy(ctx, icx, icy, iconSize)
   if (icon === 'bolt')   drawIconBolt(ctx, icx, icy, iconSize)
 
-  // Lima border (outer line of HUD rect)
+  // Lima border
   ctx.save()
   ctx.shadowColor = LIMA
-  ctx.shadowBlur  = 16
-  drawHUDRect(ctx, x, y, w, h, CUT, undefined, LIMA, 3)
+  ctx.shadowBlur  = 12
+  drawHUDRect(ctx, x, y, w, h, CUT, undefined, LIMA, 2.5)
   ctx.restore()
 
-  // Inner thin white border accent
-  drawHUDRect(ctx, x + 5, y + 5, w - 10, h - 10, CUT - 4, undefined, 'rgba(255,255,255,0.06)', 1)
+  // Inner thin white accent
+  drawHUDRect(ctx, x + 4, y + 4, w - 8, h - 8, CUT - 3, undefined, 'rgba(255,255,255,0.05)', 1)
 
-  // Value — triple glow
-  drawGlowText(ctx, value, x + w / 2, y + h / 2 - 18, {
+  // Value — triple glow (compact size)
+  drawGlowText(ctx, value, x + w / 2, y + h / 2 - 14, {
     font: DISPLAY_FONT,
     weight: '700',
-    size: 52,
+    size: 38,
     color: WHITE,
     glowColor: LIMA,
   })
 
-  // Label
+  // Label (smaller)
   ctx.save()
-  ctx.font         = `400 22px ${BODY_FONT}`
-  ctx.fillStyle    = 'rgba(255,255,255,0.55)'
+  ctx.font         = `400 18px ${BODY_FONT}`
+  ctx.fillStyle    = 'rgba(255,255,255,0.50)'
   ctx.textAlign    = 'center'
   ctx.textBaseline = 'middle'
-  ctx.fillText(label.toUpperCase(), x + w / 2, y + h / 2 + 30)
+  ctx.fillText(label.toUpperCase(), x + w / 2, y + h / 2 + 24)
   ctx.restore()
 }
 
 // ─── Main generator ──────────────────────────────────────────
 
+// Layout zones (y coordinates)
+const TOP_FRAME_H    = 300   // y: 0   → 300
+const MIDDLE_START   = 300   // y: 300
+const MIDDLE_END     = 1500  // y: 1500
+const BOTTOM_START   = 1500  // y: 1500 → 1920
+
 /**
- * Generates a 1080×1920 transparent-bg PNG sticker using Canvas 2D API.
- * v3 — EXPLOSIVE: lightning bolts, triple glows, sparks, HUD chips, cyberpunk aesthetic.
+ * Generates a 1080×1920 transparent-bg PNG sticker (FRAME layout) using Canvas 2D API.
+ * v4 — FRAME: transparent center for IG Stories, content only top & bottom.
  * No html-to-image, no CORS, no Google Fonts — works on iOS Safari.
  */
 export async function generateStickerPng(data: StickerData): Promise<Blob> {
@@ -504,91 +519,122 @@ export async function generateStickerPng(data: StickerData): Promise<Blob> {
   const ctx = canvas.getContext('2d')
   if (!ctx) throw new Error('Canvas 2D context unavailable')
 
-  // ── Transparent background
+  // ── Transparent background (the key: center is pure alpha 0)
   ctx.clearRect(0, 0, W, H)
 
   // ══════════════════════════════════════════════════════════
-  // LAYER 0 — Hex grid lines (subtle cyber background)
+  // TOP FRAME GRADIENT — dark at top, transparent downward
+  // Allows text to be legible over any photo background
   // ══════════════════════════════════════════════════════════
-  ctx.save()
-  ctx.strokeStyle = `rgba(171,255,53,0.025)`
-  ctx.lineWidth   = 1
-  const hexR = 60
-  const hexW = hexR * Math.sqrt(3)
-  for (let row = -1; row < H / (hexR * 1.5) + 2; row++) {
-    for (let col = -1; col < W / hexW + 2; col++) {
-      const hx = col * hexW + (row % 2 === 0 ? 0 : hexW / 2)
-      const hy = row * hexR * 1.5
-      ctx.beginPath()
-      for (let v = 0; v < 6; v++) {
-        const angle = (Math.PI / 180) * (60 * v - 30)
-        const px    = hx + hexR * Math.cos(angle)
-        const py    = hy + hexR * Math.sin(angle)
-        if (v === 0) ctx.moveTo(px, py)
-        else          ctx.lineTo(px, py)
-      }
-      ctx.closePath()
-      ctx.stroke()
-    }
-  }
-  ctx.restore()
-
-  // ══════════════════════════════════════════════════════════
-  // LAYER 1 — Background sparks (lima dots — drawn first, behind everything)
-  // ══════════════════════════════════════════════════════════
-  // Upper zone sparks (above logo area)
-  drawSparks(ctx, 60,  80,  960, 180,  8, LIMA, 2.5)
-  // Lower zone sparks (below tier pill)
-  drawSparks(ctx, 60, 1700,  960, 160,  8, LIMA, 2.5)
-  // Side strips
-  drawSparks(ctx, 20,  300,  100, 1300, 6, LIMA, 2)
-  drawSparks(ctx, 960, 300,  100, 1300, 6, LIMA, 2)
-
-  // ══════════════════════════════════════════════════════════
-  // LAYER 2 — Mini background lightning bolts (dispersed)
-  // ══════════════════════════════════════════════════════════
-  const bgBolts = [
-    { x: 95,   y: 155,  sz: 28, alpha: 0.22 },
-    { x: 985,  y: 195,  sz: 22, alpha: 0.18 },
-    { x: 55,   y: 430,  sz: 20, alpha: 0.18 },
-    { x: 1020, y: 510,  sz: 24, alpha: 0.20 },
-    { x: 65,   y: 1380, sz: 26, alpha: 0.20 },
-    { x: 1010, y: 1430, sz: 22, alpha: 0.18 },
-    { x: 100,  y: 1700, sz: 20, alpha: 0.18 },
-    { x: 980,  y: 1730, sz: 24, alpha: 0.20 },
-  ]
-  for (const b of bgBolts) {
+  {
+    const grad = ctx.createLinearGradient(0, 0, 0, TOP_FRAME_H)
+    grad.addColorStop(0,    'rgba(4,10,5,0.82)')
+    grad.addColorStop(0.75, 'rgba(4,10,5,0.40)')
+    grad.addColorStop(1,    'rgba(4,10,5,0.00)')
     ctx.save()
-    ctx.globalAlpha = b.alpha
-    drawBolt(ctx, b.x, b.y, b.sz, LIMA, 10)
+    ctx.fillStyle = grad as unknown as string
+    ctx.fillRect(0, 0, W, TOP_FRAME_H)
     ctx.restore()
   }
 
   // ══════════════════════════════════════════════════════════
-  // SECTION 1 — GYMBRO Wordmark with flanking lightning bolts
+  // BOTTOM FRAME GRADIENT — transparent at top, dark at bottom
+  // Allows stats/tier/tagline to be legible over any photo
   // ══════════════════════════════════════════════════════════
-  const logoY = 240
+  {
+    const grad = ctx.createLinearGradient(0, BOTTOM_START, 0, H)
+    grad.addColorStop(0,    'rgba(4,10,5,0.00)')
+    grad.addColorStop(0.25, 'rgba(4,10,5,0.50)')
+    grad.addColorStop(1,    'rgba(4,10,5,0.88)')
+    ctx.save()
+    ctx.fillStyle = grad as unknown as string
+    ctx.fillRect(0, BOTTOM_START, W, H - BOTTOM_START)
+    ctx.restore()
+  }
 
-  // Flanking bolts — large, left and right of wordmark
-  drawBolt(ctx, 180, logoY, 72, LIMA, 32)
-  drawBolt(ctx, 900, logoY, 72, LIMA, 32)
+  // ══════════════════════════════════════════════════════════
+  // TOP FRAME — Hex grid sutil (solo en top 300px)
+  // ══════════════════════════════════════════════════════════
+  {
+    ctx.save()
+    ctx.strokeStyle = `rgba(171,255,53,0.025)`
+    ctx.lineWidth   = 1
+    const hexR = 48
+    const hexW = hexR * Math.sqrt(3)
+    for (let row = -1; row < TOP_FRAME_H / (hexR * 1.5) + 1; row++) {
+      for (let col = -1; col < W / hexW + 2; col++) {
+        const hx = col * hexW + (row % 2 === 0 ? 0 : hexW / 2)
+        const hy = row * hexR * 1.5
+        ctx.beginPath()
+        for (let v = 0; v < 6; v++) {
+          const angle = (Math.PI / 180) * (60 * v - 30)
+          const px    = hx + hexR * Math.cos(angle)
+          const py    = hy + hexR * Math.sin(angle)
+          if (v === 0) ctx.moveTo(px, py)
+          else          ctx.lineTo(px, py)
+        }
+        ctx.closePath()
+        ctx.stroke()
+      }
+    }
+    ctx.restore()
+  }
 
-  // Wordmark — triple glow
+  // ══════════════════════════════════════════════════════════
+  // BOTTOM FRAME — Hex grid sutil (solo en bottom 420px)
+  // ══════════════════════════════════════════════════════════
+  {
+    ctx.save()
+    ctx.strokeStyle = `rgba(171,255,53,0.03)`
+    ctx.lineWidth   = 1
+    const hexR = 48
+    const hexW = hexR * Math.sqrt(3)
+    for (let row = -1; row < H / (hexR * 1.5) + 2; row++) {
+      const hy = row * hexR * 1.5
+      if (hy < BOTTOM_START - hexR || hy > H + hexR) continue
+      for (let col = -1; col < W / hexW + 2; col++) {
+        const hx = col * hexW + (row % 2 === 0 ? 0 : hexW / 2)
+        ctx.beginPath()
+        for (let v = 0; v < 6; v++) {
+          const angle = (Math.PI / 180) * (60 * v - 30)
+          const px    = hx + hexR * Math.cos(angle)
+          const py    = hy + hexR * Math.sin(angle)
+          if (v === 0) ctx.moveTo(px, py)
+          else          ctx.lineTo(px, py)
+        }
+        ctx.closePath()
+        ctx.stroke()
+      }
+    }
+    ctx.restore()
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // TOP FRAME — Sparks (dentro del top frame only)
+  // ══════════════════════════════════════════════════════════
+  drawSparks(ctx, 80,  40,  920, 120,  7, LIMA, 2.5)
+
+  // ══════════════════════════════════════════════════════════
+  // TOP FRAME — Mini bg bolts (decorativos, alpha baja)
+  // ══════════════════════════════════════════════════════════
+  ctx.save()
+  ctx.globalAlpha = 0.18
+  drawBolt(ctx, 90,  130, 22, LIMA, 10)
+  drawBolt(ctx, 990, 150, 20, LIMA, 10)
+  ctx.restore()
+
+  // ══════════════════════════════════════════════════════════
+  // SECTION 1 — TOP FRAME: GYMBRO Wordmark + flanking bolts
+  // Centro vertical de top frame: y=150 (centro de 0-300)
+  // ══════════════════════════════════════════════════════════
+  const logoY = 140
+
+  // Flanking bolts — left and right of wordmark
+  drawBolt(ctx, 192, logoY, 60, LIMA, 28)
+  drawBolt(ctx, 888, logoY, 60, LIMA, 28)
+
+  // Wordmark — triple glow Impact
   drawGlowText(ctx, 'GYMBRO', W / 2, logoY, {
-    font: DISPLAY_FONT,
-    weight: '900',
-    size: 120,
-    color: WHITE,
-    glowColor: LIMA,
-  })
-
-  // ── Chevron divider under logo ──────────────────────────
-  drawChevronDivider(ctx, W / 2, 318, 340, LIMA)
-
-  // ══════════════════════════════════════════════════════════
-  // SECTION 2 — Routine name (triple glow)
-  // ══════════════════════════════════════════════════════════
-  drawGlowText(ctx, data.routineName.toUpperCase(), W / 2, 435, {
     font: DISPLAY_FONT,
     weight: '900',
     size: 96,
@@ -596,172 +642,120 @@ export async function generateStickerPng(data: StickerData): Promise<Blob> {
     glowColor: LIMA,
   })
 
-  // ── Day name ─────────────────────────────────────────────
-  ctx.save()
-  ctx.font         = `400 36px ${BODY_FONT}`
-  ctx.fillStyle    = 'rgba(255,255,255,0.55)'
-  ctx.textAlign    = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillText(data.dayName.toUpperCase(), W / 2, 528)
-  ctx.restore()
+  // ── Chevron divider under logo ──────────────────────────
+  drawChevronDivider(ctx, W / 2, 210, 300, LIMA)
 
   // ══════════════════════════════════════════════════════════
-  // SECTION 3 — Volume hero card (EXPLOSIVE)
+  // SECTION 2 — TOP FRAME: Routine + Day line (compact)
   // ══════════════════════════════════════════════════════════
-  const cardX = 76
-  const cardY = 592
-  const cardW = 928
-  const cardH = 306
-  const cardR = 36
-
-  // Card: dark background fill
-  drawRoundedRect(ctx, cardX, cardY, cardW, cardH, cardR, 'rgba(6,14,8,0.92)')
-
-  // Dot pattern inside card
-  drawDotPattern(ctx, cardX + 2, cardY + 2, cardW - 4, cardH - 4, 30, 'rgba(171,255,53,0.05)')
-
-  // Double glow border
-  drawGlowBorder(ctx, cardX, cardY, cardW, cardH, cardR, LIMA, 48, 20, 5)
-
-  // 4 corner lightning bolts (energy frame)
-  const boltCornerSz = 30
-  drawBolt(ctx, cardX + 28,         cardY + 28,         boltCornerSz, LIMA, 18)
-  drawBolt(ctx, cardX + cardW - 28, cardY + 28,         boltCornerSz, LIMA, 18)
-  drawBolt(ctx, cardX + 28,         cardY + cardH - 28, boltCornerSz, LIMA, 18)
-  drawBolt(ctx, cardX + cardW - 28, cardY + cardH - 28, boltCornerSz, LIMA, 18)
-
-  // Sparks around card edges
-  drawSparks(ctx, cardX + 40, cardY - 18, cardW - 80, 18,  6, LIMA, 2.5)
-  drawSparks(ctx, cardX + 40, cardY + cardH, cardW - 80, 18, 6, LIMA, 2.5)
-
-  // Volume value — triple glow (this is the HERO element)
-  drawGlowText(ctx, formatVolume(data.volume), W / 2, cardY + cardH / 2 - 20, {
+  // Routine name + day joined in one line: "PUSH A · DÍA 1"
+  const routineLine = `${data.routineName.toUpperCase()} · ${data.dayName.toUpperCase()}`
+  drawGlowText(ctx, routineLine, W / 2, 264, {
     font: DISPLAY_FONT,
     weight: '900',
-    size: 144,
+    size: 36,
     color: WHITE,
     glowColor: LIMA,
   })
 
-  // Label
+  // ══════════════════════════════════════════════════════════
+  // SECTION 3 — MIDDLE FRAME: 4 corner bolts + brackets
+  // (pure transparent center — y=300 to y=1500)
+  // ══════════════════════════════════════════════════════════
+
+  // Corner bracket L-shapes (sci-fi viewfinder)
+  const bracketInset = 60
+  const bracketSize  = 80
+
+  drawCornerBracket(ctx, bracketInset, MIDDLE_START + bracketInset, bracketSize, LIMA, 'tl')
+  drawCornerBracket(ctx, W - bracketInset, MIDDLE_START + bracketInset, bracketSize, LIMA, 'tr')
+  drawCornerBracket(ctx, bracketInset, MIDDLE_END - bracketInset, bracketSize, LIMA, 'bl')
+  drawCornerBracket(ctx, W - bracketInset, MIDDLE_END - bracketInset, bracketSize, LIMA, 'br')
+
+  // Corner lightning bolts (on top of bracket corners)
+  const cornerBoltSz = 36
+  drawBolt(ctx, bracketInset, MIDDLE_START + bracketInset, cornerBoltSz, LIMA, 20)
+  drawBolt(ctx, W - bracketInset, MIDDLE_START + bracketInset, cornerBoltSz, LIMA, 20)
+  drawBolt(ctx, bracketInset, MIDDLE_END - bracketInset, cornerBoltSz, LIMA, 20)
+  drawBolt(ctx, W - bracketInset, MIDDLE_END - bracketInset, cornerBoltSz, LIMA, 20)
+
+  // ══════════════════════════════════════════════════════════
+  // BOTTOM FRAME — Sparks decorativos
+  // ══════════════════════════════════════════════════════════
+  drawSparks(ctx, 80, BOTTOM_START + 20, 920, 80,  8, LIMA, 2.5)
+  drawSparks(ctx, 80, H - 100, 920, 80, 6, LIMA, 2)
+
+  // Mini bg bolts en bottom frame
   ctx.save()
-  ctx.font         = `400 32px ${BODY_FONT}`
-  ctx.fillStyle    = 'rgba(255,255,255,0.5)'
-  ctx.textAlign    = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillText('VOLUMEN TOTAL', W / 2, cardY + cardH / 2 + 68)
+  ctx.globalAlpha = 0.18
+  drawBolt(ctx, 88,  BOTTOM_START + 90, 20, LIMA, 10)
+  drawBolt(ctx, 992, BOTTOM_START + 120, 22, LIMA, 10)
+  drawBolt(ctx, 88,  H - 140, 20, LIMA, 10)
+  drawBolt(ctx, 992, H - 160, 22, LIMA, 10)
   ctx.restore()
 
   // ══════════════════════════════════════════════════════════
-  // SECTION 4 — Stats 2×2 grid (HUD gaming chips)
+  // SECTION 4 — BOTTOM FRAME: Volume + XP inline (hero data)
   // ══════════════════════════════════════════════════════════
-  const statsY   = 970
-  const cellW    = 440
-  const cellH    = 178
-  const gap      = 40
-  const gridLeft = (W - cellW * 2 - gap) / 2
+  const volumeLineY = BOTTOM_START + 90   // y=1590
+  const heroLine    = `${formatVolume(data.volume)}  ·  +${data.xpGained} XP`
+  drawGlowText(ctx, heroLine, W / 2, volumeLineY, {
+    font: DISPLAY_FONT,
+    weight: '900',
+    size: 68,
+    color: WHITE,
+    glowColor: LIMA,
+  })
 
-  drawHUDChip(ctx, gridLeft,              statsY,              cellW, cellH, `${data.durationMinutes}min`, 'Duración', 'clock')
-  drawHUDChip(ctx, gridLeft + cellW + gap, statsY,              cellW, cellH, `${data.setsCompleted}`,     'Series',   'check')
-  drawHUDChip(ctx, gridLeft,              statsY + cellH + gap, cellW, cellH, `${data.prCount} PR`,        data.prCount === 1 ? 'Récord personal' : 'Récords', 'trophy')
-  drawHUDChip(ctx, gridLeft + cellW + gap, statsY + cellH + gap, cellW, cellH, `+${data.xpGained}`,       'XP Ganado', 'bolt')
-
-  // ══════════════════════════════════════════════════════════
-  // SECTION 5 — Streak pill (gradient + orange sparks)
-  // ══════════════════════════════════════════════════════════
-  const streakText = `RACHA ${data.streak} ${data.streak === 1 ? 'DÍA' : 'DÍAS'}`
-  {
-    ctx.save()
-    ctx.font     = `700 38px ${DISPLAY_FONT}`
-    const tw     = ctx.measureText(streakText).width
-    ctx.restore()
-
-    const pillW  = tw + 180
-    const pillH  = 100
-    const pillX  = W / 2 - pillW / 2
-    const pillY  = 1440
-    const pillR  = pillH / 2
-
-    // Radial gradient bg — dark to orange
-    const grad = ctx.createRadialGradient(
-      pillX + pillW / 2, pillY + pillH / 2, 4,
-      pillX + pillW / 2, pillY + pillH / 2, pillW * 0.7
-    )
-    grad.addColorStop(0,   'rgba(80,28,0,0.96)')
-    grad.addColorStop(0.6, 'rgba(40,12,0,0.97)')
-    grad.addColorStop(1,   'rgba(12,6,0,0.96)')
-    drawRoundedRect(ctx, pillX, pillY, pillW, pillH, pillR, grad as unknown as string)
-
-    // Orange border double glow
-    ctx.save()
-    ctx.beginPath()
-    ctx.moveTo(pillX + pillR, pillY)
-    ctx.arcTo(pillX + pillW, pillY,     pillX + pillW, pillY + pillH, pillR)
-    ctx.arcTo(pillX + pillW, pillY + pillH, pillX, pillY + pillH, pillR)
-    ctx.arcTo(pillX,         pillY + pillH, pillX, pillY,         pillR)
-    ctx.arcTo(pillX,         pillY,         pillX + pillW, pillY,  pillR)
-    ctx.closePath()
-    ctx.strokeStyle = ORANGE
-    ctx.lineWidth   = 3
-    ctx.shadowColor = ORANGE
-    ctx.shadowBlur  = 28
-    ctx.globalAlpha = 0.8
-    ctx.stroke()
-    ctx.shadowBlur  = 10
-    ctx.globalAlpha = 1
-    ctx.stroke()
-    ctx.restore()
-
-    // Orange sparks around pill
-    drawSparks(ctx, pillX - 20, pillY - 14, pillW + 40, 14,  5, ORANGE, 2.5)
-    drawSparks(ctx, pillX - 20, pillY + pillH, pillW + 40, 14, 5, ORANGE, 2.5)
-
-    // Emoji fire — iOS renders emojis fine even if node-canvas doesn't
-    ctx.save()
-    ctx.font         = `64px sans-serif`
-    ctx.textAlign    = 'left'
-    ctx.textBaseline = 'middle'
-    ctx.fillText('🔥', pillX + 30, pillY + pillH / 2)
-    ctx.restore()
-
-    // Streak text — triple glow orange
-    drawGlowText(ctx, streakText, pillX + 114 + tw / 2, pillY + pillH / 2, {
-      font: DISPLAY_FONT,
-      weight: '700',
-      size: 38,
-      color: WHITE,
-      glowColor: ORANGE,
-      align: 'center',
-    })
-  }
+  // Sparks flanking the hero line
+  drawSparks(ctx, 80, volumeLineY - 20, 180, 40, 4, LIMA, 2)
+  drawSparks(ctx, W - 260, volumeLineY - 20, 180, 40, 4, LIMA, 2)
 
   // ══════════════════════════════════════════════════════════
-  // SECTION 6 — Tier pill (lima gradient + star icon + triple stroke)
+  // SECTION 5 — BOTTOM FRAME: 4 compact HUD chips (horizontal row)
+  // [58min] [18 SETS] [1 PR] [🔥 7]
+  // ══════════════════════════════════════════════════════════
+  const chipW    = 210
+  const chipH    = 110
+  const chipGap  = 16
+  const chipRowW = chipW * 4 + chipGap * 3
+  const chipLeft = (W - chipRowW) / 2
+  const chipY    = BOTTOM_START + 180   // y=1680
+
+  const streakLabel = `🔥 ${data.streak}`
+
+  drawCompactHUDChip(ctx, chipLeft,                        chipY, chipW, chipH, `${data.durationMinutes}MIN`, 'DURACIÓN', 'clock')
+  drawCompactHUDChip(ctx, chipLeft + (chipW + chipGap),    chipY, chipW, chipH, `${data.setsCompleted}`,     'SERIES',   'check')
+  drawCompactHUDChip(ctx, chipLeft + (chipW + chipGap) * 2, chipY, chipW, chipH, `${data.prCount} PR`,       data.prCount === 1 ? 'RÉCORD' : 'RÉCORDS', 'trophy')
+  drawCompactHUDChip(ctx, chipLeft + (chipW + chipGap) * 3, chipY, chipW, chipH, streakLabel,               'RACHA',    'bolt')
+
+  // ══════════════════════════════════════════════════════════
+  // SECTION 6 — BOTTOM FRAME: Tier pill (compact)
   // ══════════════════════════════════════════════════════════
   {
-    const tierText   = `BRO TIER ${data.tierLevel} · ${data.tierName.toUpperCase()}`
+    const tierText = `BRO TIER ${data.tierLevel} · ${data.tierName.toUpperCase()}`
     ctx.save()
-    ctx.font         = `700 34px ${DISPLAY_FONT}`
+    ctx.font         = `700 28px ${DISPLAY_FONT}`
     const tw         = ctx.measureText(tierText).width
     ctx.restore()
 
-    const starSize   = 28
-    const pillPadX   = 52
-    const pillPadY   = 22
-    const pillW      = tw + pillPadX * 2 + starSize + 16
-    const pillH      = 34 + pillPadY * 2
+    const starSize   = 22
+    const pillPadX   = 40
+    const pillPadY   = 18
+    const pillW      = tw + pillPadX * 2 + starSize + 12
+    const pillH      = 28 + pillPadY * 2
     const pillR      = pillH / 2
     const pillX      = W / 2 - pillW / 2
-    const pillY      = 1596
+    const pillY      = chipY + chipH + 24   // y≈1814
 
     // Lima radial gradient bg
     const grad2 = ctx.createRadialGradient(
       pillX + pillW / 2, pillY + pillH / 2, 4,
       pillX + pillW / 2, pillY + pillH / 2, pillW * 0.65
     )
-    grad2.addColorStop(0,   'rgba(80,140,0,0.95)')
-    grad2.addColorStop(0.5, 'rgba(30,70,0,0.97)')
-    grad2.addColorStop(1,   'rgba(8,20,0,0.97)')
+    grad2.addColorStop(0,   'rgba(80,140,0,0.90)')
+    grad2.addColorStop(0.5, 'rgba(30,70,0,0.95)')
+    grad2.addColorStop(1,   'rgba(8,20,0,0.95)')
     drawRoundedRect(ctx, pillX, pillY, pillW, pillH, pillR, grad2 as unknown as string)
 
     // Lima glow border
@@ -774,27 +768,27 @@ export async function generateStickerPng(data: StickerData): Promise<Blob> {
     ctx.arcTo(pillX,         pillY,         pillX + pillW, pillY,   pillR)
     ctx.closePath()
     ctx.strokeStyle = LIMA
-    ctx.lineWidth   = 3
+    ctx.lineWidth   = 2.5
     ctx.shadowColor = LIMA
-    ctx.shadowBlur  = 24
+    ctx.shadowBlur  = 20
     ctx.globalAlpha = 0.8
     ctx.stroke()
-    ctx.shadowBlur  = 8
+    ctx.shadowBlur  = 7
     ctx.globalAlpha = 1
     ctx.stroke()
     ctx.restore()
 
-    // Star icon before text
+    // Star icon
     const starX = pillX + pillPadX + starSize / 2
     const starY = pillY + pillH / 2
-    drawStar(ctx, starX, starY, starSize / 2, LIMA, 18)
+    drawStar(ctx, starX, starY, starSize / 2, LIMA, 14)
 
     // Tier text — triple glow
-    const textCx = pillX + pillPadX + starSize + 12 + tw / 2
+    const textCx = pillX + pillPadX + starSize + 10 + tw / 2
     drawGlowText(ctx, tierText, textCx, pillY + pillH / 2, {
       font: DISPLAY_FONT,
       weight: '700',
-      size: 34,
+      size: 28,
       color: WHITE,
       glowColor: LIMA,
       align: 'center',
@@ -802,40 +796,39 @@ export async function generateStickerPng(data: StickerData): Promise<Blob> {
   }
 
   // ══════════════════════════════════════════════════════════
-  // SECTION 7 — Bottom chevron divider
+  // SECTION 7 — BOTTOM FRAME: Chevron divider
   // ══════════════════════════════════════════════════════════
-  drawChevronDivider(ctx, W / 2, 1678, 340, LIMA)
+  const chevronY = chipY + chipH + 24 + (28 + 18 * 2) + 22  // below tier pill
+  drawChevronDivider(ctx, W / 2, chevronY, 280, LIMA)
 
   // ══════════════════════════════════════════════════════════
-  // SECTION 8 — Tagline with CRT shadow + side bolts
+  // SECTION 8 — BOTTOM FRAME: Tagline + side bolts
   // ══════════════════════════════════════════════════════════
-  const taglineY = 1758
+  const taglineY = chevronY + 44
 
-  // Side bolts flanking tagline
-  drawBolt(ctx, 300, taglineY, 28, LIMA, 16)
-  drawBolt(ctx, 780, taglineY, 28, LIMA, 16)
+  drawBolt(ctx, 308, taglineY, 24, LIMA, 14)
+  drawBolt(ctx, 772, taglineY, 24, LIMA, 14)
 
-  // Tagline — triple glow + CRT shadow offset
   drawGlowText(ctx, 'ENTRENA · SUPERATE · GANA', W / 2, taglineY, {
     font: DISPLAY_FONT,
     weight: '700',
-    size: 46,
+    size: 40,
     color: LIMA,
     glowColor: LIMA,
-    offsetY: 3,
+    offsetY: 2,
   })
 
   // ══════════════════════════════════════════════════════════
-  // SECTION 9 — URL footer (sutil glow)
+  // SECTION 9 — BOTTOM FRAME: URL footer
   // ══════════════════════════════════════════════════════════
   ctx.save()
-  ctx.font         = `400 32px ${BODY_FONT}`
-  ctx.fillStyle    = 'rgba(255,255,255,0.38)'
+  ctx.font         = `400 26px ${BODY_FONT}`
+  ctx.fillStyle    = 'rgba(255,255,255,0.35)'
   ctx.textAlign    = 'center'
   ctx.textBaseline = 'middle'
   ctx.shadowColor  = LIMA
-  ctx.shadowBlur   = 10
-  ctx.fillText('gymbro.app', W / 2, 1844)
+  ctx.shadowBlur   = 8
+  ctx.fillText('gymbro.app', W / 2, taglineY + 52)
   ctx.restore()
 
   // Convert to transparent PNG blob
