@@ -104,24 +104,25 @@ function drawChip(
   value: string,
   label: string
 ): void {
-  drawRoundedRect(ctx, x, y, w, h, 20, 'rgba(171,255,53,0.07)', 'rgba(171,255,53,0.35)', 3)
+  // Solid dark bg + lima border — readable on any IG story background
+  drawRoundedRect(ctx, x, y, w, h, 24, 'rgba(8,16,10,0.92)', LIMA, 3)
 
   // value
   ctx.save()
-  ctx.font = `700 40px ${DISPLAY_FONT}`
-  ctx.fillStyle = WHITE
+  ctx.font = `700 52px ${DISPLAY_FONT}`
+  ctx.fillStyle = LIMA
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
-  ctx.fillText(value, x + w / 2, y + h / 2 - 14)
+  ctx.fillText(value, x + w / 2, y + h / 2 - 16)
   ctx.restore()
 
   // label
   ctx.save()
-  ctx.font = `400 20px ${BODY_FONT}`
-  ctx.fillStyle = 'rgba(255,255,255,0.5)'
+  ctx.font = `400 22px ${BODY_FONT}`
+  ctx.fillStyle = 'rgba(255,255,255,0.65)'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
-  ctx.fillText(label.toUpperCase(), x + w / 2, y + h / 2 + 22)
+  ctx.fillText(label.toUpperCase(), x + w / 2, y + h / 2 + 28)
   ctx.restore()
 }
 
@@ -255,45 +256,43 @@ export async function generateStickerPng(data: StickerData): Promise<Blob> {
   drawChip(ctx, gridLeft,              statsY + cellH + gap, cellW, cellH, `${data.prCount} PR`, data.prCount === 1 ? 'PR' : 'PRs')
   drawChip(ctx, gridLeft + cellW + gap, statsY + cellH + gap, cellW, cellH, `+${data.xpGained}`, 'XP Ganado')
 
-  // ── 7. Streak pill ──────────────────────────────────────────
-  // Emoji drawn separately from text — canvas renders emoji via fillText with sans-serif font
+  // ── 7. Streak pill (solid bg + emoji con padding) ───────────
   const streakText = `RACHA ${data.streak} ${data.streak === 1 ? 'DÍA' : 'DÍAS'}`
-
-  // Pill background
   {
     ctx.save()
     ctx.font = `700 38px ${DISPLAY_FONT}`
     const tw = ctx.measureText(streakText).width
     ctx.restore()
 
-    const pillW = tw + 160 // extra space for emoji
-    const pillH = 90
+    const pillW = tw + 180 // extra space for emoji + breathing room
+    const pillH = 96
     const pillX = W / 2 - pillW / 2
-    const pillY = 1430
+    const pillY = 1450
 
-    drawRoundedRect(ctx, pillX, pillY, pillW, pillH, 45, 'rgba(255,138,0,0.1)', 'rgba(255,138,0,0.5)', 3)
+    // Solid dark bg with orange border — readable on any IG story bg
+    drawRoundedRect(ctx, pillX, pillY, pillW, pillH, pillH / 2, 'rgba(8,16,10,0.92)', ORANGE, 3)
 
-    // Emoji fire
+    // Emoji fire — left side
     ctx.save()
-    ctx.font = `44px sans-serif`
-    ctx.textAlign  = 'left'
+    ctx.font = `52px sans-serif`
+    ctx.textAlign = 'left'
     ctx.textBaseline = 'middle'
-    ctx.fillText('🔥', pillX + 28, pillY + pillH / 2)
+    ctx.fillText('🔥', pillX + 36, pillY + pillH / 2)
     ctx.restore()
 
-    // Text
+    // Text — center-right with proper offset from emoji
     ctx.save()
     ctx.font = `700 38px ${DISPLAY_FONT}`
     ctx.fillStyle = ORANGE
     ctx.textAlign = 'left'
     ctx.textBaseline = 'middle'
-    ctx.fillText(streakText, pillX + 86, pillY + pillH / 2)
+    ctx.fillText(streakText, pillX + 110, pillY + pillH / 2)
     ctx.restore()
   }
 
-  // ── 8. Tier pill ────────────────────────────────────────────
+  // ── 8. Tier pill (solid bg + lima border) ───────────────────
   const tierText = `BRO TIER ${data.tierLevel} · ${data.tierName.toUpperCase()}`
-  drawPill(ctx, W / 2, 1565, tierText, `${LIMA}55`, `${LIMA}12`, LIMA, 34)
+  drawPill(ctx, W / 2, 1605, tierText, LIMA, 'rgba(8,16,10,0.92)', LIMA, 34)
 
   // ── 9. Bottom divider ───────────────────────────────────────
   drawGlowLine(ctx, 390, 1680, 300, 3)
