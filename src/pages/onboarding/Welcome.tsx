@@ -270,54 +270,118 @@ export default function Welcome() {
       className="fixed inset-0 flex flex-col items-center justify-between overflow-hidden"
       style={{ zIndex: 'var(--z-loader)' }}
     >
-      {/* Background — hero image + gradient overlay (adapts to light/dark) */}
+      {/* Background — textured dark green (dark) / soft white (light) */}
       <div ref={bgRef} className="absolute inset-0" aria-hidden="true" style={{ opacity: 1 }}>
-        <img
-          src="/images/hero.png"
-          alt=""
-          width={1920}
-          height={1080}
-          className="w-full h-full object-cover object-center"
-          aria-hidden="true"
-          fetchPriority="high"
-          style={{ opacity: resolvedTheme === 'light' ? 0.4 : 1 }}
-        />
         {resolvedTheme === 'light' ? (
-          /* Light mode: white gradient overlay for legibility */
+          /* Light mode: textured soft white with subtle dots + grain */
           <>
+            {/* Base color */}
+            <div
+              className="absolute inset-0"
+              style={{ background: '#FAFAFA' }}
+              aria-hidden="true"
+            />
+            {/* Mesh blobs lima sutil */}
             <div
               className="absolute inset-0"
               style={{
                 background:
-                  'radial-gradient(ellipse 70% 60% at 50% 35%, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.6) 50%, rgba(250,250,250,0.92) 100%)',
+                  'radial-gradient(ellipse 50% 35% at 20% 25%, rgba(171,255,53,0.10) 0%, transparent 60%), \
+                   radial-gradient(ellipse 45% 40% at 80% 60%, rgba(0,217,229,0.08) 0%, transparent 60%), \
+                   radial-gradient(ellipse 55% 45% at 50% 90%, rgba(255,45,156,0.06) 0%, transparent 60%)',
               }}
               aria-hidden="true"
             />
+            {/* Dot pattern */}
             <div
-              className="absolute inset-x-0 bottom-0 h-2/3"
+              className="absolute inset-0"
               style={{
-                background:
-                  'linear-gradient(180deg, transparent 0%, rgba(250,250,250,0.8) 60%, #FAFAFA 100%)',
+                backgroundImage:
+                  'radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 1.5px)',
+                backgroundSize: '20px 20px',
+                opacity: 0.7,
               }}
               aria-hidden="true"
             />
+            {/* Noise grain */}
+            <svg
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              aria-hidden="true"
+              style={{ opacity: 0.5, mixBlendMode: 'multiply' }}
+            >
+              <filter id="grain-light">
+                <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" />
+                <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.06 0" />
+              </filter>
+              <rect width="100%" height="100%" filter="url(#grain-light)" />
+            </svg>
           </>
         ) : (
-          /* Dark mode: original black gradient */
+          /* Dark mode: textured dark green base — NO flat color */
           <>
+            {/* Base color: very dark green, near OLED but with hue */}
+            <div
+              className="absolute inset-0"
+              style={{ background: '#06120A' }}
+              aria-hidden="true"
+            />
+            {/* Vertical gradient (slightly lighter at top, darker at bottom) */}
             <div
               className="absolute inset-0"
               style={{
                 background:
-                  'radial-gradient(ellipse 70% 60% at 50% 35%, transparent 0%, rgba(0,0,0,0.4) 60%, rgba(10,10,10,0.92) 100%)',
+                  'linear-gradient(180deg, #0F1F12 0%, #0A1A0D 35%, #06120A 70%, #030A06 100%)',
               }}
               aria-hidden="true"
             />
+            {/* Soft lima glow blobs (mesh) */}
             <div
-              className="absolute inset-x-0 bottom-0 h-2/3"
+              className="absolute inset-0"
               style={{
                 background:
-                  'linear-gradient(180deg, transparent 0%, rgba(10,10,10,0.7) 60%, #0A0A0A 100%)',
+                  'radial-gradient(ellipse 60% 45% at 25% 20%, rgba(171,255,53,0.10) 0%, transparent 65%), \
+                   radial-gradient(ellipse 55% 40% at 80% 55%, rgba(171,255,53,0.07) 0%, transparent 65%), \
+                   radial-gradient(ellipse 70% 50% at 50% 100%, rgba(171,255,53,0.05) 0%, transparent 65%)',
+              }}
+              aria-hidden="true"
+            />
+            {/* Dot pattern (sutil, mas oscuro) */}
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage:
+                  'radial-gradient(circle at 1px 1px, rgba(171,255,53,0.06) 1px, transparent 1.5px)',
+                backgroundSize: '24px 24px',
+              }}
+              aria-hidden="true"
+            />
+            {/* Diagonal lines pattern (very subtle) */}
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage:
+                  'repeating-linear-gradient(45deg, transparent 0px, transparent 60px, rgba(171,255,53,0.015) 60px, rgba(171,255,53,0.015) 61px)',
+              }}
+              aria-hidden="true"
+            />
+            {/* Noise grain — luminance, blends with base */}
+            <svg
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              aria-hidden="true"
+              style={{ opacity: 0.65, mixBlendMode: 'overlay' }}
+            >
+              <filter id="grain-dark">
+                <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
+                <feColorMatrix values="0 0 0 0 0.67  0 0 0 0 1  0 0 0 0 0.21  0 0 0 0.09 0" />
+              </filter>
+              <rect width="100%" height="100%" filter="url(#grain-dark)" />
+            </svg>
+            {/* Vignette — slightly darker at edges for cinematic depth */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  'radial-gradient(ellipse 80% 70% at 50% 40%, transparent 0%, transparent 50%, rgba(0,0,0,0.45) 100%)',
               }}
               aria-hidden="true"
             />
