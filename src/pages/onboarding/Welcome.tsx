@@ -325,12 +325,12 @@ export default function Welcome() {
               style={{ background: '#06120A' }}
               aria-hidden="true"
             />
-            {/* Vertical gradient (slightly lighter at top, darker at bottom) */}
+            {/* Vertical gradient — dark green top to dark green bottom (no near-black) */}
             <div
               className="absolute inset-0"
               style={{
                 background:
-                  'linear-gradient(180deg, #0F1F12 0%, #0A1A0D 35%, #06120A 70%, #030A06 100%)',
+                  'linear-gradient(180deg, #0F1F12 0%, #0C1B0E 50%, #0A1A0D 100%)',
               }}
               aria-hidden="true"
             />
@@ -444,16 +444,16 @@ export default function Welcome() {
         aria-hidden="true"
       />
 
-      {/* Glow radial — lima from bottom center */}
+      {/* Glow radial — lima from bottom center (stronger, fills the void) */}
       <div
         className="absolute pointer-events-none"
         style={{
           bottom: 0,
           left: '50%',
           transform: 'translateX(-50%)',
-          width: '120%',
-          height: '60%',
-          background: 'radial-gradient(ellipse at bottom center, rgba(171,255,53,0.18) 0%, rgba(171,255,53,0.06) 40%, transparent 70%)',
+          width: '140%',
+          height: '70%',
+          background: 'radial-gradient(ellipse at bottom center, rgba(171,255,53,0.28) 0%, rgba(171,255,53,0.12) 30%, rgba(171,255,53,0.04) 60%, transparent 80%)',
           zIndex: 2,
         }}
         aria-hidden="true"
@@ -538,9 +538,12 @@ export default function Welcome() {
         <p
           style={{
             fontFamily: 'var(--font-body)',
-            fontSize: '12px',
-            color: 'rgba(255,255,255,0.35)',
+            fontSize: '13px',
+            fontWeight: 500,
+            color: 'rgba(171,255,53,0.75)',
             textAlign: 'center',
+            letterSpacing: '0.02em',
+            textShadow: '0 0 8px rgba(171,255,53,0.25)',
           }}
         >
           ¿Sos nuevo? · Leé cómo funciona
