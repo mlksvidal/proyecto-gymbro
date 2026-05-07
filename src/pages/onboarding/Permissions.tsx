@@ -362,7 +362,7 @@ export default function Permissions() {
         </div>
 
         {/* Header */}
-        <div className="px-6 pt-4 pb-2">
+        <div className="px-7 pt-4 pb-2">
           <p
             className="text-xs font-bold uppercase tracking-widest mb-1"
             style={{ fontFamily: 'var(--font-display)', color: 'var(--color-text-muted)' }}
@@ -429,7 +429,7 @@ export default function Permissions() {
         <HeroSection />
 
         {/* Toggles */}
-        <div className="px-6 flex flex-col gap-3 mb-6">
+        <div className="px-7 flex flex-col gap-3 mb-6">
           {/* Sound toggle */}
           <div
             className="rounded-[var(--radius-lg)] border transition-all duration-300 overflow-hidden"
@@ -587,13 +587,13 @@ export default function Permissions() {
         {/* Mini tutorial — tips with Tilt3D cards */}
         <div className="mb-6">
           <p
-            className="px-6 text-xs uppercase tracking-widest mb-3"
+            className="px-7 text-xs uppercase tracking-widest mb-3"
             style={{ fontFamily: 'var(--font-body)', color: 'var(--color-text-muted)' }}
           >
             ¿Qué podés hacer?
           </p>
           <div
-            className="flex gap-3 overflow-x-auto snap-x snap-mandatory px-6 pb-2"
+            className="flex gap-3 overflow-x-auto snap-x snap-mandatory px-7 pb-2"
             style={{ scrollbarWidth: 'none' }}
             role="list"
             aria-label="Tips de uso"
@@ -609,7 +609,7 @@ export default function Permissions() {
 
         {/* CTA */}
         <div
-          className="px-6 mt-auto pt-4"
+          className="px-7 mt-auto pt-4"
           style={{ paddingBottom: 'max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 16px))' }}
         >
           <MagneticCTA onClick={handleFinish} loading={loading} />

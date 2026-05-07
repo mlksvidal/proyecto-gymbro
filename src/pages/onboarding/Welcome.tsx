@@ -461,7 +461,7 @@ export default function Welcome() {
 
       {/* Hero logo area — safe-area-inset-top + 16px breathing room (Dynamic Island ~47px) */}
       <div
-        className="relative flex flex-col items-center gap-5 px-6"
+        className="relative flex flex-col items-center gap-5 px-7"
         style={{
           zIndex: 10,
           paddingTop: 'max(32px, calc(env(safe-area-inset-top, 0px) + 16px))',
@@ -517,7 +517,7 @@ export default function Welcome() {
       {/* CTA */}
       <div
         ref={btnRef}
-        className="relative w-full px-6 pt-8 flex flex-col items-center gap-3"
+        className="relative w-full px-7 pt-8 flex flex-col items-center gap-3"
         style={{
           paddingBottom: 'max(2rem, calc(env(safe-area-inset-bottom, 0px) + 24px))',
           opacity: 1,

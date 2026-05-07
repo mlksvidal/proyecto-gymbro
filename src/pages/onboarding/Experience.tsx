@@ -315,7 +315,7 @@ export default function Experience() {
         </div>
 
         {/* Header */}
-        <div className="px-6 pt-4 pb-2">
+        <div className="px-7 pt-4 pb-2">
           <p
             className="text-xs font-bold uppercase tracking-widest mb-1"
             style={{ fontFamily: 'var(--font-display)', color: 'var(--color-text-muted)' }}
@@ -383,7 +383,7 @@ export default function Experience() {
 
         {/* Cards */}
         <div
-          className="flex flex-col gap-3 px-6 pb-3"
+          className="flex flex-col gap-3 px-7 pb-3"
           role="radiogroup"
           aria-label="Nivel de experiencia"
         >
@@ -417,7 +417,7 @@ export default function Experience() {
 
         {/* CTA */}
         <div
-          className="px-6 pt-2 mt-auto"
+          className="px-7 pt-3 mt-auto"
           style={{ paddingBottom: 'max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 16px))' }}
         >
           <MagneticButton enabled={!!selected} onClick={handleNext} />
