@@ -60,10 +60,10 @@ export function CompleteSetButton({
         whileTap={isDisabled ? {} : { scale: 0.96 }}
         animate={{ scale: 1 }}
         transition={{ type: 'spring', stiffness: 400, damping: 15 }}
-        className="w-full rounded-2xl font-[var(--font-display)] font-bold uppercase tracking-widest flex items-center justify-center gap-2"
+        className="w-full rounded-2xl font-[var(--font-display)] font-bold uppercase tracking-wide flex items-center justify-center gap-2"
         style={{
           height: 64,
-          fontSize: 16,
+          fontSize: 'clamp(13px, 4vw, 16px)',
           background: isDisabled
             ? 'rgba(171,255,53,0.2)'
             : 'var(--color-primary)',
@@ -72,8 +72,8 @@ export function CompleteSetButton({
         }}
         aria-label={isDisabled ? 'Set no disponible' : label}
       >
-        <Check size={20} strokeWidth={3} />
-        {label}
+        <Check size={20} strokeWidth={3} className="flex-shrink-0" />
+        <span className="min-w-0 truncate">{label}</span>
       </motion.button>
     </div>
   )

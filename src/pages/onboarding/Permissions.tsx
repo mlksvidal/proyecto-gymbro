@@ -177,13 +177,14 @@ function MagneticCTA({ onClick, loading }: { onClick: () => void; loading: boole
         loading={loading}
         onClick={onClick}
         className="anim-next-btn-pulse"
+        style={{ fontSize: 'clamp(13px, 3.8vw, 16px)' }}
       >
         {loading ? (
           'Arrancando...'
         ) : (
           <>
             <span>DALE, ARRANQUEMOS</span>
-            <span className="anim-arrow-bounce" aria-hidden="true">
+            <span className="anim-arrow-bounce flex-shrink-0" aria-hidden="true">
               <ArrowRight size={18} />
             </span>
           </>

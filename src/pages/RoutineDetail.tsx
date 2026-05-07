@@ -301,7 +301,8 @@ export default function RoutineDetail() {
           size="lg"
           fullWidth
           onClick={handleStart}
-          className="uppercase tracking-widest font-bold text-[16px]"
+          className="uppercase tracking-wide font-bold"
+          style={{ fontSize: 'clamp(12px, 3.8vw, 16px)' }}
         >
           EMPEZAR — {currentDay?.dayName}
         </Button>

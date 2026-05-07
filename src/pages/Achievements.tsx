@@ -232,10 +232,11 @@ export default function Achievements() {
               key={f}
               onClick={() => handleFilterChange(f)}
               whileTap={{ scale: 0.95 }}
-              className="flex-shrink-0 px-4 rounded-full text-[11px] font-semibold uppercase tracking-wider transition-all duration-200 min-h-[44px] flex items-center justify-center"
+              className="flex-shrink-0 px-3 rounded-full font-semibold uppercase transition-all duration-200 min-h-[44px] flex items-center justify-center"
               style={{
                 fontFamily: 'var(--font-display)',
-                letterSpacing: '0.08em',
+                fontSize: 'clamp(10px, 2.8vw, 11px)',
+                letterSpacing: '0.05em',
                 background: filter === f
                   ? 'var(--color-primary)'
                   : 'var(--color-surface)',

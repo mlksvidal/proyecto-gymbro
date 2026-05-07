@@ -232,7 +232,7 @@ export default function Stats() {
               role="tab"
               aria-selected={period === p}
               onClick={() => setPeriod(p)}
-              className="relative flex-1 py-2 min-h-[44px] rounded-xl text-[12px] font-[var(--font-body)] font-semibold uppercase tracking-wider transition-colors duration-200 z-10"
+              className="relative flex-1 py-2 min-h-[44px] rounded-xl text-[12px] font-[var(--font-body)] font-semibold uppercase tracking-wider transition-colors duration-200 z-10 whitespace-nowrap"
               style={{
                 color: period === p ? 'var(--color-text-inverse)' : 'var(--color-text-muted)',
               }}

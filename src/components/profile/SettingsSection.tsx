@@ -145,20 +145,21 @@ function ThemePicker() {
             role="radio"
             aria-checked={active}
             onClick={(e) => handleSelect(value, e)}
-            className="flex-1 flex flex-col items-center gap-1.5 py-2.5 rounded-xl text-[11px] font-semibold transition-all duration-200 active:scale-95"
+            className="flex-1 flex flex-col items-center gap-1.5 py-2.5 rounded-xl font-semibold transition-all duration-200 active:scale-95 min-w-0"
             style={{
               fontFamily: 'var(--font-body)',
+              fontSize: 'clamp(10px, 2.8vw, 11px)',
               background: active ? 'rgba(171,255,53,0.15)' : 'transparent',
               border: active
                 ? '1px solid var(--color-primary)'
                 : '1px solid var(--color-border)',
               color: active ? 'var(--color-primary)' : 'var(--color-text-muted)',
-              letterSpacing: '0.04em',
+              letterSpacing: '0.03em',
               textTransform: 'uppercase',
             }}
           >
-            <Icon size={16} aria-hidden="true" />
-            {label}
+            <Icon size={16} aria-hidden="true" className="flex-shrink-0" />
+            <span className="truncate w-full text-center">{label}</span>
           </button>
         )
       })}

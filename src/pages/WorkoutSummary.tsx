@@ -422,8 +422,9 @@ export default function WorkoutSummary() {
           size="lg"
           fullWidth
           onClick={handleOpenShare}
+          style={{ fontSize: 'clamp(13px, 3.8vw, 16px)' }}
         >
-          <Camera size={18} />
+          <Camera size={18} className="flex-shrink-0" />
           COMPARTIR EN HISTORIA
         </Button>
 
@@ -435,7 +436,7 @@ export default function WorkoutSummary() {
             fullWidth
             onClick={() => navigate('/stats')}
           >
-            <BarChart3 size={16} />
+            <BarChart3 size={16} className="flex-shrink-0" />
             VER STATS
           </Button>
 
@@ -445,7 +446,7 @@ export default function WorkoutSummary() {
             fullWidth
             onClick={() => navigate('/')}
           >
-            <Home size={16} />
+            <Home size={16} className="flex-shrink-0" />
             INICIO
           </Button>
         </div>

@@ -158,6 +158,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           // Base
           'inline-flex items-center justify-center gap-2',
           'select-none cursor-pointer',
+          'whitespace-nowrap', // prevent text wrapping mid-button
           'relative overflow-hidden', // needed for ripple containment
           // Uppercase for display font variants
           variant === 'primary' && 'uppercase',

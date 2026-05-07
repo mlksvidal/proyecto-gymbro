@@ -169,7 +169,7 @@ export function TodayWorkoutCard() {
               navigate('/workouts')
             }}
             className="mt-1"
-            style={{ boxShadow: 'var(--shadow-glow-primary)' }}
+            style={{ boxShadow: 'var(--shadow-glow-primary)', fontSize: 'clamp(13px, 3.8vw, 16px)' }}
           >
             COMENZAR ENTRENAMIENTO
           </Button>
