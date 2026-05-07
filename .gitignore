@@ -51,3 +51,4 @@ coverage/
 sw.js
 workbox-*.js
 .vercel
+.env*.local

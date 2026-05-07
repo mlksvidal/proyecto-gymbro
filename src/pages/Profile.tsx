@@ -13,6 +13,7 @@ import { ProfileHeroCinema } from '@/components/profile/ProfileHeroCinema'
 import { SettingsSection } from '@/components/profile/SettingsSection'
 import { ResetConfirmModal } from '@/components/profile/ResetConfirmModal'
 import { NotificationsSection } from '@/components/profile/NotificationsSection'
+import { CloudSyncSection } from '@/components/profile/CloudSyncSection'
 import { RMCalculator } from '@/components/profile/RMCalculator'
 import { PlateCalculator } from '@/components/profile/PlateCalculator'
 import { ChangelogSheet } from '@/components/profile/ChangelogSheet'
@@ -631,6 +632,22 @@ export default function Profile() {
           transition={{ duration: 0.4, ease: 'easeOut' }}
         >
           <NotificationsSection />
+        </motion.div>
+
+        {/* ── Cuenta y sincronización ────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+        >
+          <h2
+            className="text-[11px] font-[var(--font-body)] uppercase tracking-widest font-semibold mb-3"
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            Cuenta y sincronización
+          </h2>
+          <CloudSyncSection />
         </motion.div>
 
         {/* ── Herramientas ───────────────────────────── */}

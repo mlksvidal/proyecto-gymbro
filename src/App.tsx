@@ -7,9 +7,14 @@ import { ThemeTransitionProvider } from '@/components/ui/ThemeTransition'
 import { seedDb } from '@/lib/seed'
 import { LS_KEYS } from '@/lib/constants'
 import { useApplyTheme } from '@/hooks/useApplyTheme'
+import { useAuth } from '@/hooks/useAuth'
 // Critical routes — loaded eagerly (LCP path)
 import Home from '@/pages/Home'
 import Welcome from '@/pages/onboarding/Welcome'
+// Auth routes — lazy loaded
+const Login = lazy(() => import('@/pages/auth/Login'))
+const Signup = lazy(() => import('@/pages/auth/Signup'))
+const AuthCallback = lazy(() => import('@/pages/auth/Callback'))
 // Non-critical routes — lazy loaded for code splitting
 const Workouts = lazy(() => import('@/pages/Workouts'))
 const RoutineDetail = lazy(() => import('@/pages/RoutineDetail'))
@@ -73,6 +78,11 @@ export default function App() {
   // Apply theme to <html> element based on persisted settings
   useApplyTheme()
 
+  // Initialize Supabase auth listener — subscribes to session changes
+  // Auth is optional; calling this here ensures the store is populated
+  // before any child component reads it.
+  useAuth()
+
   useEffect(() => {
     seedDb()
       .catch((err) => {
@@ -96,6 +106,11 @@ export default function App() {
           <InstallPrompt />
           <Suspense fallback={<LoadingScreen />}>
             <Routes>
+              {/* ── Auth (fullscreen, no bottom nav) ───────── */}
+              <Route path="/auth/login"    element={<Login />} />
+              <Route path="/auth/signup"   element={<Signup />} />
+              <Route path="/auth/callback" element={<AuthCallback />} />
+
               {/* ── Onboarding (fullscreen, no bottom nav) ── */}
               <Route path="/onboarding/welcome"     element={<Welcome />} />
               <Route path="/onboarding/goal"        element={<Goal />} />

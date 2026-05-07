@@ -2,37 +2,30 @@ import { createClient } from '@supabase/supabase-js'
 import type { Database } from './types'
 
 // ============================================================
-// Supabase browser client — uses anon key, respects RLS
-// Used ONLY on the frontend for reading data when authenticated.
-// The service role key is NEVER exposed here — it lives in api/ only.
+// GYMBRO — Supabase browser client (Sprint 24)
+// Uses anon key + Supabase Auth native (no Better Auth)
+// RLS policies enforce user_id isolation on the server side
 // ============================================================
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
 
-// Returns null if env vars are not set (app works offline without them)
-export function createSupabaseClient() {
-  if (!supabaseUrl || !supabaseAnonKey) {
-    return null
-  }
-  return createClient<Database>(supabaseUrl, supabaseAnonKey, {
-    auth: {
-      // We use Better Auth for session management, not Supabase Auth
-      // Supabase client is used only for direct DB reads via RLS
-      persistSession: false,
-      autoRefreshToken: false,
-    },
-  })
-}
+// isSupabaseConfigured is false when env vars are absent — app works offline without them
 
-// Singleton — lazily created, returns null if env vars missing
-let _client: ReturnType<typeof createSupabaseClient> | undefined
+// Singleton client — null when env vars are absent
+export const supabase =
+  supabaseUrl && supabaseAnonKey
+    ? createClient<Database>(supabaseUrl, supabaseAnonKey, {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true,
+          storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+          storageKey: 'gymbro-sb-auth',
+        },
+      })
+    : null
 
-export function getSupabaseClient() {
-  if (_client === undefined) {
-    _client = createSupabaseClient()
-  }
-  return _client
-}
+export const isSupabaseConfigured = !!supabase
 
-export type SupabaseClient = NonNullable<ReturnType<typeof createSupabaseClient>>
+export type SupabaseClient = NonNullable<typeof supabase>
