@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { LS_KEYS } from '@/lib/constants'
-import type { AppSettings } from '@/types'
+import type { AppSettings, ThemeSchedule } from '@/types'
 
 // ============================================================
 // Settings Store — persisted in LocalStorage
@@ -14,6 +14,8 @@ interface SettingsState extends AppSettings {
   setVolume: (volume: number) => void
   setDefaultRestSeconds: (seconds: number) => void
   setTheme: (theme: 'dark' | 'light' | 'system') => void
+  setThemeSchedule: (schedule: ThemeSchedule) => void
+  setLightHours: (start: number, end: number) => void
   resetSettings: () => void
 }
 
@@ -24,6 +26,9 @@ const DEFAULT_SETTINGS: AppSettings = {
   defaultRestSeconds: 90,
   language: 'es-AR',
   theme: 'dark',
+  themeSchedule: 'off',
+  lightHourStart: 7,
+  lightHourEnd: 19,
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -37,6 +42,8 @@ export const useSettingsStore = create<SettingsState>()(
       setDefaultRestSeconds: (seconds) =>
         set({ defaultRestSeconds: Math.min(Math.max(seconds, 15), 300) }),
       setTheme: (theme) => set({ theme }),
+      setThemeSchedule: (schedule) => set({ themeSchedule: schedule }),
+      setLightHours: (start, end) => set({ lightHourStart: start, lightHourEnd: end }),
       resetSettings: () => set(DEFAULT_SETTINGS),
     }),
     {

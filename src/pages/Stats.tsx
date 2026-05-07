@@ -6,8 +6,8 @@
 
 import { lazy, Suspense, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { BarChart3, Calendar, Zap, Clock, Dumbbell, Trophy } from 'lucide-react'
-import { useWorkouts, usePRs } from '@/hooks/useDb'
+import { BarChart3, Calendar, Zap, Clock, Dumbbell, Trophy, TrendingUp } from 'lucide-react'
+import { useWorkouts, usePRs, useWeeklyAdherence } from '@/hooks/useDb'
 import { VolumeChart } from '@/components/stats/VolumeChart'
 import { HeatmapCalendar } from '@/components/stats/HeatmapCalendar'
 import { PRHighlight } from '@/components/stats/PRHighlight'
@@ -98,6 +98,7 @@ export default function Stats() {
   const tabsRef = useRef<HTMLDivElement>(null)
   const workouts = useWorkouts()
   const allPRs = usePRs()
+  const adherence = useWeeklyAdherence()
 
   const DAY = 86400000
 
@@ -271,6 +272,84 @@ export default function Stats() {
             </div>
           </motion.div>
         </AnimatePresence>
+
+        {/* ── Adherencia semanal ─────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+          className="rounded-2xl p-4"
+          style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
+        >
+          <div className="flex items-center gap-2 mb-3">
+            <TrendingUp size={14} style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
+            <h2
+              className="text-[12px] font-[var(--font-body)] uppercase tracking-wider font-semibold"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
+              Adherencia esta semana
+            </h2>
+          </div>
+
+          {/* Progress bar */}
+          <div className="flex items-center gap-3 mb-2">
+            <span
+              className="text-[28px] font-[var(--font-display)] font-bold leading-none"
+              style={{ color: adherence.percent >= 100 ? 'var(--color-primary)' : 'var(--color-text)' }}
+            >
+              {adherence.trained}/{adherence.goal}
+            </span>
+            <span
+              className="text-[13px] font-[var(--font-body)]"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
+              días
+            </span>
+            <span
+              className="ml-auto text-[13px] font-[var(--font-display)] font-bold"
+              style={{ color: adherence.percent >= 100 ? 'var(--color-primary)' : 'var(--color-text-muted)' }}
+            >
+              {adherence.percent}%
+            </span>
+          </div>
+
+          <div
+            className="w-full h-2.5 rounded-full overflow-hidden"
+            style={{ background: 'var(--color-surface-elevated)' }}
+            role="progressbar"
+            aria-valuenow={adherence.percent}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label={`Adherencia: ${adherence.trained} de ${adherence.goal} días`}
+          >
+            <motion.div
+              initial={{ width: 0 }}
+              whileInView={{ width: `${Math.min(adherence.percent, 100)}%` }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+              className="h-full rounded-full"
+              style={{
+                background: adherence.percent >= 100
+                  ? 'var(--color-primary)'
+                  : adherence.percent >= 50
+                  ? 'linear-gradient(90deg, var(--color-primary) 0%, rgba(171,255,53,0.6) 100%)'
+                  : 'rgba(171,255,53,0.4)',
+              }}
+            />
+          </div>
+
+          <p
+            className="text-[12px] font-[var(--font-body)] mt-2"
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            {adherence.percent >= 100
+              ? 'Cumpliste tu meta esta semana.'
+              : adherence.goal - adherence.trained === 1
+              ? 'Te falta 1 entrenamiento para cumplir la meta.'
+              : `Te faltan ${adherence.goal - adherence.trained} entrenamientos para cumplir la meta.`}
+          </p>
+        </motion.div>
 
         {/* ── Stats grid — whileInView stagger ────────── */}
         <AnimatePresence mode="wait">

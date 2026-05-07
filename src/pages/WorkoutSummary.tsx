@@ -6,6 +6,8 @@
 
 import { useEffect, useRef, useState, lazy, Suspense } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { notifications } from '@/lib/notifications'
+import { loadNotifPrefs } from '@/lib/notifications-prefs'
 import { motion } from 'framer-motion'
 import { Trophy, Clock, Zap, BarChart3, Check, Home, Camera } from 'lucide-react'
 import confetti from 'canvas-confetti'
@@ -162,12 +164,19 @@ export default function WorkoutSummary() {
     }
   }, [workout, navigate])
 
-  // Play success sound on mount (summary page appears)
+  // Play success sound + workout complete notification on mount
   const mountedRef = useRef(false)
   useEffect(() => {
     if (!workout || mountedRef.current) return
     mountedRef.current = true
     play('success').catch(() => {})
+
+    // Notification: workout complete
+    const prefs = loadNotifPrefs()
+    if (prefs.workoutComplete) {
+      const units = 'kg' // units from workout are always kg internally
+      notifications.workoutComplete(workout.totalVolumeKg, units).catch(() => {})
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workout])
 

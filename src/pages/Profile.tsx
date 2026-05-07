@@ -6,12 +6,16 @@
 import { lazy, Suspense, useState, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ChevronRight, Dumbbell, Trophy, RotateCcw, ChevronLeft, ChevronRight as ChevronRightSmall, Check } from 'lucide-react'
+import { ChevronRight, Dumbbell, Trophy, RotateCcw, ChevronLeft, ChevronRight as ChevronRightSmall, Check, Calculator, Tag, Info } from 'lucide-react'
 import { useUserStore } from '@/store/userStore'
 import { useWorkouts, usePRs, useAchievementRecords, useCurrentStreak } from '@/hooks/useDb'
 import { ProfileHeroCinema } from '@/components/profile/ProfileHeroCinema'
 import { SettingsSection } from '@/components/profile/SettingsSection'
 import { ResetConfirmModal } from '@/components/profile/ResetConfirmModal'
+import { NotificationsSection } from '@/components/profile/NotificationsSection'
+import { RMCalculator } from '@/components/profile/RMCalculator'
+import { PlateCalculator } from '@/components/profile/PlateCalculator'
+import { ChangelogSheet } from '@/components/profile/ChangelogSheet'
 import { AchievementBadge } from '@/components/achievements/AchievementBadge'
 import { Marquee } from '@/components/ui/Marquee'
 import { AuroraBackground } from '@/components/ui/AuroraBackground'
@@ -21,6 +25,7 @@ import { clearAllData } from '@/lib/db'
 import { getTierForXP } from '@/lib/tiers'
 import { getAchievementDef } from '@/lib/achievements'
 import { LS_KEYS } from '@/lib/constants'
+import { APP_INFO } from '@/lib/app-info'
 
 // Lazy: InteractiveBackground is heavy canvas — load async
 const InteractiveBackground = lazy(
@@ -359,6 +364,9 @@ export default function Profile() {
 
   const [showReset, setShowReset] = useState(false)
   const [resetting, setResetting] = useState(false)
+  const [showRMCalc, setShowRMCalc] = useState(false)
+  const [showPlateCalc, setShowPlateCalc] = useState(false)
+  const [showChangelog, setShowChangelog] = useState(false)
   const [now] = useState<number>(() => Date.now())
   const { play } = useAudio()
 
@@ -615,6 +623,68 @@ export default function Profile() {
           </motion.div>
         )}
 
+        {/* ── Notifications ──────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+        >
+          <NotificationsSection />
+        </motion.div>
+
+        {/* ── Herramientas ───────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+        >
+          <h2
+            className="text-[11px] font-[var(--font-body)] uppercase tracking-widest font-semibold mb-3"
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            Herramientas
+          </h2>
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={() => setShowRMCalc(true)}
+              className="flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-200 active:scale-[0.98] min-h-[52px]"
+              style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
+              aria-label="Abrir calculadora de 1RM"
+            >
+              <Calculator size={18} style={{ color: 'var(--color-primary)', flexShrink: 0 }} aria-hidden="true" />
+              <div className="flex-1 text-left">
+                <p className="text-[14px] font-[var(--font-body)]" style={{ color: 'var(--color-text)' }}>
+                  Calculadora 1RM
+                </p>
+                <p className="text-[11px] font-[var(--font-body)]" style={{ color: 'var(--color-text-disabled)' }}>
+                  Estimá tu máximo con fórmula Epley
+                </p>
+              </div>
+              <ChevronRight size={16} style={{ color: 'var(--color-text-muted)', flexShrink: 0 }} aria-hidden="true" />
+            </button>
+
+            <button
+              onClick={() => setShowPlateCalc(true)}
+              className="flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-200 active:scale-[0.98] min-h-[52px]"
+              style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
+              aria-label="Abrir calculadora de discos"
+            >
+              <Dumbbell size={18} style={{ color: 'var(--color-primary)', flexShrink: 0 }} aria-hidden="true" />
+              <div className="flex-1 text-left">
+                <p className="text-[14px] font-[var(--font-body)]" style={{ color: 'var(--color-text)' }}>
+                  Calculadora de discos
+                </p>
+                <p className="text-[11px] font-[var(--font-body)]" style={{ color: 'var(--color-text-disabled)' }}>
+                  Qué pesas cargar para X kg
+                </p>
+              </div>
+              <ChevronRight size={16} style={{ color: 'var(--color-text-muted)', flexShrink: 0 }} aria-hidden="true" />
+            </button>
+          </div>
+        </motion.div>
+
         {/* ── Settings ─────────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -629,6 +699,69 @@ export default function Profile() {
             Configuración
           </h2>
           <SettingsSection onResetClick={handleOpenReset} />
+        </motion.div>
+
+        {/* ── Sobre Gymbro ─────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+        >
+          <h2
+            className="text-[11px] font-[var(--font-body)] uppercase tracking-widest font-semibold mb-3"
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            Sobre Gymbro
+          </h2>
+          <div
+            className="rounded-2xl overflow-hidden px-4"
+            style={{ background: 'var(--color-surface)' }}
+          >
+            <div
+              className="flex items-center justify-between py-3 border-b"
+              style={{ borderColor: 'var(--color-border-subtle)' }}
+            >
+              <div className="flex items-center gap-3">
+                <Info size={18} style={{ color: 'var(--color-text-muted)', flexShrink: 0 }} aria-hidden="true" />
+                <p className="text-[14px] font-[var(--font-body)]" style={{ color: 'var(--color-text)' }}>
+                  Versión
+                </p>
+              </div>
+              <span className="text-[13px] font-[var(--font-body)]" style={{ color: 'var(--color-text-disabled)' }}>
+                v{APP_INFO.version}
+              </span>
+            </div>
+
+            <div
+              className="flex items-center justify-between py-3 border-b"
+              style={{ borderColor: 'var(--color-border-subtle)' }}
+            >
+              <div className="flex items-center gap-3">
+                <Dumbbell size={18} style={{ color: 'var(--color-text-muted)', flexShrink: 0 }} aria-hidden="true" />
+                <p className="text-[14px] font-[var(--font-body)]" style={{ color: 'var(--color-text)' }}>
+                  Build
+                </p>
+              </div>
+              <span className="text-[13px] font-[var(--font-body)]" style={{ color: 'var(--color-text-disabled)' }}>
+                {APP_INFO.buildDate}
+              </span>
+            </div>
+
+            <button
+              onClick={() => setShowChangelog(true)}
+              className="flex items-center justify-between py-3 w-full min-h-[48px]"
+              aria-label="Ver changelog de Gymbro"
+            >
+              <div className="flex items-center gap-3">
+                <Tag size={18} style={{ color: 'var(--color-text-muted)', flexShrink: 0 }} aria-hidden="true" />
+                <p className="text-[14px] font-[var(--font-body)]" style={{ color: 'var(--color-text)' }}>
+                  Changelog
+                </p>
+              </div>
+              <ChevronRight size={16} style={{ color: 'var(--color-text-muted)' }} aria-hidden="true" />
+            </button>
+          </div>
         </motion.div>
 
         {/* ── Danger zone ─────────────────────────────── */}
@@ -667,10 +800,10 @@ export default function Profile() {
           </button>
         </motion.div>
 
-        {/* App version */}
+        {/* Footer */}
         <div className="text-center py-4">
           <p className="text-[11px] font-[var(--font-body)] inline-flex items-center gap-1.5" style={{ color: 'var(--color-text-disabled)' }}>
-            Gymbro v0.1.0 · Hecho con
+            Gymbro v{APP_INFO.version} · Hecho con
             <Dumbbell size={11} aria-hidden="true" />
           </p>
         </div>
@@ -683,6 +816,11 @@ export default function Profile() {
         onConfirm={handleReset}
         loading={resetting}
       />
+
+      {/* Tool modals */}
+      <RMCalculator open={showRMCalc} onClose={() => setShowRMCalc(false)} />
+      <PlateCalculator open={showPlateCalc} onClose={() => setShowPlateCalc(false)} />
+      <ChangelogSheet open={showChangelog} onClose={() => setShowChangelog(false)} />
     </div>
   )
 }

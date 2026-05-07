@@ -187,6 +187,8 @@ export const BRO_TIERS: BroTier[] = [
 // App Settings
 // ============================================================
 
+export type ThemeSchedule = 'off' | 'time-based'
+
 export interface AppSettings {
   soundEnabled: boolean
   vibrationEnabled: boolean
@@ -194,6 +196,10 @@ export interface AppSettings {
   defaultRestSeconds: number
   language: 'es-AR'
   theme: 'dark' | 'light' | 'system'
+  // Theme schedule (Sprint 23)
+  themeSchedule?: ThemeSchedule    // default 'off'
+  lightHourStart?: number          // 0-23, default 7
+  lightHourEnd?: number            // 0-23, default 19
 }
 
 // ============================================================

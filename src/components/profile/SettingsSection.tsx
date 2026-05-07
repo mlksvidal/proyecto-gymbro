@@ -17,6 +17,7 @@ import { useAudio } from '@/hooks/useAudio'
 import { haptics } from '@/lib/haptics'
 import { exportData, importData } from '@/lib/backup'
 import { useThemeTransition } from '@/components/ui/ThemeTransition'
+import { ThemeScheduleSection } from '@/components/profile/ThemeScheduleSection'
 import type { VibrationIntensity } from '@/types'
 
 interface SettingsSectionProps {
@@ -501,6 +502,8 @@ export function SettingsSection(_props: SettingsSectionProps) {
             </div>
             <ThemePicker />
           </div>
+          {/* Theme schedule auto-switch */}
+          <ThemeScheduleSection />
           <SettingRow>
             <SettingLabel icon={Globe} label="Idioma" sub="Solo español en MVP" />
             <span

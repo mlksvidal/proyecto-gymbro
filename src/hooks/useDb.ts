@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '@/lib/db'
 import { BRO_TIERS } from '@/types'
+import { useUserStore } from '@/store/userStore'
 import type { Workout, SetRecord, PR, Achievement, AchievementRecord, Routine, Exercise } from '@/types'
 
 // ============================================================
@@ -154,6 +155,41 @@ export function getMonthlyPRs(prs: PR[]): PR[] {
   const now = new Date()
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime()
   return prs.filter((pr) => pr.achievedAt >= monthStart)
+}
+
+// ── Weekly adherence ───────────────────────────────────────────
+
+/** Weekly adherence vs daysPerWeekGoal — calendar week Mon-Sun */
+export function useWeeklyAdherence(): { trained: number; goal: number; percent: number } {
+  const workouts = useWorkouts()
+  const goal = useUserStore((s) => s.currentUser?.daysPerWeekGoal ?? 4)
+
+  // Start of this calendar week (Monday 00:00)
+  const now = new Date()
+  const dayOfWeek = now.getDay() // 0=Sun, 1=Mon...
+  const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+  const startOfWeek = new Date(now)
+  startOfWeek.setDate(now.getDate() - daysSinceMonday)
+  startOfWeek.setHours(0, 0, 0, 0)
+
+  const endOfWeek = new Date(startOfWeek)
+  endOfWeek.setDate(startOfWeek.getDate() + 6)
+  endOfWeek.setHours(23, 59, 59, 999)
+
+  const startTs = startOfWeek.getTime()
+  const endTs = endOfWeek.getTime()
+
+  const distinctDays = new Set(
+    workouts
+      .filter((w) => w.completedAt && w.completedAt >= startTs && w.completedAt <= endTs)
+      .map((w) => new Date(w.completedAt!).toDateString())
+  ).size
+
+  return {
+    trained: distinctDays,
+    goal,
+    percent: goal > 0 ? Math.round((distinctDays / goal) * 100) : 0,
+  }
 }
 
 /** Current BRO TIER based on total XP in workouts */

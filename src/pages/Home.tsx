@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Bell, Trophy, Flame, Zap, Target, Dumbbell as DumbbellIcon } from 'lucide-react'
@@ -13,6 +13,8 @@ import { CounterRolling } from '@/components/ui/CounterRolling'
 import { Marquee } from '@/components/ui/Marquee'
 import { AuroraBackground } from '@/components/ui/AuroraBackground'
 import { useSettingsStore } from '@/store/settingsStore'
+import { notifications, hasShownTodayKey, markShownTodayKey } from '@/lib/notifications'
+import { loadNotifPrefs } from '@/lib/notifications-prefs'
 
 // Lazy: InteractiveBackground is heavy canvas — load async
 const InteractiveBackground = lazy(
@@ -473,6 +475,36 @@ export default function Home() {
   const sparkData = useWeeklySparkData()
   const resolvedTheme = useResolvedTheme()
   const isLight = resolvedTheme === 'light'
+  const workouts = useWorkouts()
+
+  // Streak warning notification — once per day if streak > 0 and >18h since last workout
+  useEffect(() => {
+    if (streak <= 0) return
+    const prefs = loadNotifPrefs()
+    if (!prefs.streakWarning) return
+    if (!notifications.isGranted()) return
+    if (hasShownTodayKey('streak-warning')) return
+
+    const lastWorkout = workouts
+      .filter((w) => w.completedAt)
+      .sort((a, b) => (b.completedAt ?? 0) - (a.completedAt ?? 0))[0]
+
+    if (!lastWorkout?.completedAt) return
+
+    const hoursAgo = (Date.now() - lastWorkout.completedAt) / (1000 * 60 * 60)
+    if (hoursAgo < 18) return
+
+    // Days left before streak breaks (streak breaks if no workout today or yesterday)
+    const todayStart = new Date()
+    todayStart.setHours(0, 0, 0, 0)
+    const trainedToday = workouts.some(
+      (w) => w.completedAt && w.completedAt >= todayStart.getTime()
+    )
+    const daysLeft = trainedToday ? 1 : 0
+
+    markShownTodayKey('streak-warning')
+    notifications.streakWarning(daysLeft).catch(() => {})
+  }, [streak, workouts])
 
   return (
     <div className="flex flex-col h-full relative overflow-x-hidden">

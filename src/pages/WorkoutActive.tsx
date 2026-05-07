@@ -6,6 +6,8 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { notifications } from '@/lib/notifications'
+import { loadNotifPrefs } from '@/lib/notifications-prefs'
 import { AnimatePresence } from 'framer-motion'
 import { useWorkoutStore } from '@/store/workoutStore'
 import { useSettingsStore } from '@/store/settingsStore'
@@ -258,6 +260,19 @@ export default function WorkoutActive() {
         await db.achievementRecords.bulkPut(
           newlyUnlocked.map((id) => ({ id, unlockedAt: now }))
         )
+
+        // Notification: achievement unlocked (fire for first newly-unlocked)
+        const prefs = loadNotifPrefs()
+        if (prefs.achievements) {
+          const { getAchievementDef } = await import('@/lib/achievements')
+          for (const id of newlyUnlocked) {
+            const def = getAchievementDef(id)
+            if (def) {
+              notifications.achievementUnlocked(def.name).catch(() => {})
+              break // only fire once per workout to avoid spam
+            }
+          }
+        }
       }
     } catch {
       // Achievement detection failure is non-fatal
@@ -311,6 +326,13 @@ export default function WorkoutActive() {
         navigator.vibrate([100, 50, 100])
       }
       setPrToast({ weight: set.actualWeight, reps: set.actualReps })
+
+      // Notification: PR achieved
+      const prefs = loadNotifPrefs()
+      if (prefs.prs) {
+        const units = currentUser?.units ?? 'kg'
+        notifications.prConseguido(currentExercise.exerciseName, set.actualWeight, units).catch(() => {})
+      }
     }
 
     const isLastSetOfExercise = activeSetIndex === currentExercise.sets.length - 1
@@ -348,6 +370,7 @@ export default function WorkoutActive() {
     goToNextExercise,
     endRest,
     saveWorkoutAndNavigate,
+    currentUser,
   ])
 
   // ── Rest timer handlers ───────────────────────────────────
