@@ -33,8 +33,8 @@ export default function Workouts() {
         }}
       >
         <motion.h1
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
           className="text-[28px] font-[var(--font-display)] font-bold uppercase tracking-wider"
           style={{ color: 'var(--color-text)' }}
@@ -122,8 +122,8 @@ export default function Workouts() {
                 return (
                   <motion.div
                     key={workout.id}
-                    initial={{ opacity: 0, x: -16 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.35, delay: index * 0.06, ease: 'easeOut' }}
                     className="flex items-center justify-between px-4 py-3 rounded-xl"

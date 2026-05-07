@@ -71,6 +71,22 @@ h6 {
   text-size-adjust: 100%;
 }
 
+/* Lock root horizontal viewport — prevents any rogue element from
+   creating horizontal scroll that pushes content past the left edge. */
+html,
+body {
+  overflow-x: clip;
+  max-width: 100vw;
+  width: 100%;
+}
+
+/* Stronger guarantee on the React root itself */
+#root {
+  overflow-x: clip;
+  max-width: 100vw;
+  width: 100%;
+}
+
 /* --------------------------------------------------------------------------
    BODY — App shell base
    -------------------------------------------------------------------------- */

@@ -357,8 +357,8 @@ function ChallengesSection() {
         {ACTIVE_CHALLENGES.map((c, idx) => (
           <motion.div
             key={c.id}
-            initial={{ opacity: 0, x: -12 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.35, delay: idx * 0.08, ease: 'easeOut' }}
           >
@@ -389,8 +389,8 @@ function HomeHeader() {
     >
       <div>
         <motion.h1
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
           className="flex items-center gap-2"
           style={{

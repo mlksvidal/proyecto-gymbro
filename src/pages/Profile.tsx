@@ -273,8 +273,8 @@ function PRHighlightsSection({ prs }: { prs: { id: string; exerciseName: string;
         {top3.map((pr, i) => (
           <motion.div
             key={pr.id}
-            initial={{ opacity: 0, x: -16 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.08, duration: 0.35, ease: 'easeOut' }}
             className="rounded-2xl p-3 flex items-center gap-3 relative overflow-hidden"
