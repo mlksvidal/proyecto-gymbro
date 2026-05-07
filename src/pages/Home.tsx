@@ -374,7 +374,7 @@ function HomeHeader() {
 
   return (
     <header
-      className="sticky top-0 z-[var(--z-sticky)] flex items-center justify-between px-4"
+      className="sticky top-0 z-[var(--z-sticky)] flex items-center justify-between px-5"
       style={{
         background: 'color-mix(in srgb, var(--color-bg) 90%, transparent)',
         backdropFilter: 'blur(8px)',
@@ -526,7 +526,7 @@ export default function Home() {
         <PullToRefresh onRefresh={fakeRefresh} className="flex-1">
           <main
             id="main-content"
-            className="flex flex-col gap-4 px-4 pt-2"
+            className="flex flex-col gap-4 px-5 pt-2"
             style={{ paddingBottom: 'max(24px, calc(env(safe-area-inset-bottom, 0px) + 16px))' }}
           >
             {/* Stat cards row — stagger entrance */}

@@ -233,7 +233,7 @@ export default function WorkoutSummary() {
   }
 
   return (
-    <div className="flex flex-col min-h-[100dvh] bg-[var(--color-bg)] px-4 pb-safe">
+    <div className="flex flex-col min-h-[100dvh] bg-[var(--color-bg)] px-5 pb-safe">
       <div
         className="pt-safe"
         style={{ paddingTop: 'max(24px, env(safe-area-inset-top))' }}

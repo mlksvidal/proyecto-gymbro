@@ -55,14 +55,14 @@ function SettingLabel({
   sub?: string
 }) {
   return (
-    <div className="flex items-center gap-3">
-      <Icon size={18} style={{ color: 'var(--color-text-muted)' }} aria-hidden="true" />
-      <div>
-        <p className="text-[14px] font-[var(--font-body)]" style={{ color: 'var(--color-text)' }}>
+    <div className="flex items-center gap-3 flex-1 min-w-0 mr-3">
+      <Icon size={18} style={{ color: 'var(--color-text-muted)', flexShrink: 0 }} aria-hidden="true" />
+      <div className="min-w-0">
+        <p className="text-[14px] font-[var(--font-body)] truncate" style={{ color: 'var(--color-text)' }}>
           {label}
         </p>
         {sub && (
-          <p className="text-[11px] font-[var(--font-body)]" style={{ color: 'var(--color-text-disabled)' }}>
+          <p className="text-[11px] font-[var(--font-body)] truncate" style={{ color: 'var(--color-text-disabled)' }}>
             {sub}
           </p>
         )}
@@ -321,7 +321,7 @@ export function SettingsSection(_props: SettingsSectionProps) {
           <SettingRow>
             <SettingLabel icon={Globe} label="Idioma" sub="Solo español en MVP" />
             <span
-              className="text-[12px] font-[var(--font-body)]"
+              className="text-[12px] font-[var(--font-body)] flex-shrink-0"
               style={{ color: 'var(--color-text-disabled)' }}
             >
               Español

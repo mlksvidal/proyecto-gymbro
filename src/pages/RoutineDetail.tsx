@@ -125,7 +125,7 @@ export default function RoutineDetail() {
     <div className="flex flex-col min-h-screen bg-[var(--color-bg)]">
       {/* Sticky header */}
       <div
-        className="sticky top-0 z-20 flex items-center justify-between px-4 py-3"
+        className="sticky top-0 z-20 flex items-center justify-between px-5 py-3"
         style={{
           background: 'var(--color-bg)',
           paddingTop: 'max(12px, env(safe-area-inset-top))',
@@ -174,7 +174,7 @@ export default function RoutineDetail() {
           }}
           aria-hidden="true"
         />
-        <div className="absolute bottom-4 left-4 right-4">
+        <div className="absolute bottom-4 left-5 right-5">
           <h1
             className="text-[40px] font-[var(--font-display)] font-bold uppercase leading-none"
             style={{ color: 'var(--color-primary)' }}
@@ -189,7 +189,7 @@ export default function RoutineDetail() {
 
       {/* Stats row */}
       <div
-        className="grid grid-cols-3 gap-3 px-4 py-4 border-b border-white/5"
+        className="grid grid-cols-3 gap-3 px-5 py-4 border-b border-white/5"
       >
         {[
           { icon: Calendar, label: 'Días/sem', value: `${routine.daysPerWeek}x` },
@@ -216,7 +216,7 @@ export default function RoutineDetail() {
 
       {/* Equipment */}
       {usedEquipment.length > 0 && (
-        <div className="px-4 py-3 border-b border-white/5">
+        <div className="px-5 py-3 border-b border-white/5">
           <p className="text-[12px] font-[var(--font-body)] text-[var(--color-text-muted)] mb-2 uppercase tracking-wider">
             Equipo necesario
           </p>
@@ -238,7 +238,7 @@ export default function RoutineDetail() {
       )}
 
       {/* Day tabs */}
-      <div className="px-4 pt-4 pb-2">
+      <div className="px-5 pt-4 pb-2">
         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
           {routine.days.map((day, idx) => (
             <button
@@ -259,7 +259,7 @@ export default function RoutineDetail() {
       </div>
 
       {/* Exercise list */}
-      <div className="px-4 pb-36">
+      <div className="px-5 pb-36">
         {currentDay && currentDay.exercises.length > 0 ? (
           <motion.div
             key={selectedDayIndex}
@@ -289,7 +289,7 @@ export default function RoutineDetail() {
 
       {/* Fixed bottom CTA — lifted above BottomNav (64px height + safe area) */}
       <div
-        className="fixed left-0 right-0 z-40 px-4 pt-3"
+        className="fixed left-0 right-0 z-40 px-5 pt-3"
         style={{
           bottom: 'calc(var(--bottom-nav-height, 64px) + env(safe-area-inset-bottom, 0px))',
           background: 'linear-gradient(to top, var(--color-bg) 70%, transparent)',

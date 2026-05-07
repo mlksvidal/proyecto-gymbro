@@ -262,7 +262,7 @@ export function ProfileHeroCinema({
       </motion.div>
 
       {/* ── Stat chips ───────────────────────────────────────── */}
-      <div className="flex gap-2 w-full px-2">
+      <div className="flex gap-2.5 w-full">
         <StatChip icon={Dumbbell} value={workoutCount} label="Workouts" tierColor={tierColor} delay={0.25} />
         <StatChip icon={Flame} value={streak} label="Racha días" tierColor={tierColor} delay={0.32} />
         <StatChip icon={Zap} value={Math.round(totalVolumeKg / 1000 * 10) / 10 || Math.round(totalVolumeKg)} label={totalVolumeKg >= 1000 ? 'Ton total' : 'Vol kg'} tierColor={tierColor} delay={0.39} compact />
