@@ -733,7 +733,7 @@ export async function generateStickerPng(data: StickerData): Promise<Blob> {
   // SECTION 6 — BOTTOM FRAME: Tier pill (compact)
   // ══════════════════════════════════════════════════════════
   {
-    const tierText = `BRO TIER ${data.tierLevel} · ${data.tierName.toUpperCase()}`
+    const tierText = `Tier ${data.tierLevel} · ${data.tierName.toUpperCase()}`
     ctx.save()
     ctx.font         = `700 28px ${DISPLAY_FONT}`
     const tw         = ctx.measureText(tierText).width

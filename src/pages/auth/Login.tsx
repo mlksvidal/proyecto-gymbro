@@ -315,7 +315,7 @@ export default function Login() {
             className="text-[24px] font-[var(--font-display)] font-bold text-center mb-1"
             style={{ color: 'var(--color-text)' }}
           >
-            Bienvenido de vuelta, bro
+            Bienvenido de vuelta
           </h1>
           <p className="text-[14px] font-[var(--font-body)] text-center" style={{ color: 'var(--color-text-muted)' }}>
             Ingresá para sincronizar tu progreso

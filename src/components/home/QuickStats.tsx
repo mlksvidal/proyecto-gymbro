@@ -60,7 +60,7 @@ function BroTierCard({ totalXP }: BroTierCardProps) {
   return (
     <div className="flex flex-col gap-1 p-4 rounded-[var(--radius-lg)] bg-[var(--color-surface)] border border-[var(--color-border)]">
       <p className="text-[10px] font-[var(--font-body)] text-[var(--color-text-muted)] uppercase tracking-widest leading-tight">
-        BRO TIER
+        Tier
       </p>
       <div className="flex items-center gap-2 mt-1">
         <Award size={20} style={{ color: tier.color }} aria-hidden="true" />

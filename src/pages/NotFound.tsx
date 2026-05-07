@@ -13,13 +13,13 @@ export default function NotFound() {
         404
       </h1>
       <p className="text-[var(--color-text-muted)] mb-8">
-        Esta página no existe, bro.
+        Esta página no existe.
       </p>
       <button
         onClick={() => navigate('/')}
         className="bg-[var(--color-primary)] text-[var(--color-text-inverse)] font-[var(--font-display)] font-bold px-8 py-3 rounded-[var(--radius-full)] haptic"
       >
-        VOLVER AL INICIO
+        Volver al inicio
       </button>
     </div>
   )

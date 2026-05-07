@@ -1,10 +1,11 @@
 // ============================================================
-// GYMBRO — Stats Page — Sprint 9 WOW MODE
-// Route: /stats
-// Tabs con sliding indicator animado, counters rolling, bg interactivo
+// GYMBRO — Stats Page — Sprint 25.2 v2
+// Eliminado: AuroraBackground, InteractiveBackground, Marquee,
+//            GlitchText heading, decorative bg text
+// TabBar v2 underline. StatCards Whoop style. Tokens v2.
 // ============================================================
 
-import { lazy, Suspense, useState, useRef } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BarChart3, Calendar, Zap, Clock, Dumbbell, Trophy, TrendingUp } from 'lucide-react'
 import { useWorkouts, usePRs, useWeeklyAdherence } from '@/hooks/useDb'
@@ -12,22 +13,17 @@ import { VolumeChart } from '@/components/stats/VolumeChart'
 import { HeatmapCalendar } from '@/components/stats/HeatmapCalendar'
 import { PRHighlight } from '@/components/stats/PRHighlight'
 import { CounterRolling } from '@/components/ui/CounterRolling'
-import { AuroraBackground } from '@/components/ui/AuroraBackground'
-import { useSettingsStore } from '@/store/settingsStore'
-
-const InteractiveBackground = lazy(
-  () => import('@/components/ui/InteractiveBackground').then((m) => ({ default: m.InteractiveBackground }))
-)
+import { TabBar } from '@/components/ui/TabBar'
 
 type Period = 'week' | 'month' | 'all'
 
-const PERIOD_LABELS: Record<Period, string> = {
-  week: 'SEMANA',
-  month: 'MES',
-  all: 'TODO',
-}
+const PERIOD_TABS: { value: Period; label: string }[] = [
+  { value: 'week', label: 'Semana' },
+  { value: 'month', label: 'Mes' },
+  { value: 'all', label: 'Todo' },
+]
 
-// ── Animated stat card ────────────────────────────────────────
+// ── Stat card — Whoop style ───────────────────────────────────
 function StatCard({
   icon: Icon,
   label,
@@ -45,46 +41,57 @@ function StatCard({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-20px' }}
-      transition={{ duration: 0.4, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
-      className="flex flex-col gap-1.5 p-4 rounded-2xl relative overflow-hidden"
-      style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
+      transition={{ duration: 0.3, delay: index * 0.06, ease: [0.16, 1, 0.3, 1] }}
+      className="flex flex-col gap-1 p-4 rounded-[var(--radius-lg)]"
+      style={{
+        background: 'var(--color-surface-elevated)',
+        boxShadow: 'var(--shadow-md)',
+      }}
     >
-      {/* Faded icon bg */}
-      <Icon
-        size={48}
-        aria-hidden="true"
+      <span
         style={{
-          position: 'absolute',
-          right: -6,
-          bottom: -6,
-          color: 'rgba(171,255,53,0.04)',
+          fontFamily: 'var(--font-mono)',
+          fontWeight: 600,
+          fontSize: 'var(--text-display-lg)',
+          color: 'var(--color-text)',
+          lineHeight: 'var(--leading-tight)',
+          fontVariantNumeric: 'tabular-nums',
         }}
-      />
-
-      <div className="flex items-center gap-2">
-        <Icon size={14} style={{ color: 'var(--color-text-muted)' }} aria-hidden="true" />
-        <span
-          className="text-[11px] font-[var(--font-body)] uppercase tracking-wider"
-          style={{ color: 'var(--color-text-muted)' }}
-        >
-          {label}
-        </span>
-      </div>
-      <div
-        className="text-[26px] font-[var(--font-display)] font-bold leading-none"
-        style={{ color: 'var(--color-text)' }}
       >
         {numericValue !== undefined ? (
           <CounterRolling value={numericValue} />
         ) : (
           value
         )}
+      </span>
+
+      <div className="flex items-center gap-1.5">
+        <Icon size={12} style={{ color: 'var(--color-text-muted)' }} aria-hidden="true" />
+        <span
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: 'var(--text-body-2xs)',
+            color: 'var(--color-text-muted)',
+            textTransform: 'uppercase',
+            letterSpacing: 'var(--tracking-widest)',
+            fontWeight: 600,
+          }}
+        >
+          {label}
+        </span>
       </div>
+
       {sub && (
-        <p className="text-[11px] font-[var(--font-body)]" style={{ color: 'var(--color-text-muted)' }}>
+        <p
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: 'var(--text-body-xs)',
+            color: 'var(--color-text-muted)',
+          }}
+        >
           {sub}
         </p>
       )}
@@ -95,7 +102,6 @@ function StatCard({
 export default function Stats() {
   const [period, setPeriod] = useState<Period>('week')
   const [now] = useState<number>(() => Date.now())
-  const tabsRef = useRef<HTMLDivElement>(null)
   const workouts = useWorkouts()
   const allPRs = usePRs()
   const adherence = useWeeklyAdherence()
@@ -135,134 +141,74 @@ export default function Stats() {
       ? Math.round(filteredWorkouts.reduce((s, w) => s + (w.setsCompleted ?? 0), 0) / filteredWorkouts.length)
       : 0
 
-  // Tab index for sliding indicator position
-  const periodKeys = Object.keys(PERIOD_LABELS) as Period[]
-  const activeTabIdx = periodKeys.indexOf(period)
-
-  const theme = useSettingsStore((s) => s.theme)
-  const isLight = theme === 'light' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: light)').matches)
-
   return (
     <div
-      className="min-h-[100dvh] relative overflow-hidden"
+      className="min-h-[100dvh]"
       style={{
         background: 'var(--color-bg)',
         paddingBottom: 'calc(80px + env(safe-area-inset-bottom))',
       }}
     >
-      {/* Aurora background — light mode only */}
-      <AuroraBackground zIndex={0} />
-
-      {/* Background particles — dark mode only */}
-      {!isLight && (
-        <Suspense fallback={null}>
-          <InteractiveBackground particleCount={18} />
-        </Suspense>
-      )}
-
-      {/* Decorative background text */}
-      <div
-        aria-hidden="true"
-        className="absolute top-20 left-0 right-0 flex justify-center pointer-events-none select-none overflow-hidden"
-        style={{ zIndex: 0 }}
-      >
-        <span
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontWeight: 900,
-            fontSize: 'clamp(48px, 20vw, 96px)',
-            color: 'rgba(171,255,53,0.03)',
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            whiteSpace: 'nowrap',
-            lineHeight: 1,
-          }}
-        >
-          PROGRESO · STATS · GANANCIA
-        </span>
-      </div>
-
       {/* Header */}
       <div
-        className="sticky top-0 z-10 flex items-center gap-2 px-6"
+        className="sticky top-0 z-[var(--z-sticky)] flex items-center gap-2 px-[var(--page-padding-x)]"
         style={{
-          background: 'color-mix(in srgb, var(--color-bg) 92%, transparent)',
+          background: 'var(--nav-v2-bg)',
           backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          borderBottom: 'none',
           paddingTop: 'max(16px, calc(env(safe-area-inset-top, 0px) + 8px))',
           paddingBottom: '14px',
         }}
       >
-        <BarChart3 size={20} style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
+        <BarChart3 size={18} style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
         <h1
-          className="text-[20px] font-[var(--font-display)] font-bold uppercase"
-          style={{ color: 'var(--color-text)' }}
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontWeight: 600,
+            fontSize: 'var(--text-display-sm)',
+            color: 'var(--color-text)',
+          }}
         >
           Estadísticas
         </h1>
       </div>
 
-      <div className="px-6 pt-3 space-y-5 relative" style={{ zIndex: 1 }}>
-        {/* ── Animated period tabs ─────────────────────── */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: 'easeOut' }}
-          ref={tabsRef}
-          className="relative flex gap-px p-1 rounded-2xl"
-          style={{ background: 'var(--color-surface)' }}
-          role="tablist"
+      <div
+        className="px-[var(--page-padding-x)] pt-4 space-y-[var(--section-gap)]"
+        style={{ position: 'relative' }}
+      >
+        {/* ── TabBar v2 — underline indicator ─────────── */}
+        <TabBar
+          tabs={PERIOD_TABS}
+          active={period}
+          onChange={setPeriod}
           aria-label="Período de estadísticas"
-        >
-          {/* Sliding active indicator */}
-          <motion.div
-            className="absolute top-1 bottom-1 rounded-xl"
-            style={{ background: 'var(--color-primary)' }}
-            initial={false}
-            animate={{
-              left: `calc(${activeTabIdx} * (100% - 8px) / 3 + 4px)`,
-              width: `calc((100% - 8px) / 3)`,
-              boxShadow: '0 0 12px rgba(171,255,53,0.4)',
-            }}
-            transition={{ type: 'spring', stiffness: 400, damping: 35 }}
-            aria-hidden="true"
-          />
-
-          {periodKeys.map((p) => (
-            <button
-              key={p}
-              role="tab"
-              aria-selected={period === p}
-              onClick={() => setPeriod(p)}
-              className="relative flex-1 py-2 min-h-[44px] rounded-xl text-[12px] font-[var(--font-body)] font-semibold uppercase tracking-wider transition-colors duration-200 z-10 whitespace-nowrap"
-              style={{
-                color: period === p ? 'var(--color-text-inverse)' : 'var(--color-text-muted)',
-              }}
-            >
-              {PERIOD_LABELS[p]}
-            </button>
-          ))}
-        </motion.div>
+        />
 
         {/* ── Volume chart ────────────────────────────── */}
         <AnimatePresence mode="wait">
           <motion.div
             key={`chart-${period}`}
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
           >
             <div
-              className="rounded-2xl p-4"
+              className="rounded-[var(--radius-lg)] p-4"
               style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
             >
               <div className="flex items-center gap-2 mb-3">
-                <BarChart3 size={14} style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
                 <h2
-                  className="text-[12px] font-[var(--font-body)] uppercase tracking-wider font-semibold"
-                  style={{ color: 'var(--color-text-muted)' }}
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontWeight: 600,
+                    fontSize: 'var(--text-body-md)',
+                    color: 'var(--color-text)',
+                  }}
                 >
-                  Volumen total —{' '}
+                  Volumen{' '}
                   <span style={{ color: 'var(--color-primary)' }}>
                     {Math.round(totalVolume).toLocaleString('es-AR')} kg
                   </span>
@@ -275,48 +221,65 @@ export default function Stats() {
 
         {/* ── Adherencia semanal ─────────────────────── */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="rounded-2xl p-4"
+          transition={{ duration: 0.3, ease: 'easeOut' }}
+          className="rounded-[var(--radius-lg)] p-4"
           style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
         >
           <div className="flex items-center gap-2 mb-3">
             <TrendingUp size={14} style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
             <h2
-              className="text-[12px] font-[var(--font-body)] uppercase tracking-wider font-semibold"
-              style={{ color: 'var(--color-text-muted)' }}
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontWeight: 600,
+                fontSize: 'var(--text-body-md)',
+                color: 'var(--color-text)',
+              }}
             >
               Adherencia esta semana
             </h2>
           </div>
 
-          {/* Progress bar */}
           <div className="flex items-center gap-3 mb-2">
             <span
-              className="text-[28px] font-[var(--font-display)] font-bold leading-none"
-              style={{ color: adherence.percent >= 100 ? 'var(--color-primary)' : 'var(--color-text)' }}
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontWeight: 600,
+                fontSize: 'var(--text-display-lg)',
+                color: adherence.percent >= 100 ? 'var(--color-primary)' : 'var(--color-text)',
+                lineHeight: 'var(--leading-tight)',
+                fontVariantNumeric: 'tabular-nums',
+              }}
             >
               {adherence.trained}/{adherence.goal}
             </span>
             <span
-              className="text-[13px] font-[var(--font-body)]"
-              style={{ color: 'var(--color-text-muted)' }}
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: 'var(--text-body-sm)',
+                color: 'var(--color-text-muted)',
+              }}
             >
               días
             </span>
             <span
-              className="ml-auto text-[13px] font-[var(--font-display)] font-bold"
-              style={{ color: adherence.percent >= 100 ? 'var(--color-primary)' : 'var(--color-text-muted)' }}
+              className="ml-auto"
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontWeight: 600,
+                fontSize: 'var(--text-body-sm)',
+                color: adherence.percent >= 100 ? 'var(--color-primary)' : 'var(--color-text-muted)',
+              }}
             >
               {adherence.percent}%
             </span>
           </div>
 
           <div
-            className="w-full h-2.5 rounded-full overflow-hidden"
-            style={{ background: 'var(--color-surface-elevated)' }}
+            className="w-full h-1.5 rounded-full overflow-hidden"
+            style={{ background: 'var(--progress-v2-track)' }}
             role="progressbar"
             aria-valuenow={adherence.percent}
             aria-valuemin={0}
@@ -327,31 +290,29 @@ export default function Stats() {
               initial={{ width: 0 }}
               whileInView={{ width: `${Math.min(adherence.percent, 100)}%` }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
               className="h-full rounded-full"
-              style={{
-                background: adherence.percent >= 100
-                  ? 'var(--color-primary)'
-                  : adherence.percent >= 50
-                  ? 'linear-gradient(90deg, var(--color-primary) 0%, rgba(171,255,53,0.6) 100%)'
-                  : 'rgba(171,255,53,0.4)',
-              }}
+              style={{ background: 'var(--progress-v2-fill)' }}
             />
           </div>
 
           <p
-            className="text-[12px] font-[var(--font-body)] mt-2"
-            style={{ color: 'var(--color-text-muted)' }}
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: 'var(--text-body-xs)',
+              color: 'var(--color-text-muted)',
+              marginTop: 8,
+            }}
           >
             {adherence.percent >= 100
               ? 'Cumpliste tu meta esta semana.'
               : adherence.goal - adherence.trained === 1
-              ? 'Te falta 1 entrenamiento para cumplir la meta.'
-              : `Te faltan ${adherence.goal - adherence.trained} entrenamientos para cumplir la meta.`}
+              ? 'Falta 1 sesión para cumplir la meta.'
+              : `Faltan ${adherence.goal - adherence.trained} sesiones para cumplir la meta.`}
           </p>
         </motion.div>
 
-        {/* ── Stats grid — whileInView stagger ────────── */}
+        {/* ── Stats grid 2x2 — Whoop style ────────────── */}
         <AnimatePresence mode="wait">
           <motion.div
             key={`grid-${period}`}
@@ -371,7 +332,7 @@ export default function Stats() {
             <StatCard
               index={1}
               icon={Dumbbell}
-              label="Workouts"
+              label="Sesiones"
               value={filteredWorkouts.length}
               numericValue={filteredWorkouts.length}
               sub="en el período"
@@ -379,27 +340,27 @@ export default function Stats() {
             <StatCard
               index={2}
               icon={BarChart3}
-              label="Prom. volumen"
+              label="Vol. promedio"
               value={`${avgVolume}kg`}
               numericValue={avgVolume}
-              sub="por workout"
+              sub="por sesión"
             />
             <StatCard
               index={3}
               icon={Clock}
-              label="Prom. duración"
+              label="Duración prom."
               value={avgDuration > 0 ? `${avgDuration}min` : '—'}
               numericValue={avgDuration > 0 ? avgDuration : undefined}
-              sub="por workout"
+              sub="por sesión"
             />
             {avgSets > 0 && (
               <StatCard
                 index={4}
                 icon={Zap}
-                label="Prom. sets"
+                label="Sets prom."
                 value={avgSets}
                 numericValue={avgSets}
-                sub="por workout"
+                sub="por sesión"
               />
             )}
             {allPRs.length > 0 && (
@@ -409,38 +370,42 @@ export default function Stats() {
                 label="Total PRs"
                 value={allPRs.length}
                 numericValue={allPRs.length}
-                sub="récords personales"
+                sub="récords"
               />
             )}
           </motion.div>
         </AnimatePresence>
 
-        {/* ── PR del mes — scale-bounce entrance ──────── */}
+        {/* ── PR del mes ──────────────────────────────── */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.92 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         >
           <PRHighlight allPRs={allPRs} />
         </motion.div>
 
         {/* ── Heatmap ──────────────────────────────────── */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
+          transition={{ duration: 0.35, ease: 'easeOut' }}
         >
           <div
-            className="rounded-2xl p-4"
+            className="rounded-[var(--radius-lg)] p-4"
             style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
           >
             <div className="flex items-center gap-2 mb-4">
               <Calendar size={14} style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
               <h2
-                className="text-[12px] font-[var(--font-body)] uppercase tracking-wider font-semibold"
-                style={{ color: 'var(--color-text-muted)' }}
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontWeight: 600,
+                  fontSize: 'var(--text-body-md)',
+                  color: 'var(--color-text)',
+                }}
               >
                 Actividad — últimos 365 días
               </h2>

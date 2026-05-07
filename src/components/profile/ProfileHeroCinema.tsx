@@ -1,12 +1,11 @@
 // ============================================================
-// ProfileHeroCinema — Sprint 9 WOW MODE + Sprint 22 dynamic avatar
-// Avatar circular 140x140 con:
-// - Anillo conic-gradient rotando 360°
-// - SVG ring de progreso XP alrededor del avatar
-// - Glow pulse expandiendo
-// - Avatar dinámico (mascot | icon | initials) clickeable
-// - 4 stat chips horizontales con CounterRolling
-// - TierBadge con shine sweep
+// ProfileHeroCinema — Sprint 25.2 v2 — Clean Fitness Pro
+// - XP progress ring (SVG, no glow loop)
+// - Avatar: border token, no conic spin, no pulse-glow
+// - Name: Geist, no uppercase, no textShadow
+// - TierBadge: v2 (no shine sweep)
+// - Stat chips: tier color bg at 8% opacity
+// - Edit button: Inter semibold, no uppercase
 // ============================================================
 
 import { useState } from 'react'
@@ -173,47 +172,27 @@ export function ProfileHeroCinema({
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         className="relative"
         style={{ width: 160, height: 160 }}
       >
-        {/* Rotating conic-gradient ring — outer decorative */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 rounded-full anim-ring-spin"
-          style={{
-            background: `conic-gradient(from 0deg, ${tierColor} 0%, transparent 30%, ${tierColor}55 60%, transparent 80%, ${tierColor} 100%)`,
-            padding: '3px',
-            zIndex: 2,
-          }}
-        >
-          <div
-            className="w-full h-full rounded-full"
-            style={{ background: 'var(--color-bg)' }}
-          />
-        </div>
-
-        {/* XP progress ring overlay */}
+        {/* XP progress ring — clean SVG, no glow loop */}
         <XPProgressRing
           progress={breakdown.progressPercent}
           tierColor={tierColor}
           size={160}
         />
 
-        {/* Avatar circle — absolute centered, clickable */}
+        {/* Avatar circle — clean border, no pulse-glow */}
         <div
           className="absolute rounded-full flex items-center justify-center overflow-hidden"
           style={{
             inset: '10px',
             zIndex: 4,
             background: avatarKind === 'mascot'
-              ? `radial-gradient(circle at 30% 30%, ${tierColor}18, transparent 70%)`
-              : 'transparent',
-            border: `1px solid ${tierColor}40`,
-            boxShadow: `0 0 24px ${tierColor}40, 0 0 48px ${tierColor}18, inset 0 0 20px rgba(0,0,0,0.4)`,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ['--tier-glow' as any]: tierColor,
-            animation: 'pulse-glow-tier 3s ease-in-out infinite',
+              ? `radial-gradient(circle at 30% 30%, ${tierColor}10, transparent 70%)`
+              : 'var(--color-surface)',
+            border: `1px solid ${tierColor}35`,
           }}
         >
           <UserAvatar
@@ -237,7 +216,6 @@ export function ProfileHeroCinema({
             height: 30,
             background: 'var(--color-primary)',
             border: '2px solid var(--color-bg)',
-            boxShadow: `0 0 8px ${tierColor}60`,
           }}
           aria-label="Editar perfil"
         >
@@ -255,13 +233,10 @@ export function ProfileHeroCinema({
         <h1
           style={{
             fontFamily: 'var(--font-display)',
-            fontWeight: 900,
-            fontSize: 'clamp(28px, 8vw, 40px)',
+            fontWeight: 700,
+            fontSize: 'clamp(26px, 7vw, 36px)',
             color: 'var(--color-text)',
             lineHeight: '1',
-            textTransform: 'uppercase',
-            letterSpacing: '0.04em',
-            textShadow: `0 0 20px ${tierColor}50`,
           }}
         >
           {name}
@@ -293,24 +268,9 @@ export function ProfileHeroCinema({
           </p>
         )}
 
-        {/* Tier badge with shine */}
+        {/* Tier badge — v2 clean */}
         <div className="mt-3 flex justify-center">
-          <div className="relative overflow-hidden rounded-full">
-            <TierBadge tier={tier} size="lg" />
-            {/* Shine sweep over badge */}
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: 'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%)',
-                width: '40px',
-                top: 0,
-                bottom: 0,
-              }}
-            >
-              <div className="w-full h-full anim-shine-sweep" />
-            </div>
-          </div>
+          <TierBadge tier={tier} size="lg" />
         </div>
 
         {/* XP to next tier */}
@@ -330,19 +290,18 @@ export function ProfileHeroCinema({
           </motion.p>
         )}
 
-        {/* Edit button */}
+        {/* Edit button — v2 clean */}
         <button
           onClick={() => setEditOpen(true)}
-          className="mt-3 px-4 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-wide transition-all active:scale-95"
+          className="mt-3 px-4 py-1.5 rounded-full text-[12px] font-semibold transition-all active:scale-95"
           style={{
-            fontFamily: 'var(--font-display)',
+            fontFamily: 'var(--font-body)',
             background: 'var(--color-surface)',
             color: 'var(--color-text-muted)',
             border: '1px solid var(--color-border)',
-            letterSpacing: '0.06em',
           }}
         >
-          EDITAR PERFIL
+          Editar perfil
         </button>
       </motion.div>
 

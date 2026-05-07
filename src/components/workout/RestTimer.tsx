@@ -113,7 +113,7 @@ export function RestTimer({
           color: 'var(--color-text-muted)',
         }}
       >
-        DESCANSANDO
+        Descansando
       </p>
 
       {/* Giant SVG Timer — 280px */}

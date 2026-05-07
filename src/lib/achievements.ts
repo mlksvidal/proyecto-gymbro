@@ -141,7 +141,7 @@ export const ACHIEVEMENT_CATALOG: AchievementDef[] = [
   {
     id: 'tier_3',
     name: 'Consistente',
-    description: 'Alcanzá el BRO TIER 3: CONSISTENTE',
+    description: 'Alcanzá el Tier 3: Consistente',
     icon: 'Shield',
     tier: 'silver',
     category: 'tiers',
@@ -149,7 +149,7 @@ export const ACHIEVEMENT_CATALOG: AchievementDef[] = [
   {
     id: 'tier_5',
     name: 'Brutal',
-    description: 'Alcanzá el BRO TIER 5: BRUTAL',
+    description: 'Alcanzá el Tier 5: Brutal',
     icon: 'Star',
     tier: 'gold',
     category: 'tiers',
@@ -157,7 +157,7 @@ export const ACHIEVEMENT_CATALOG: AchievementDef[] = [
   {
     id: 'tier_7',
     name: 'GOAT',
-    description: 'Alcanzá el BRO TIER 7: GOAT',
+    description: 'Alcanzá el Tier 7: GOAT',
     icon: 'Crown',
     tier: 'diamond',
     category: 'tiers',

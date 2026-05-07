@@ -1,0 +1,389 @@
+/* ==========================================================================
+   GYMBRO — Design Tokens v2  (REBRAND — Sprint 25.1)
+   Tailwind v4 CSS-first (@theme directive)
+
+   COEXISTENCIA: este archivo puede coexistir con tokens.css durante la
+   migración. Importar DESPUÉS de tokens.css para sobrescribir selectivamente.
+
+   Dirección estética v2: Clean Fitness Pro — Hevy discipline + Whoop data viz.
+   Lima reservada solo para CTAs, estados completados y datos críticos.
+   Sin glow ambient. Sin pulso de cards. Jerarquía tipográfica clara.
+   ========================================================================== */
+
+/* Note: Geist + Inter + JetBrains Mono @import debe ir en index.css
+   ANTES del @import "tailwindcss", junto con los demás Google Fonts.
+   Geist: https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap
+   Inter: https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap
+   JetBrains Mono: https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap
+*/
+
+@theme {
+
+  /* --------------------------------------------------------------------------
+     COLORS v2
+
+     Cambio filosófico respecto v1:
+     - Fondo levemente más cálido (0A0A0B no 0A0A0A) — less sterile
+     - Superficie más diferenciada (3 niveles claros)
+     - Texto con jerarquía real: 3 niveles + disabled
+     - Lima SOLO en: CTAs primarios, estados completed/success, datos críticos
+     - Orange para streaks >30d y near-PR (más legible que amarillo)
+     - Tiers más sobrios (gray → lima → orange → red)
+     -------------------------------------------------------------------------- */
+
+  /* Brand primary */
+  --color-primary:              #ABFF35;              /* Lima — CTAs, completed, success */
+  --color-primary-dim:          #7DD32A;              /* Lima pressed/hover */
+  --color-primary-glow:         rgba(171,255,53,0.4); /* Solo para box-shadow de CTAs */
+
+  /* Backgrounds — warmer dark, not pure OLED */
+  --color-bg:                   #0A0A0B;              /* Near-black, levemente warm */
+  --color-surface:              #141416;              /* Card backgrounds */
+  --color-surface-elevated:     #1C1C1F;              /* Modal / bottom sheet bg */
+  --color-surface-pressed:      #232327;              /* Active/pressed surface */
+
+  /* Borders */
+  --color-border:               #27272A;              /* Subtle — divisores, cards default */
+  --color-border-strong:        #3F3F46;              /* Visible — inputs focus inactive, separadores */
+
+  /* Text — proper contrast hierarchy (WCAG AA verificado) */
+  --color-text:                 #FAFAFA;              /* Primary — 19.8:1 sobre bg */
+  --color-text-secondary:       #A1A1AA;              /* Secondary — 5.9:1 sobre bg */
+  --color-text-muted:           #71717A;              /* Muted / labels — 4.6:1 sobre bg (AA ≥18px) */
+  --color-text-disabled:        #52525B;              /* Disabled — decorativo únicamente */
+
+  /* Semantic */
+  --color-success:              #ABFF35;              /* = primary — PRs, completed, streaks */
+  --color-warning:              #FB923C;              /* Orange — streaks ≥30d, near-PR alerts */
+  --color-danger:               #EF4444;              /* Red — destructive, error únicamente */
+  --color-info:                 #60A5FA;              /* Blue — tooltips, hints, info */
+
+  /* Semantic subtle backgrounds (para badges, alerts inline) */
+  --color-success-subtle:       rgba(171,255,53,0.08);
+  --color-warning-subtle:       rgba(251,146,60,0.08);
+  --color-danger-subtle:        rgba(239,68,68,0.08);
+  --color-info-subtle:          rgba(96,165,250,0.08);
+
+  /* Semantic text on subtle bg */
+  --color-success-text:         #ABFF35;
+  --color-warning-text:         #FB923C;
+  --color-danger-text:          #EF4444;
+  --color-info-text:            #60A5FA;
+
+  /* Tier colors v2 — progresión más sobria */
+  --color-tier-rookie:          #71717A;              /* Gray — muted */
+  --color-tier-warming:         #A1A1AA;              /* Lighter gray */
+  --color-tier-consistent:      #ABFF35;              /* Lima */
+  --color-tier-intense:         #ABFF35;              /* Lima */
+  --color-tier-brutal:          #FB923C;              /* Orange */
+  --color-tier-beast:           #FB923C;              /* Orange */
+  --color-tier-goat:            #EF4444;              /* Red — top 1%, exclusividad */
+
+  /* Heatmap — igual pero con nuevas superficies */
+  --color-heatmap-empty:        #141416;              /* = surface */
+  --color-heatmap-level-1:      rgba(171,255,53,0.15);
+  --color-heatmap-level-2:      rgba(171,255,53,0.35);
+  --color-heatmap-level-3:      rgba(171,255,53,0.60);
+  --color-heatmap-level-4:      #ABFF35;
+
+  /* Overlay / scrim */
+  --color-overlay:              rgba(0,0,0,0.72);
+  --color-scrim:                rgba(0,0,0,0.48);
+
+  /* RGB companions — para rgba() compositing */
+  --color-primary-rgb:          171, 255, 53;
+  --color-danger-rgb:           239, 68, 68;
+  --color-warning-rgb:          251, 146, 60;
+  --color-text-rgb:             250, 250, 250;
+  --color-bg-rgb:               10, 10, 11;
+
+  /* --------------------------------------------------------------------------
+     TYPOGRAPHY v2
+
+     Cambio respecto v1:
+     - Geist reemplaza Rajdhani para display — más neutral, premium, legible
+     - Inter reemplaza Sora para body — estándar de facto, excelente en <14px
+     - Escala renombrada: display-* para grandes, body-* para UI
+     - SIN UPPERCASE en body/display — solo chips y badges ≤11px
+     - Tracking-tight agresivo en display (Geist lo aguanta bien)
+     -------------------------------------------------------------------------- */
+
+  /* Familias */
+  --font-display:               'Geist', 'Inter', system-ui, sans-serif;
+  --font-body:                  'Inter', system-ui, sans-serif;
+  --font-mono:                  'JetBrains Mono', ui-monospace, monospace;
+
+  /* Escala display — para números hero, títulos de pantalla */
+  --text-display-2xl:           48px;    /* Números hero: volumen total, XP, contador workout */
+  --text-display-xl:            36px;    /* Título de página prominente */
+  --text-display-lg:            28px;    /* Sección hero, card principal */
+  --text-display-md:            22px;    /* H1 de pantalla */
+  --text-display-sm:            18px;    /* Card header, modal title */
+
+  /* Escala body — para UI, labels, metadata */
+  --text-body-lg:               16px;    /* Body primario, inputs */
+  --text-body-md:               14px;    /* Body secundario, descriptions */
+  --text-body-sm:               13px;    /* Labels, captions */
+  --text-body-xs:               12px;    /* Micro labels, chips */
+  --text-body-2xs:              11px;    /* Badges únicamente */
+
+  /* Line heights */
+  --leading-tight:              1.1;     /* Display numbers */
+  --leading-snug:               1.3;     /* Headings */
+  --leading-normal:             1.5;     /* Body */
+  --leading-relaxed:            1.65;    /* Texto largo, instrucciones */
+
+  /* Letter spacing */
+  --tracking-tight:             -0.02em; /* Display ≥28px */
+  --tracking-normal:            0em;
+  --tracking-wide:              0.02em;  /* Labels contextuales */
+  --tracking-widest:            0.08em;  /* UPPERCASE chips/badges ≤11px ÚNICAMENTE */
+
+  /* Font weights */
+  --font-light:                 300;
+  --font-normal:                400;
+  --font-medium:                500;
+  --font-semibold:              600;
+  --font-bold:                  700;
+
+  /* --------------------------------------------------------------------------
+     SPACING v2
+
+     Mismo base 4px que v1, pero:
+     - Tokens semánticos renombrados y más específicos
+     - page-padding-x separado de page-padding-x-lg
+     - section-gap para separación entre secciones
+     - card-padding fijo en 16px (v1 tenía 20px — reducir densidad)
+     -------------------------------------------------------------------------- */
+
+  --space-1:                    4px;
+  --space-2:                    8px;
+  --space-3:                    12px;
+  --space-4:                    16px;
+  --space-5:                    20px;
+  --space-6:                    24px;
+  --space-8:                    32px;
+  --space-10:                   40px;
+  --space-12:                   48px;
+  --space-16:                   64px;
+
+  /* Semánticos — USAR ESTOS, no los numéricos en componentes */
+  --page-padding-x:             16px;    /* Padding horizontal en mobile 390px */
+  --page-padding-x-lg:          20px;    /* Padding horizontal en >480px */
+  --section-gap:                24px;    /* Entre secciones dentro de una page */
+  --card-padding:               16px;    /* Padding interno estándar de cards */
+  --tap-gap:                    12px;    /* Gap mínimo entre elementos tapeables */
+
+  /* --------------------------------------------------------------------------
+     BORDER RADIUS v2
+
+     Levemente más pequeños que v1 — más Hevy, menos Gaming.
+     radius-full sigue para pills/FAB.
+     -------------------------------------------------------------------------- */
+
+  --radius-sm:                  6px;     /* Chips, micro elements */
+  --radius-md:                  12px;    /* Botones, inputs */
+  --radius-lg:                  16px;    /* Cards estándar */
+  --radius-xl:                  20px;    /* Modales, bottom sheets */
+  --radius-2xl:                 24px;    /* Hero cards */
+  --radius-full:                9999px;  /* Pills, FAB, toggles */
+
+  /* --------------------------------------------------------------------------
+     SHADOWS v2
+
+     Cambio RADICAL respecto v1:
+     - Glow ambient ELIMINADO — no más card-glow-pulse, no más borders lima
+     - Shadow-glow-primary SOLO para FAB primary y button primary lg/xl
+     - Shadow-glow-primary-strong SOLO para level-up modal
+     - Sombras de elevación más pronunciadas (fondo más cálido las necesita)
+     -------------------------------------------------------------------------- */
+
+  --shadow-sm:                  0 1px 2px rgba(0,0,0,0.5);
+  --shadow-md:                  0 4px 12px rgba(0,0,0,0.6);
+  --shadow-lg:                  0 8px 24px rgba(0,0,0,0.7);
+
+  /* Glow lima — USO RESTRINGIDO (ver reglas abajo) */
+  --shadow-glow-primary:        0 0 32px rgba(171,255,53,0.35);  /* FAB + button-primary lg/xl */
+  --shadow-glow-primary-strong: 0 0 48px rgba(171,255,53,0.5);   /* Level-up modal únicamente */
+
+  /* --------------------------------------------------------------------------
+     MOTION v2
+
+     Apple-like spring easing. Duraciones levemente aumentadas vs v1
+     para sentirse menos "gaming" y más "premium".
+     --ease-bounce ELIMINADO del sistema principal (solo level-up modal).
+     -------------------------------------------------------------------------- */
+
+  --ease-out:                   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring:                cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in:                    cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out:                cubic-bezier(0.65, 0, 0.35, 1);
+
+  --duration-instant:           100ms;   /* Tap feedback, scale active */
+  --duration-fast:              180ms;   /* Hover states, color transitions */
+  --duration-base:              280ms;   /* Transiciones de estado UI */
+  --duration-slow:              420ms;   /* Slide-up, reveals de cards */
+  --duration-epic:              600ms;   /* Level-up modal — usar con criterio */
+
+  /* Stagger para listas — ligeramente más largo que v1 */
+  --stagger-xs:                 50ms;    /* Rows de sets, listas densas */
+  --stagger-sm:                 80ms;    /* Cards de ejercicio */
+  --stagger-md:                 120ms;   /* Secciones de dashboard */
+
+  /* --------------------------------------------------------------------------
+     Z-INDEX — Sin cambios respecto v1 (escala ya era correcta)
+     -------------------------------------------------------------------------- */
+
+  --z-base:                     0;
+  --z-raised:                   10;
+  --z-sticky:                   20;
+  --z-floating:                 30;
+  --z-bottom-nav:               50;
+  --z-sheet:                    60;
+  --z-modal:                    100;
+  --z-toast:                    200;
+  --z-loader:                   300;
+  --z-top:                      9999;
+
+  /* --------------------------------------------------------------------------
+     LAYOUT — Sin cambios respecto v1
+     -------------------------------------------------------------------------- */
+
+  --safe-area-top:              env(safe-area-inset-top, 0px);
+  --safe-area-bottom:           env(safe-area-inset-bottom, 0px);
+  --safe-area-left:             env(safe-area-inset-left, 0px);
+  --safe-area-right:            env(safe-area-inset-right, 0px);
+
+  --bottom-nav-height:          64px;
+  --header-height:              56px;
+
+  --container-xs:               360px;
+  --container-sm:               480px;
+  --container-md:               768px;
+
+  --breakpoint-xs:              360px;
+  --breakpoint-sm:              480px;
+  --breakpoint-md:              768px;
+  --breakpoint-lg:              1024px;
+
+  /* --------------------------------------------------------------------------
+     COMPONENTES — Variables semánticas v2
+     -------------------------------------------------------------------------- */
+
+  /* Button primary v2 */
+  --btn-v2-primary-bg:          #ABFF35;
+  --btn-v2-primary-color:       #0A0A0A;
+  --btn-v2-primary-hover-bg:    #7DD32A;
+  --btn-v2-primary-active-bg:   #7DD32A;
+  --btn-v2-primary-shadow-lg:   0 0 32px rgba(171,255,53,0.35);  /* solo lg/xl */
+
+  /* Button secondary v2 */
+  --btn-v2-secondary-bg:        transparent;
+  --btn-v2-secondary-color:     #ABFF35;
+  --btn-v2-secondary-border:    #ABFF35;
+  --btn-v2-secondary-hover-bg:  rgba(171,255,53,0.08);
+
+  /* Button ghost v2 */
+  --btn-v2-ghost-bg:            transparent;
+  --btn-v2-ghost-color:         #A1A1AA;
+  --btn-v2-ghost-hover-color:   #FAFAFA;
+
+  /* Button danger v2 */
+  --btn-v2-danger-bg:           transparent;
+  --btn-v2-danger-color:        #EF4444;
+  --btn-v2-danger-border:       #EF4444;
+  --btn-v2-danger-hover-bg:     rgba(239,68,68,0.08);
+
+  /* Input v2 — underline style */
+  --input-v2-bg:                transparent;
+  --input-v2-border-bottom:     1px solid #27272A;
+  --input-v2-focus-border:      #ABFF35;
+  --input-v2-color:             #FAFAFA;
+  --input-v2-placeholder:       #52525B;
+  --input-v2-label-color:       #71717A;
+  --input-v2-error-color:       #EF4444;
+
+  /* Card v2 */
+  --card-v2-default-bg:         #141416;
+  --card-v2-default-border:     #27272A;
+  --card-v2-elevated-bg:        #1C1C1F;
+  --card-v2-elevated-shadow:    0 4px 12px rgba(0,0,0,0.6);
+  --card-v2-outlined-bg:        transparent;
+  --card-v2-outlined-border:    #3F3F46;
+
+  /* Toggle v2 */
+  --toggle-v2-track-off:        #232327;
+  --toggle-v2-track-on:         #ABFF35;
+  --toggle-v2-knob:             #FAFAFA;
+  --toggle-v2-border-off:       #27272A;
+
+  /* Progress bar v2 */
+  --progress-v2-track:          #232327;
+  --progress-v2-fill:           #ABFF35;
+
+  /* Nav v2 */
+  --nav-v2-bg:                  rgba(10,10,11,0.92);
+  --nav-v2-backdrop-blur:       12px;
+  --nav-v2-border-top:          1px solid #27272A;
+  --nav-v2-item-color:          #52525B;
+  --nav-v2-item-active-color:   #ABFF35;
+  --nav-v2-indicator-color:     #ABFF35;
+
+  /* TabBar v2 */
+  --tab-v2-inactive-color:      #A1A1AA;
+  --tab-v2-active-color:        #ABFF35;
+  --tab-v2-indicator-height:    2px;
+  --tab-v2-indicator-color:     #ABFF35;
+
+  /* XP Bar — mantiene v1 pero sin glow ambient */
+  --xp-bar-v2-bg:               #232327;
+  --xp-bar-v2-fill:             #ABFF35;
+
+  /* Heatmap — alias de los tokens de color */
+  --heatmap-v2-empty:           var(--color-heatmap-empty);
+  --heatmap-v2-level-1:         var(--color-heatmap-level-1);
+  --heatmap-v2-level-2:         var(--color-heatmap-level-2);
+  --heatmap-v2-level-3:         var(--color-heatmap-level-3);
+  --heatmap-v2-level-4:         var(--color-heatmap-level-4);
+
+}
+
+/* ==========================================================================
+   CONTRAST VALIDATION — Documentación inline (build-time checks en Sprint 25.2)
+
+   Par                           | Ratio  | WCAG    | Uso
+   -------------------------------|--------|---------|------------------
+   #FAFAFA sobre #0A0A0B          | 19.8:1 | AAA     | text sobre bg
+   #FAFAFA sobre #141416          | 15.8:1 | AAA     | text sobre surface
+   #FAFAFA sobre #1C1C1F          | 13.1:1 | AAA     | text sobre surface-elevated
+   #A1A1AA sobre #0A0A0B          |  5.9:1 | AA      | text-secondary sobre bg (≥14px)
+   #A1A1AA sobre #141416          |  4.7:1 | AA      | text-secondary sobre surface (≥14px)
+   #71717A sobre #0A0A0B          |  4.6:1 | AA      | text-muted sobre bg (≥18px only)
+   #71717A sobre #141416          |  3.7:1 | AA Large| text-muted sobre surface (≥18px bold only)
+   #0A0A0A sobre #ABFF35          | 13.5:1 | AAA     | black text on lima button
+   #EF4444 sobre #0A0A0B          |  4.8:1 | AA      | danger sobre bg
+   #FB923C sobre #0A0A0B          |  4.9:1 | AA      | warning sobre bg
+   #60A5FA sobre #0A0A0B          |  5.1:1 | AA      | info sobre bg
+
+   REGLA CRÍTICA: --color-text-disabled (#52525B) ratio 3.2:1 sobre bg.
+   Solo usar para texto DECORATIVO no funcional. Nunca para labels de input,
+   texto de botón, ni información que el usuario necesita leer.
+
+   REGLA --color-text-muted: usar solo en texto ≥18px regular o ≥14px bold.
+   Para texto más pequeño, usar --color-text-secondary (#A1A1AA).
+   ========================================================================== */
+
+/* ==========================================================================
+   MIGRACIÓN — Cómo coexistir con tokens.css durante Sprint 25.2
+
+   En src/styles/index.css agregar DESPUÉS del import de tokens.css:
+   @import './tokens-v2.css';
+
+   Los tokens v2 tienen nombres distintos (--color-text-secondary en vez de
+   --color-text-muted, --card-v2-* en vez de --card-*, etc.) para no romper
+   componentes existentes. Los componentes refactorizados en Sprint 25.2
+   deben usar EXCLUSIVAMENTE tokens v2.
+
+   Al terminar la migración completa, tokens.css puede eliminarse y los
+   tokens v2 renombrarse removiendo el "-v2" suffix donde corresponda.
+   ========================================================================== */

@@ -1,12 +1,9 @@
 import { useState, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Volume2, Vibrate, Dumbbell, Trophy, Zap, Activity, Target, Flame, ArrowRight } from 'lucide-react'
+import { Volume2, Vibrate, Dumbbell, Trophy, Zap, ArrowRight } from 'lucide-react'
 import { Toggle } from '@/components/ui/Toggle'
 import { Button } from '@/components/ui/Button'
 import { ProgressDots } from '@/components/ui/ProgressDots'
-import { InteractiveBackground } from '@/components/ui/InteractiveBackground'
-import { GlitchText } from '@/components/ui/GlitchText'
-import { Marquee } from '@/components/ui/Marquee'
 import { CounterRolling } from '@/components/ui/CounterRolling'
 import { Tilt3D } from '@/components/ui/Tilt3D'
 import { useSettingsStore } from '@/store/settingsStore'
@@ -18,7 +15,7 @@ import { LS_KEYS } from '@/lib/constants'
 import type { Goal, ExperienceLevel } from '@/types'
 
 // ============================================================
-// Permissions Screen — SPRINT 10 EXPLOSIVO
+// Permissions Screen — Sprint 25.2 v2 — Clean Fitness Pro
 // ============================================================
 
 const REDUCED_MOTION =
@@ -27,16 +24,13 @@ const REDUCED_MOTION =
     : false
 
 // ── Audio Waveform Visualization ────────────────────────────
-function AudioWaveform({ active, isLight }: { active: boolean; isLight?: boolean }) {
+function AudioWaveform({ active }: { active: boolean }) {
   const BAR_COUNT = 6
   const HEIGHTS = [0.4, 0.8, 0.55, 1, 0.65, 0.45]
-  // Light mode aurora colors per bar: lima, cyan, magenta cycling
-  const LIGHT_COLORS = ['#5C9914', '#00B5BF', '#CC0082', '#5C9914', '#00B5BF', '#CC0082']
-  const LIGHT_GLOWS = ['rgba(92,153,20,0.7)', 'rgba(0,181,191,0.7)', 'rgba(204,0,130,0.7)', 'rgba(92,153,20,0.7)', 'rgba(0,181,191,0.7)', 'rgba(204,0,130,0.7)']
 
   return (
     <div
-      className={`flex items-end gap-[3px] h-6 ${isLight ? 'waveform-multicolor' : ''}`}
+      className="flex items-end gap-[3px] h-6"
       aria-hidden="true"
       style={{ opacity: active ? 1 : 0.2, transition: 'opacity 400ms ease' }}
     >
@@ -46,14 +40,11 @@ function AudioWaveform({ active, isLight }: { active: boolean; isLight?: boolean
           className="rounded-full"
           style={{
             width: '3px',
-            background: isLight ? LIGHT_COLORS[i] : 'var(--color-primary)',
-            boxShadow: active
-              ? `0 0 6px ${isLight ? LIGHT_GLOWS[i] : 'rgba(171,255,53,0.7)'}`
-              : 'none',
+            background: 'var(--color-primary)',
             transformOrigin: 'bottom center',
             height: '100%',
             transform: `scaleY(${active && !REDUCED_MOTION ? HEIGHTS[i] : 0.3})`,
-            transition: 'transform 200ms ease, box-shadow 400ms ease',
+            transition: 'transform 200ms ease',
             animation: active && !REDUCED_MOTION
               ? `waveform-bar ${0.6 + i * 0.12}s ease-in-out ${i * 80}ms infinite`
               : 'none',
@@ -65,14 +56,12 @@ function AudioWaveform({ active, isLight }: { active: boolean; isLight?: boolean
 }
 
 // ── Haptic Visualization ─────────────────────────────────────
-function HapticViz({ active, isLight }: { active: boolean; isLight?: boolean }) {
+function HapticViz({ active }: { active: boolean }) {
   const LINE_COUNT = 5
-  const LIGHT_COLORS = ['#5C9914', '#00B5BF', '#CC0082', '#5C9914', '#00B5BF']
-  const LIGHT_GLOWS = ['rgba(92,153,20,0.7)', 'rgba(0,181,191,0.7)', 'rgba(204,0,130,0.7)', 'rgba(92,153,20,0.7)', 'rgba(0,181,191,0.7)']
 
   return (
     <div
-      className={`flex items-center gap-1.5 ${isLight ? 'haptic-multicolor' : ''}`}
+      className="flex items-center gap-1.5"
       aria-hidden="true"
       style={{ opacity: active ? 1 : 0.2, transition: 'opacity 400ms ease' }}
     >
@@ -82,13 +71,8 @@ function HapticViz({ active, isLight }: { active: boolean; isLight?: boolean }) 
           className="rounded-full"
           style={{
             height: '3px',
-            background: isLight ? LIGHT_COLORS[i] : 'var(--color-primary)',
-            boxShadow: active
-              ? `0 0 6px ${isLight ? LIGHT_GLOWS[i] : 'rgba(171,255,53,0.7)'}`
-              : 'none',
-            transformOrigin: 'center center',
+            background: 'var(--color-primary)',
             width: `${14 + i * 6}px`,
-            transform: 'scaleX(1)',
             animation: active && !REDUCED_MOTION
               ? `haptic-pulse ${0.5 + i * 0.1}s ease-in-out ${i * 100}ms infinite`
               : 'none',
@@ -99,7 +83,7 @@ function HapticViz({ active, isLight }: { active: boolean; isLight?: boolean }) 
   )
 }
 
-// ── Tip Card with Tilt3D ─────────────────────────────────────
+// ── Tip Card ─────────────────────────────────────────────────
 interface TipItem {
   icon: React.ReactNode
   title: string
@@ -110,27 +94,27 @@ function TipCard({ tip }: { tip: TipItem }) {
   return (
     <Tilt3D
       maxDeg={6}
-      glowColor="rgba(171,255,53,0.12)"
+      glowColor="rgba(171,255,53,0.08)"
       className="snap-center flex-shrink-0 w-[200px]"
     >
       <div
-        className="w-full p-4 rounded-[var(--radius-lg)] flex flex-col gap-2 border transition-all duration-200"
+        className="w-full p-4 rounded-[var(--radius-lg)] flex flex-col gap-2"
         style={{
           background: 'var(--color-surface)',
-          borderColor: 'rgba(171,255,53,0.18)',
+          border: '1px solid var(--color-border)',
           minHeight: '140px',
         }}
       >
         <span>{tip.icon}</span>
         <p
-          className="font-bold text-base text-[var(--color-text)] leading-tight"
-          style={{ fontFamily: 'var(--font-display)' }}
+          className="font-semibold text-[14px] leading-tight"
+          style={{ fontFamily: 'var(--font-body)', color: 'var(--color-text)' }}
         >
           {tip.title}
         </p>
         <p
-          className="text-xs text-[var(--color-text-muted)] leading-snug"
-          style={{ fontFamily: 'var(--font-body)' }}
+          className="text-[12px] leading-snug"
+          style={{ fontFamily: 'var(--font-body)', color: 'var(--color-text-muted)' }}
         >
           {tip.body}
         </p>
@@ -139,7 +123,7 @@ function TipCard({ tip }: { tip: TipItem }) {
   )
 }
 
-// ── Magnetic CTA Button ──────────────────────────────────────
+// ── CTA Button ───────────────────────────────────────────────
 function MagneticCTA({ onClick, loading }: { onClick: () => void; loading: boolean }) {
   const wrapperRef = useRef<HTMLDivElement>(null)
 
@@ -172,18 +156,17 @@ function MagneticCTA({ onClick, loading }: { onClick: () => void; loading: boole
     >
       <Button
         variant="primary"
-        size="lg"
+        size="xl"
         fullWidth
         loading={loading}
         onClick={onClick}
-        className="anim-next-btn-pulse"
         style={{ fontSize: 'clamp(13px, 3.8vw, 16px)' }}
       >
         {loading ? (
           'Arrancando...'
         ) : (
           <>
-            <span>DALE, ARRANQUEMOS</span>
+            <span>Arranquemos</span>
             <span className="anim-arrow-bounce flex-shrink-0" aria-hidden="true">
               <ArrowRight size={18} />
             </span>
@@ -194,23 +177,14 @@ function MagneticCTA({ onClick, loading }: { onClick: () => void; loading: boole
   )
 }
 
-// ── Floating background icons ────────────────────────────────
-const FLOATING_ICONS = [
-  { Icon: Trophy,   style: { top: '8%',  left: '4%',  '--orb-rot': '-12deg', '--orb-op': '0.15', animDuration: '5.1s', animDelay: '0s'   } },
-  { Icon: Zap,      style: { top: '6%',  right: '6%', '--orb-rot': '14deg',  '--orb-op': '0.13', animDuration: '4.3s', animDelay: '0.7s'  } },
-  { Icon: Activity, style: { top: '42%', left: '3%',  '--orb-rot': '-7deg',  '--orb-op': '0.11', animDuration: '6.2s', animDelay: '1.3s'  } },
-  { Icon: Flame,    style: { top: '20%', right: '4%', '--orb-rot': '19deg',  '--orb-op': '0.14', animDuration: '3.7s', animDelay: '0.3s'  } },
-  { Icon: Target,   style: { top: '62%', right: '5%', '--orb-rot': '-4deg',  '--orb-op': '0.1',  animDuration: '5.7s', animDelay: '1.5s'  } },
-]
-
 const TIPS: TipItem[] = [
   {
     icon: <Dumbbell size={28} className="text-[var(--color-primary)]" aria-hidden="true" />,
-    title: 'Registrá tus sets',
-    body: 'Anotá peso y reps en cada ejercicio para trackear tu progreso.',
+    title: 'Anotá cada serie',
+    body: 'Registrá peso y reps en cada ejercicio para ver tu progreso.',
   },
   {
-    icon: <Trophy size={28} className="text-[var(--color-highlight)]" aria-hidden="true" />,
+    icon: <Trophy size={28} style={{ color: 'var(--color-highlight)' }} aria-hidden="true" />,
     title: 'Subí de tier',
     body: 'Cada workout suma XP. Pasá de Rookie a GOAT entrenando seguido.',
   },
@@ -221,40 +195,12 @@ const TIPS: TipItem[] = [
   },
 ]
 
-// ── Hero Section (static — no selection needed) ──────────────
-function HeroSection() {
-  return (
-    <div
-      className="flex flex-col items-center justify-center py-3 relative"
-      aria-hidden="true"
-    >
-      <div
-        className="anim-hero-icon-float text-[var(--color-primary)]"
-        style={{ filter: 'drop-shadow(0 0 20px rgba(171,255,53,0.7))' }}
-      >
-        <Zap size={64} />
-      </div>
-      <p
-        className="mt-2 text-sm font-bold uppercase tracking-wider text-center"
-        style={{
-          fontFamily: 'var(--font-display)',
-          color: 'var(--color-primary)',
-          filter: 'drop-shadow(0 0 8px rgba(171,255,53,0.5))',
-        }}
-      >
-        Casi listo, bro ⚡
-      </p>
-    </div>
-  )
-}
-
 // ── Main Page ────────────────────────────────────────────────
 export default function Permissions() {
   const navigate = useNavigate()
   const { play } = useAudio()
-  const { setSoundEnabled, setVibrationEnabled, theme } = useSettingsStore()
+  const { setSoundEnabled, setVibrationEnabled } = useSettingsStore()
   const { setUser } = useUserStore()
-  const isLight = theme === 'light' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: light)').matches)
 
   const [soundEnabled, setSoundLocal] = useState(false)
   const [vibrationEnabled, setVibrationLocal] = useState(false)
@@ -318,46 +264,9 @@ export default function Permissions() {
   }
 
   return (
-    <div
-      className="relative min-h-[100dvh] flex flex-col bg-[var(--color-bg)] overflow-hidden"
-    >
-      {/* ── Interactive particle background ── */}
-      <InteractiveBackground particleCount={35} />
-
-      {/* ── Floating decorative icons ── */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1]">
-        {!REDUCED_MOTION && FLOATING_ICONS.map(({ Icon, style: s }, i) => {
-          const { animDuration, animDelay, ...cssVars } = s
-          return (
-            <span
-              key={i}
-              className="absolute text-[var(--color-primary)]"
-              style={{
-                ...cssVars as React.CSSProperties,
-                animation: `floating-icon-orb ${animDuration} ease-in-out ${animDelay} infinite`,
-              }}
-            >
-              <Icon size={24} />
-            </span>
-          )
-        })}
-      </div>
-
-      {/* ── Radial ambient glows ── */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0"
-        style={{
-          background: `
-            radial-gradient(ellipse 60% 40% at 80% 5%, rgba(171,255,53,0.08) 0%, transparent 70%),
-            radial-gradient(ellipse 50% 35% at 15% 95%, rgba(171,255,53,0.05) 0%, transparent 70%)
-          `,
-        }}
-      />
-
-      {/* ── Content ── */}
+    <div className="relative min-h-[100dvh] flex flex-col overflow-hidden" style={{ background: 'var(--color-bg)' }}>
       <div className="relative z-10 flex flex-col flex-1">
-        {/* Progress — safe-area-inset-top + 12px buffer for Dynamic Island */}
+        {/* Progress dots */}
         <div className="flex justify-center pb-2" style={{ paddingTop: 'max(1.5rem, calc(env(safe-area-inset-top, 0px) + 12px))' }}>
           <ProgressDots total={4} current={4} />
         </div>
@@ -365,59 +274,30 @@ export default function Permissions() {
         {/* Header */}
         <div className="px-7 pt-4 pb-2">
           <p
-            className="text-xs font-bold uppercase tracking-widest mb-1"
-            style={{ fontFamily: 'var(--font-display)', color: 'var(--color-text-muted)' }}
+            className="text-[11px] font-semibold uppercase tracking-widest mb-1"
+            style={{ fontFamily: 'var(--font-body)', color: 'var(--color-text-muted)' }}
           >
-            PASO{' '}
+            Paso{' '}
             <CounterRolling
               value={4}
               className="text-[var(--color-primary)]"
               duration={0.5}
             />
-            {' '}/ 4
+            {' '}de 4
           </p>
 
-          <div className="relative overflow-hidden" style={{ height: '2.5rem' }}>
-            <div
-              className="absolute inset-0 flex items-center overflow-hidden"
-              aria-hidden="true"
-              style={{ opacity: 0.04 }}
-            >
-              <Marquee speed="slow">
-                <span
-                  className="text-2xl font-black uppercase tracking-widest"
-                  style={{ fontFamily: 'var(--font-display)', color: 'var(--color-primary)' }}
-                >
-                  SONIDO · VIBRACIÓN · AUDIO · HAPTICS · SOUND ·&nbsp;
-                </span>
-              </Marquee>
-            </div>
-
-            <GlitchText
-              as="h1"
-              className="relative uppercase"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontWeight: 700,
-                fontSize: 'clamp(20px, 6vw, 28px)',
-                color: 'var(--color-primary)',
-                letterSpacing: 'var(--tracking-wide)',
-                lineHeight: '2.5rem',
-                filter: 'drop-shadow(0 0 12px rgba(171,255,53,0.4))',
-              }}
-            >
-              ÚLTIMA COSA, BRO
-            </GlitchText>
-          </div>
-
-          <span
-            aria-hidden="true"
-            className="block h-0.5 mt-1 origin-left anim-scale-x-in"
+          <h1
             style={{
-              background: 'linear-gradient(90deg, var(--color-primary), rgba(171,255,53,0.2))',
-              boxShadow: '0 0 8px rgba(171,255,53,0.5)',
+              fontFamily: 'var(--font-display)',
+              fontWeight: 700,
+              fontSize: 'clamp(22px, 6vw, 30px)',
+              color: 'var(--color-text)',
+              lineHeight: '1.2',
             }}
-          />
+          >
+            Configuración final
+          </h1>
+
           <p
             className="mt-1.5"
             style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'var(--color-text-muted)' }}
@@ -426,22 +306,30 @@ export default function Permissions() {
           </p>
         </div>
 
-        {/* Hero */}
-        <HeroSection />
+        {/* Hero — simple icon, no glow */}
+        <div
+          className="flex flex-col items-center justify-center py-3"
+          aria-hidden="true"
+        >
+          <div className="anim-hero-icon-float text-[var(--color-primary)]">
+            <Zap size={56} />
+          </div>
+          <p
+            className="mt-2 text-[13px] font-semibold text-center"
+            style={{ fontFamily: 'var(--font-body)', color: 'var(--color-primary)' }}
+          >
+            Casi listo
+          </p>
+        </div>
 
         {/* Toggles */}
         <div className="px-7 flex flex-col gap-3 mb-6">
           {/* Sound toggle */}
           <div
-            className="rounded-[var(--radius-lg)] border transition-all duration-300 overflow-hidden"
+            className="rounded-[var(--radius-lg)] border transition-colors duration-300 overflow-hidden"
             style={{
-              background: soundEnabled
-                ? 'linear-gradient(135deg, rgba(171,255,53,0.08) 0%, var(--color-surface) 100%)'
-                : 'var(--color-surface)',
-              borderColor: soundEnabled ? 'rgba(171,255,53,0.5)' : 'var(--color-border)',
-              boxShadow: soundEnabled
-                ? '0 0 20px rgba(171,255,53,0.2), inset 0 0 16px rgba(171,255,53,0.05)'
-                : 'none',
+              background: soundEnabled ? 'rgba(171,255,53,0.06)' : 'var(--color-surface)',
+              borderColor: soundEnabled ? 'rgba(171,255,53,0.4)' : 'var(--color-border)',
             }}
           >
             <div className="flex items-center justify-between p-4">
@@ -451,21 +339,14 @@ export default function Permissions() {
                   aria-hidden="true"
                   style={{
                     color: soundEnabled ? 'var(--color-primary)' : 'var(--color-text-muted)',
-                    filter: soundEnabled ? 'drop-shadow(0 0 8px rgba(171,255,53,0.8))' : 'none',
-                    transition: 'all 0.3s ease',
+                    transition: 'color 200ms ease',
                   }}
                 />
                 <div>
-                  <p
-                    className="text-sm font-medium text-[var(--color-text)]"
-                    style={{ fontFamily: 'var(--font-body)' }}
-                  >
+                  <p className="text-[14px] font-medium" style={{ fontFamily: 'var(--font-body)', color: 'var(--color-text)' }}>
                     Sonidos
                   </p>
-                  <p
-                    className="text-xs text-[var(--color-text-muted)]"
-                    style={{ fontFamily: 'var(--font-body)' }}
-                  >
+                  <p className="text-[12px]" style={{ fontFamily: 'var(--font-body)', color: 'var(--color-text-muted)' }}>
                     Alertas de descanso y logros
                   </p>
                 </div>
@@ -487,17 +368,17 @@ export default function Permissions() {
               }}
             >
               <span
-                className="text-xs uppercase tracking-wider"
-                style={{ fontFamily: 'var(--font-body)', color: 'var(--color-text-muted)', fontSize: '10px' }}
+                className="text-[10px] uppercase tracking-widest"
+                style={{ fontFamily: 'var(--font-body)', color: 'var(--color-text-muted)' }}
                 aria-hidden="true"
               >
-                AUDIO
+                audio
               </span>
-              <AudioWaveform active={soundEnabled} isLight={isLight} />
+              <AudioWaveform active={soundEnabled} />
               {soundJustToggled && soundEnabled && (
                 <span
-                  className="text-xs font-bold anim-fade-in"
-                  style={{ color: 'var(--color-primary)', fontFamily: 'var(--font-display)' }}
+                  className="text-[11px] font-semibold anim-fade-in"
+                  style={{ color: 'var(--color-primary)', fontFamily: 'var(--font-body)' }}
                   aria-hidden="true"
                 >
                   ON
@@ -508,15 +389,10 @@ export default function Permissions() {
 
           {/* Vibration toggle */}
           <div
-            className="rounded-[var(--radius-lg)] border transition-all duration-300 overflow-hidden"
+            className="rounded-[var(--radius-lg)] border transition-colors duration-300 overflow-hidden"
             style={{
-              background: vibrationEnabled
-                ? 'linear-gradient(135deg, rgba(171,255,53,0.08) 0%, var(--color-surface) 100%)'
-                : 'var(--color-surface)',
-              borderColor: vibrationEnabled ? 'rgba(171,255,53,0.5)' : 'var(--color-border)',
-              boxShadow: vibrationEnabled
-                ? '0 0 20px rgba(171,255,53,0.2), inset 0 0 16px rgba(171,255,53,0.05)'
-                : 'none',
+              background: vibrationEnabled ? 'rgba(171,255,53,0.06)' : 'var(--color-surface)',
+              borderColor: vibrationEnabled ? 'rgba(171,255,53,0.4)' : 'var(--color-border)',
             }}
           >
             <div className="flex items-center justify-between p-4">
@@ -526,24 +402,17 @@ export default function Permissions() {
                   aria-hidden="true"
                   style={{
                     color: vibrationEnabled ? 'var(--color-primary)' : 'var(--color-text-muted)',
-                    filter: vibrationEnabled ? 'drop-shadow(0 0 8px rgba(171,255,53,0.8))' : 'none',
-                    transition: 'all 0.3s ease',
+                    transition: 'color 200ms ease',
                     animation: vibJustToggled && vibrationEnabled && !REDUCED_MOTION
                       ? 'anim-shake 300ms ease-in-out'
                       : 'none',
                   }}
                 />
                 <div>
-                  <p
-                    className="text-sm font-medium text-[var(--color-text)]"
-                    style={{ fontFamily: 'var(--font-body)' }}
-                  >
+                  <p className="text-[14px] font-medium" style={{ fontFamily: 'var(--font-body)', color: 'var(--color-text)' }}>
                     Vibración
                   </p>
-                  <p
-                    className="text-xs text-[var(--color-text-muted)]"
-                    style={{ fontFamily: 'var(--font-body)' }}
-                  >
+                  <p className="text-[12px]" style={{ fontFamily: 'var(--font-body)', color: 'var(--color-text-muted)' }}>
                     Feedback háptico en sets y timers
                   </p>
                 </div>
@@ -565,17 +434,17 @@ export default function Permissions() {
               }}
             >
               <span
-                className="text-xs uppercase tracking-wider"
-                style={{ fontFamily: 'var(--font-body)', color: 'var(--color-text-muted)', fontSize: '10px' }}
+                className="text-[10px] uppercase tracking-widest"
+                style={{ fontFamily: 'var(--font-body)', color: 'var(--color-text-muted)' }}
                 aria-hidden="true"
               >
-                HAPTIC
+                haptic
               </span>
-              <HapticViz active={vibrationEnabled} isLight={isLight} />
+              <HapticViz active={vibrationEnabled} />
               {vibJustToggled && vibrationEnabled && (
                 <span
-                  className="text-xs font-bold anim-fade-in"
-                  style={{ color: 'var(--color-primary)', fontFamily: 'var(--font-display)' }}
+                  className="text-[11px] font-semibold anim-fade-in"
+                  style={{ color: 'var(--color-primary)', fontFamily: 'var(--font-body)' }}
                   aria-hidden="true"
                 >
                   ON
@@ -585,10 +454,10 @@ export default function Permissions() {
           </div>
         </div>
 
-        {/* Mini tutorial — tips with Tilt3D cards */}
+        {/* Tips */}
         <div className="mb-6">
           <p
-            className="px-7 text-xs uppercase tracking-widest mb-3"
+            className="px-7 text-[11px] uppercase tracking-widest mb-3"
             style={{ fontFamily: 'var(--font-body)', color: 'var(--color-text-muted)' }}
           >
             ¿Qué podés hacer?

@@ -176,22 +176,22 @@ export function NotificationsSection() {
             {[
               {
                 key: 'achievements' as const,
-                label: 'Logros desbloqueados',
+                label: 'Logros',
                 sub: 'Cuando conseguís un logro',
               },
               {
                 key: 'prs' as const,
-                label: 'Récords personales',
+                label: 'Récords',
                 sub: 'Cuando superás un PR',
               },
               {
                 key: 'workoutComplete' as const,
-                label: 'Workout completado',
+                label: 'Sesión completa',
                 sub: 'Volumen total al terminar',
               },
               {
                 key: 'streakWarning' as const,
-                label: 'Recordatorio de racha',
+                label: 'Recordatorio diario',
                 sub: 'Si llevás más de 18hs sin entrenar',
               },
             ].map(({ key, label, sub }, i, arr) => (

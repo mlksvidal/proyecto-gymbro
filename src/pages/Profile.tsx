@@ -1,9 +1,9 @@
 // ============================================================
-// GYMBRO — Profile Page — Sprint 9 WOW MODE (Cinema refactor)
+// GYMBRO — Profile Page — Sprint 25.2 v2 — Clean Fitness Pro
 // Route: /profile
 // ============================================================
 
-import { lazy, Suspense, useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ChevronRight, Dumbbell, Trophy, RotateCcw, ChevronLeft, ChevronRight as ChevronRightSmall, Check, Calculator, Tag, Info } from 'lucide-react'
@@ -18,20 +18,12 @@ import { RMCalculator } from '@/components/profile/RMCalculator'
 import { PlateCalculator } from '@/components/profile/PlateCalculator'
 import { ChangelogSheet } from '@/components/profile/ChangelogSheet'
 import { AchievementBadge } from '@/components/achievements/AchievementBadge'
-import { Marquee } from '@/components/ui/Marquee'
-import { AuroraBackground } from '@/components/ui/AuroraBackground'
-import { useSettingsStore } from '@/store/settingsStore'
 import { useAudio } from '@/hooks/useAudio'
 import { clearAllData } from '@/lib/db'
 import { getTierForXP } from '@/lib/tiers'
 import { getAchievementDef } from '@/lib/achievements'
 import { LS_KEYS } from '@/lib/constants'
 import { APP_INFO } from '@/lib/app-info'
-
-// Lazy: InteractiveBackground is heavy canvas — load async
-const InteractiveBackground = lazy(
-  () => import('@/components/ui/InteractiveBackground').then((m) => ({ default: m.InteractiveBackground }))
-)
 
 // ── Mini heatmap (12 semanas) ─────────────────────────────────
 function MiniHeatmap({ workouts }: { workouts: { completedAt?: number; totalVolumeKg?: number }[] }) {
@@ -360,8 +352,6 @@ export default function Profile() {
   const allPRs = usePRs()
   const achievementRecords = useAchievementRecords()
   const streak = useCurrentStreak()
-  const theme = useSettingsStore((s) => s.theme)
-  const isLight = theme === 'light' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: light)').matches)
 
   const [showReset, setShowReset] = useState(false)
   const [resetting, setResetting] = useState(false)
@@ -424,41 +414,6 @@ export default function Profile() {
         paddingBottom: 'calc(80px + env(safe-area-inset-bottom))',
       }}
     >
-      {/* Aurora background — light mode only */}
-      <AuroraBackground zIndex={0} />
-
-      {/* Interactive background particles — dark mode only */}
-      {!isLight && (
-        <Suspense fallback={null}>
-          <InteractiveBackground particleCount={25} />
-        </Suspense>
-      )}
-
-      {/* Decorative bg marquee text */}
-      <div
-        aria-hidden="true"
-        className="absolute top-0 left-0 right-0 pointer-events-none select-none overflow-hidden"
-        style={{ zIndex: 0 }}
-      >
-        <Marquee speed="slow" style={{ opacity: 0.03 }}>
-          <span
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontWeight: 900,
-              fontSize: 'clamp(36px, 14vw, 64px)',
-              color: 'var(--color-primary)',
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              whiteSpace: 'nowrap',
-              lineHeight: 1,
-              paddingTop: '4px',
-            }}
-          >
-            BRO TIER · NIVEL · GAINS · PROGRESO · FUERZA ·
-          </span>
-        </Marquee>
-      </div>
-
       {/* Safe area top */}
       <div style={{ paddingTop: 'max(16px, calc(env(safe-area-inset-top, 0px) + 8px))' }} />
 
@@ -797,7 +752,7 @@ export default function Profile() {
             className="text-[11px] font-[var(--font-body)] uppercase tracking-widest font-semibold mb-2"
             style={{ color: 'rgba(255,59,48,0.8)' }}
           >
-            Zona peligrosa
+            Zona crítica
           </h2>
           <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '12px' }}>
             Esta acción borrará todo tu progreso permanentemente.

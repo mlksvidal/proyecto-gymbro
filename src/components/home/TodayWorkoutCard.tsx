@@ -12,11 +12,11 @@ const IS_DESKTOP =
 
 // ============================================================
 // Sprint 6 — TodayWorkoutCard
-// - Tag chip "ENTRENAMIENTO HOY"
+// - Tag chip "Hoy entrenás"
 // - Darker overlay
 // - Stats row with real data
 // - Mascot: inline SVG dumbbell figure (simplified)
-// - CTA: "COMENZAR ENTRENAMIENTO"
+// - CTA: "Empezar"
 // ============================================================
 
 const PPL_MAP: Record<number, { label: string; routineId: string }> = {
@@ -113,7 +113,7 @@ export function TodayWorkoutCard() {
               letterSpacing: '0.1em',
             }}
           >
-            ENTRENAMIENTO HOY
+            Hoy entrenás
           </span>
 
           {/* Mascot SVG — idle bro */}
@@ -171,7 +171,7 @@ export function TodayWorkoutCard() {
             className="mt-1"
             style={{ boxShadow: 'var(--shadow-glow-primary)', fontSize: 'clamp(13px, 3.8vw, 16px)' }}
           >
-            COMENZAR ENTRENAMIENTO
+            Empezar
           </Button>
         </div>
       </div>

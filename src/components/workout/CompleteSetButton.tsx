@@ -27,10 +27,10 @@ export function CompleteSetButton({
 
   const label =
     isLastSet && isLastExercise
-      ? 'EJERCICIO COMPLETO ✓'
+      ? 'Ejercicio completo ✓'
       : isLastSet
-      ? 'EJERCICIO COMPLETO ✓'
-      : 'SET COMPLETADO ✓'
+      ? 'Ejercicio completo ✓'
+      : 'Serie completa ✓'
 
   const handleClick = useCallback(async () => {
     if (isDisabled) return

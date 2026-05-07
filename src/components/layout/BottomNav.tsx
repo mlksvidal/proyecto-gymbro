@@ -7,11 +7,10 @@ import { useAudio } from '@/hooks/useAudio'
 import { useSettingsStore } from '@/store/settingsStore'
 
 // ============================================================
-// BottomNav — T40 micro-interactions
-// - layoutId "nav-indicator" slides indicator between tabs
-// - Icon active: scale 1.15 + lima glow filter
-// - Tap: scale 0.92 spring + tickButton sound
-// - FAB: 3-layer glow pulse + scale 0.88 + ripple on tap
+// BottomNav v2 — Gymbro Sprint 25.2
+// - Indicador: dot 4px lima DEBAJO del icono (sin pill bg)
+// - Iconos: sin filter glow. Color activo: lima.
+// - Tap: scale spring. FAB mantiene glow (único permitido).
 // ============================================================
 
 const REDUCED_MOTION =
@@ -53,53 +52,66 @@ function NavItem({ item, active }: { item: NavItemConfig; active: boolean }) {
       aria-label={item.label}
       aria-current={active ? 'page' : undefined}
       onClick={handleClick}
-      whileTap={REDUCED_MOTION ? {} : { scale: 0.88 }}
+      whileTap={
+        REDUCED_MOTION
+          ? {}
+          : { scale: 0.85 }
+      }
       transition={{ type: 'spring', stiffness: 600, damping: 30 }}
       className={clsx(
         'flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[56px] relative px-2',
-        'cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:rounded-lg'
+        'cursor-pointer select-none',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:rounded-lg'
       )}
     >
-      {/* Sliding indicator dot — shares layoutId across all NavItems */}
+      <Icon
+        size={22}
+        aria-hidden="true"
+        style={{
+          color: active
+            ? 'var(--nav-v2-item-active-color)'
+            : 'var(--nav-v2-item-color)',
+          transition: 'color 180ms var(--ease-out)',
+        }}
+      />
+
+      <span
+        style={{
+          fontSize: 'var(--text-body-2xs)',
+          fontFamily: 'var(--font-body)',
+          fontWeight: 500,
+          lineHeight: 1,
+          color: active
+            ? 'var(--nav-v2-item-active-color)'
+            : 'var(--nav-v2-item-color)',
+          transition: 'color 180ms var(--ease-out)',
+        }}
+      >
+        {item.label}
+      </span>
+
+      {/* Dot indicator — lima, 4px, debajo del label */}
       {active && (
         <motion.span
-          layoutId="nav-indicator"
-          className="absolute top-[6px] left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full"
-          style={{ background: 'var(--color-primary)' }}
+          layoutId="nav-indicator-v2"
+          aria-hidden="true"
           transition={
             REDUCED_MOTION
               ? { duration: 0 }
               : { type: 'spring', stiffness: 500, damping: 30 }
           }
-          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            bottom: 6,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 4,
+            height: 4,
+            borderRadius: '50%',
+            background: 'var(--nav-v2-indicator-color)',
+          }}
         />
       )}
-
-      <motion.div
-        animate={
-          REDUCED_MOTION
-            ? {}
-            : active
-            ? { scale: 1.15, filter: 'drop-shadow(0 0 6px rgba(171,255,53,0.7))' }
-            : { scale: 1, filter: 'drop-shadow(0 0 0px rgba(171,255,53,0))' }
-        }
-        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-      >
-        <Icon
-          size={22}
-          className={active ? 'text-[var(--color-primary)]' : 'text-[var(--nav-item-color)]'}
-          aria-hidden="true"
-        />
-      </motion.div>
-
-      <span
-        className={clsx(
-          'text-[10px] font-[var(--font-body)] leading-none transition-colors duration-150',
-          active ? 'text-[var(--color-primary)]' : 'text-[#666666]'
-        )}
-      >
-        {item.label}
-      </span>
     </motion.button>
   )
 }
@@ -131,13 +143,12 @@ function FABButton() {
           'w-[72px] h-[72px] rounded-full flex items-center justify-center',
           'bg-[var(--color-primary)] cursor-pointer select-none',
           '-mt-5',
-          // 3-layer glow pulse (more cinematic)
+          // FAB es el único elemento fuera de level-up modal que puede tener glow
           REDUCED_MOTION ? '' : 'anim-fab-pulse-premium',
         )}
         style={{
           zIndex: 'var(--z-floating)',
-          // Fallback glow
-          boxShadow: '0 0 24px rgba(171,255,53,0.5), 0 0 48px rgba(171,255,53,0.2), 0 0 72px rgba(171,255,53,0.08)',
+          boxShadow: 'var(--shadow-glow-primary)',
         }}
         aria-haspopup={false}
       >
@@ -150,7 +161,7 @@ function FABButton() {
               exit={{ opacity: 0, rotate: 20, scale: 0.7 }}
               transition={{ duration: 0.2 }}
             >
-              <Zap size={28} className="text-[var(--color-text-inverse)]" fill="currentColor" aria-hidden="true" />
+              <Zap size={28} style={{ color: 'var(--color-bg)' }} fill="currentColor" aria-hidden="true" />
             </motion.span>
           ) : (
             <motion.span
@@ -160,14 +171,21 @@ function FABButton() {
               exit={{ opacity: 0, scale: 0.7 }}
               transition={{ duration: 0.2 }}
             >
-              <Zap size={28} className="text-[var(--color-text-inverse)]" aria-hidden="true" />
+              <Zap size={28} style={{ color: 'var(--color-bg)' }} aria-hidden="true" />
             </motion.span>
           )}
         </AnimatePresence>
       </motion.button>
       <span
-        className="text-[10px] font-[var(--font-body)] font-semibold text-[var(--color-primary)] mt-1 whitespace-nowrap"
         aria-hidden="true"
+        style={{
+          fontSize: 'var(--text-body-2xs)',
+          fontFamily: 'var(--font-body)',
+          fontWeight: 600,
+          color: 'var(--color-primary)',
+          marginTop: 4,
+          whiteSpace: 'nowrap',
+        }}
       >
         {hasActiveWorkout ? 'Continuar' : 'Empezar'}
       </span>
@@ -196,22 +214,22 @@ export function BottomNav() {
       <div
         className="h-[64px] flex items-center justify-around relative px-2"
         style={{
-          background: 'var(--nav-bg)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          borderTop: '1px solid var(--color-border)',
+          background: 'var(--nav-v2-bg)',
+          backdropFilter: `blur(var(--nav-v2-backdrop-blur))`,
+          WebkitBackdropFilter: `blur(var(--nav-v2-backdrop-blur))`,
+          borderTop: 'var(--nav-v2-border-top)',
         }}
       >
-        {/* Left items: Home + Workouts */}
-        <NavItem item={NAV_ITEMS[0]} active={isActive(NAV_ITEMS[0].route)} />
-        <NavItem item={NAV_ITEMS[1]} active={isActive(NAV_ITEMS[1].route)} />
+        {/* Left: Home + Workouts */}
+        <NavItem item={NAV_ITEMS[0]!} active={isActive(NAV_ITEMS[0]!.route)} />
+        <NavItem item={NAV_ITEMS[1]!} active={isActive(NAV_ITEMS[1]!.route)} />
 
-        {/* FAB slot */}
+        {/* FAB */}
         <FABButton />
 
-        {/* Right items: Stats + Profile */}
-        <NavItem item={NAV_ITEMS[2]} active={isActive(NAV_ITEMS[2].route)} />
-        <NavItem item={NAV_ITEMS[3]} active={isActive(NAV_ITEMS[3].route)} />
+        {/* Right: Stats + Profile */}
+        <NavItem item={NAV_ITEMS[2]!} active={isActive(NAV_ITEMS[2]!.route)} />
+        <NavItem item={NAV_ITEMS[3]!} active={isActive(NAV_ITEMS[3]!.route)} />
       </div>
     </nav>
   )

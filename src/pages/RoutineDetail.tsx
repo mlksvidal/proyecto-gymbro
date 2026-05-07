@@ -142,7 +142,8 @@ export default function RoutineDetail() {
         </button>
 
         <p
-          className="text-[15px] font-[var(--font-display)] font-semibold uppercase tracking-wide text-white truncate max-w-[180px]"
+          className="text-[15px] font-[var(--font-display)] font-semibold truncate max-w-[180px]"
+          style={{ color: 'var(--color-text)' }}
         >
           {routine.name}
         </p>
@@ -176,7 +177,7 @@ export default function RoutineDetail() {
         />
         <div className="absolute bottom-4 left-5 right-5">
           <h1
-            className="text-[40px] font-[var(--font-display)] font-bold uppercase leading-none"
+            className="text-[36px] font-[var(--font-display)] font-bold leading-none"
             style={{ color: 'var(--color-primary)' }}
           >
             {routine.name}
@@ -217,7 +218,7 @@ export default function RoutineDetail() {
       {/* Equipment */}
       {usedEquipment.length > 0 && (
         <div className="px-6 py-3 border-b border-white/5">
-          <p className="text-[12px] font-[var(--font-body)] text-[var(--color-text-muted)] mb-2 uppercase tracking-wider">
+          <p className="text-[11px] font-[var(--font-body)] font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--color-text-muted)' }}>
             Equipo necesario
           </p>
           <div className="flex flex-wrap gap-2">
@@ -301,10 +302,9 @@ export default function RoutineDetail() {
           size="lg"
           fullWidth
           onClick={handleStart}
-          className="uppercase tracking-wide font-bold"
           style={{ fontSize: 'clamp(12px, 3.8vw, 16px)' }}
         >
-          EMPEZAR — {currentDay?.dayName}
+          Empezar entrenamiento
         </Button>
       </div>
 

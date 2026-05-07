@@ -1,10 +1,9 @@
 // ============================================================
-// GYMBRO — Achievements Page — Sprint 9 WOW MODE
+// GYMBRO — Achievements Page — Sprint 25.2 v2 — Clean Fitness Pro
 // Route: /achievements
-// Hero counter + filtros + grid stagger + modal shine
 // ============================================================
 
-import { lazy, Suspense, useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, Trophy } from 'lucide-react'
@@ -12,8 +11,6 @@ import { useAchievementRecords } from '@/hooks/useDb'
 import { AchievementBadge } from '@/components/achievements/AchievementBadge'
 import { AchievementModal } from '@/components/achievements/AchievementModal'
 import { CounterRolling } from '@/components/ui/CounterRolling'
-import { AuroraBackground } from '@/components/ui/AuroraBackground'
-import { useSettingsStore } from '@/store/settingsStore'
 import { useAudio } from '@/hooks/useAudio'
 import {
   ACHIEVEMENT_CATALOG,
@@ -22,18 +19,14 @@ import {
   type AchievementDef,
 } from '@/lib/achievements'
 
-const InteractiveBackground = lazy(
-  () => import('@/components/ui/InteractiveBackground').then((m) => ({ default: m.InteractiveBackground }))
-)
-
 const CATEGORY_ORDER: AchievementCategory[] = ['workouts', 'streak', 'pr', 'volume', 'tiers']
 
 type FilterMode = 'all' | 'unlocked' | 'locked'
 
 const FILTER_LABELS: Record<FilterMode, string> = {
-  all: 'TODOS',
-  unlocked: 'DESBLOQUEADOS',
-  locked: 'BLOQUEADOS',
+  all: 'Todos',
+  unlocked: 'Desbloqueados',
+  locked: 'Bloqueados',
 }
 
 export default function Achievements() {
@@ -41,8 +34,6 @@ export default function Achievements() {
   const records = useAchievementRecords()
   const [selected, setSelected] = useState<{ def: AchievementDef; unlockedAt?: number } | null>(null)
   const [filter, setFilter] = useState<FilterMode>('all')
-  const theme = useSettingsStore((s) => s.theme)
-  const isLight = theme === 'light' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: light)').matches)
   const { play } = useAudio()
 
   const unlockedMap = new Map(records.map((r) => [r.id, r.unlockedAt]))
@@ -85,16 +76,6 @@ export default function Achievements() {
         paddingBottom: 'calc(80px + env(safe-area-inset-bottom))',
       }}
     >
-      {/* Aurora background — light mode only */}
-      <AuroraBackground zIndex={0} />
-
-      {/* Background particles — dark mode only */}
-      {!isLight && (
-        <Suspense fallback={null}>
-          <InteractiveBackground particleCount={18} />
-        </Suspense>
-      )}
-
       {/* Header */}
       <div
         className="sticky top-0 z-10 flex items-center gap-3 px-6"
@@ -119,7 +100,7 @@ export default function Achievements() {
 
         <div className="flex-1">
           <h1
-            className="text-[18px] font-[var(--font-display)] font-bold uppercase"
+            className="text-[18px] font-[var(--font-display)] font-bold"
             style={{ color: 'var(--color-text)' }}
           >
             Logros
@@ -154,12 +135,11 @@ export default function Achievements() {
           <div className="flex items-end justify-center gap-2 mb-1">
             <span
               style={{
-                fontFamily: 'var(--font-display)',
-                fontWeight: 900,
+                fontFamily: 'var(--font-mono)',
+                fontWeight: 700,
                 fontSize: '56px',
                 color: 'var(--color-primary)',
                 lineHeight: '1',
-                textShadow: '0 0 24px rgba(171,255,53,0.5)',
               }}
             >
               <CounterRolling value={totalUnlocked} duration={0.8} />
@@ -182,8 +162,6 @@ export default function Achievements() {
               fontFamily: 'var(--font-body)',
               fontSize: '12px',
               color: 'var(--color-text-muted)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
             }}
           >
             desbloqueados
@@ -201,7 +179,6 @@ export default function Achievements() {
               className="h-full rounded-full"
               style={{
                 background: 'var(--color-primary)',
-                boxShadow: 'var(--shadow-glow-primary)',
               }}
             />
           </div>
@@ -232,11 +209,10 @@ export default function Achievements() {
               key={f}
               onClick={() => handleFilterChange(f)}
               whileTap={{ scale: 0.95 }}
-              className="flex-shrink-0 px-3 rounded-full font-semibold uppercase transition-all duration-200 min-h-[44px] flex items-center justify-center"
+              className="flex-shrink-0 px-4 rounded-full font-semibold transition-colors duration-200 min-h-[36px] flex items-center justify-center"
               style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(10px, 2.8vw, 11px)',
-                letterSpacing: '0.05em',
+                fontFamily: 'var(--font-body)',
+                fontSize: '13px',
                 background: filter === f
                   ? 'var(--color-primary)'
                   : 'var(--color-surface)',
@@ -246,9 +222,6 @@ export default function Achievements() {
                 border: filter === f
                   ? '1px solid var(--color-primary)'
                   : '1px solid var(--color-border)',
-                boxShadow: filter === f
-                  ? '0 0 12px rgba(171,255,53,0.35)'
-                  : 'none',
               }}
               aria-pressed={filter === f}
             >
@@ -293,7 +266,7 @@ export default function Achievements() {
                   <div className="flex items-center justify-between mb-3">
                     <h2
                       id={`cat-${cat}`}
-                      className="text-[13px] font-[var(--font-body)] uppercase tracking-wider font-semibold"
+                      className="text-[11px] font-[var(--font-body)] uppercase tracking-widest font-semibold"
                       style={{ color: 'var(--color-text-muted)' }}
                     >
                       {CATEGORY_LABELS[cat]}

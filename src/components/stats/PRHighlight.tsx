@@ -42,7 +42,7 @@ export function PRHighlight({ allPRs }: PRHighlightProps) {
           </span>
         </div>
         <p className="text-[13px]" style={{ color: 'var(--color-text-muted)' }}>
-          Sin PRs este mes. ¡A entrenar!
+          Sin récords este mes. A moverla.
         </p>
       </div>
     )

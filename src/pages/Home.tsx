@@ -1,7 +1,7 @@
-import { lazy, Suspense, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Bell, Trophy, Flame, Zap, Target, Dumbbell as DumbbellIcon } from 'lucide-react'
+import { Bell, Flame, Zap, Target, Trophy } from 'lucide-react'
 import { useUserStore } from '@/store/userStore'
 import { UserAvatar } from '@/components/profile/UserAvatar'
 import { getTierForXP } from '@/lib/tiers'
@@ -10,24 +10,14 @@ import { TodayWorkoutCard } from '@/components/home/TodayWorkoutCard'
 import { PullToRefresh } from '@/components/ui/PullToRefresh'
 import { ACTIVE_CHALLENGES, type Challenge } from '@/lib/challenges-seed'
 import { CounterRolling } from '@/components/ui/CounterRolling'
-import { Marquee } from '@/components/ui/Marquee'
-import { AuroraBackground } from '@/components/ui/AuroraBackground'
-import { useSettingsStore } from '@/store/settingsStore'
 import { notifications, hasShownTodayKey, markShownTodayKey } from '@/lib/notifications'
 import { loadNotifPrefs } from '@/lib/notifications-prefs'
 
-// Lazy: InteractiveBackground is heavy canvas — load async
-const InteractiveBackground = lazy(
-  () => import('@/components/ui/InteractiveBackground').then((m) => ({ default: m.InteractiveBackground }))
-)
-
 // ============================================================
-// Sprint 9 WOW MODE — Home Dashboard
-// - InteractiveBackground canvas
-// - Greeting con wave hand 👋
-// - Marquee motivacional en top
-// - Stat cards con iconos de fondo
-// - ChallengesSection con íconos pulse
+// Home — Sprint 25.2 v2
+// Eliminado: Marquee, AuroraBackground, InteractiveBackground,
+//            card-glow-pulse, GlitchText
+// StatCards: estilo Whoop (hero number + label uppercase chico)
 // ============================================================
 
 // ── Sparkline SVG — 7-day volume line ───────────────────────
@@ -48,109 +38,63 @@ function Sparkline({ values }: { values: number[] }) {
       aria-hidden="true"
       className="overflow-visible"
     >
-      <defs>
-        <linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="var(--color-primary)" stopOpacity="0.35" />
-          <stop offset="100%" stopColor="var(--color-primary)" stopOpacity="0" />
-        </linearGradient>
-        <filter id="spark-glow">
-          <feGaussianBlur stdDeviation="1.5" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-      <polygon
-        points={`0,${h} ${points.join(' ')} ${w},${h}`}
-        fill="url(#spark-fill)"
-      />
       <polyline
         points={points.join(' ')}
         fill="none"
         stroke="var(--color-primary)"
-        strokeWidth="2"
+        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        filter="url(#spark-glow)"
+        opacity="0.7"
       />
-      {/* Glowing dot at latest value */}
-      {points.length > 0 && (() => {
-        const last = points[points.length - 1]!.split(',')
-        const lx = parseFloat(last[0]!)
-        const ly = parseFloat(last[1]!)
-        return (
-          <circle cx={lx} cy={ly} r={3} fill="var(--color-primary)"
-            style={{ filter: 'drop-shadow(0 0 4px var(--color-primary))' }}
-          />
-        )
-      })()}
     </svg>
   )
 }
 
-// ── Stat cards row ───────────────────────────────────────────
+// ── Stat cards — Whoop style ─────────────────────────────────
 function StreakCard({ streak }: { streak: number }) {
+  const streakColor = streak >= 30
+    ? 'var(--color-warning)'   // orange ≥30d
+    : 'var(--color-primary)'   // lima <30d
+
   return (
     <div
-      className="flex flex-col gap-1 p-4 rounded-2xl w-full card-glow-pulse relative overflow-hidden"
+      className="flex flex-col gap-1 p-4 rounded-[var(--radius-lg)] w-full overflow-hidden"
       style={{
-        background: 'var(--color-surface)',
-        border: '1px solid var(--color-border)',
-        borderLeft: '3px solid var(--color-primary)',
+        background: 'var(--color-surface-elevated)',
+        boxShadow: 'var(--shadow-md)',
       }}
     >
-      {/* Faded bg icon */}
-      <Flame
-        size={56}
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          right: -8,
-          bottom: -8,
-          color: 'rgba(171,255,53,0.06)',
-        }}
-      />
-
-      <div className="flex items-center gap-1.5 relative">
+      <div className="flex items-center gap-1.5">
         <Flame
-          size={16}
-          className="text-[var(--color-primary)] anim-flame"
+          size={14}
           aria-hidden="true"
+          style={{ color: streakColor }}
         />
         <span
           style={{
-            fontFamily: 'var(--font-display)',
-            fontWeight: 700,
-            fontSize: '32px',
+            fontFamily: 'var(--font-mono)',
+            fontWeight: 600,
+            fontSize: 'var(--text-display-2xl)',
             color: 'var(--color-text)',
-            lineHeight: '1',
+            lineHeight: 'var(--leading-tight)',
+            fontVariantNumeric: 'tabular-nums',
           }}
         >
           <CounterRolling value={streak} />
-        </span>
-        <span
-          style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: '13px',
-            color: 'var(--color-text-muted)',
-            alignSelf: 'flex-end',
-            paddingBottom: '2px',
-          }}
-        >
-          días
         </span>
       </div>
       <p
         style={{
           fontFamily: 'var(--font-body)',
-          fontSize: '11px',
+          fontSize: 'var(--text-body-2xs)',
           color: 'var(--color-text-muted)',
           textTransform: 'uppercase',
-          letterSpacing: '0.08em',
+          letterSpacing: 'var(--tracking-widest)',
+          fontWeight: 600,
         }}
       >
-        Racha actual
+        Racha
       </p>
     </div>
   )
@@ -159,51 +103,39 @@ function StreakCard({ streak }: { streak: number }) {
 function VolumeCard({ volume, sparkData }: { volume: number; sparkData: number[] }) {
   return (
     <div
-      className="flex flex-col gap-1 p-4 rounded-2xl w-full relative overflow-hidden"
+      className="flex flex-col gap-1 p-4 rounded-[var(--radius-lg)] w-full overflow-hidden"
       style={{
-        background: 'var(--color-surface)',
-        border: '1px solid var(--color-border)',
+        background: 'var(--color-surface-elevated)',
+        boxShadow: 'var(--shadow-md)',
       }}
     >
-      {/* Faded bg icon */}
-      <Zap
-        size={56}
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          right: -6,
-          top: -8,
-          color: 'rgba(171,255,53,0.05)',
-        }}
-      />
-
-      <span
-        style={{
-          fontFamily: 'var(--font-display)',
-          fontWeight: 700,
-          fontSize: '28px',
-          color: 'var(--color-text)',
-          lineHeight: '1',
-          fontVariantNumeric: 'tabular-nums',
-        }}
-        className="tabular-nums relative"
-      >
-        <CounterRolling value={Math.round(volume)} />
-      </span>
+      <div className="flex items-start justify-between">
+        <span
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontWeight: 600,
+            fontSize: 'var(--text-display-2xl)',
+            color: 'var(--color-text)',
+            lineHeight: 'var(--leading-tight)',
+            fontVariantNumeric: 'tabular-nums',
+          }}
+        >
+          <CounterRolling value={Math.round(volume)} />
+        </span>
+        <Sparkline values={sparkData} />
+      </div>
       <p
         style={{
           fontFamily: 'var(--font-body)',
-          fontSize: '11px',
+          fontSize: 'var(--text-body-2xs)',
           color: 'var(--color-text-muted)',
           textTransform: 'uppercase',
-          letterSpacing: '0.08em',
+          letterSpacing: 'var(--tracking-widest)',
+          fontWeight: 600,
         }}
       >
-        Vol semanal kg
+        Volumen semanal
       </p>
-      <div className="mt-1">
-        <Sparkline values={sparkData} />
-      </div>
     </div>
   )
 }
@@ -219,11 +151,9 @@ const CHALLENGE_ICONS: Record<Challenge['icon'], React.FC<{ size?: number; class
 function ChallengeCard({ challenge }: { challenge: Challenge }) {
   const Icon = CHALLENGE_ICONS[challenge.icon]
   return (
-    <div
-      className="flex items-center gap-3 py-2"
-    >
+    <div className="flex items-center gap-3 py-2">
       <div
-        className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 relative overflow-hidden"
+        className="w-10 h-10 rounded-[var(--radius-md)] flex items-center justify-center flex-shrink-0"
         style={{ background: 'rgba(171,255,53,0.08)', border: '1px solid rgba(171,255,53,0.12)' }}
       >
         <Icon size={18} className="text-[var(--color-primary)]" aria-hidden="true" />
@@ -234,7 +164,7 @@ function ChallengeCard({ challenge }: { challenge: Challenge }) {
           style={{
             fontFamily: 'var(--font-display)',
             fontWeight: 600,
-            fontSize: '14px',
+            fontSize: 'var(--text-body-md)',
             color: 'var(--color-text)',
             lineHeight: '1.2',
           }}
@@ -244,9 +174,9 @@ function ChallengeCard({ challenge }: { challenge: Challenge }) {
         <p
           style={{
             fontFamily: 'var(--font-body)',
-            fontSize: '12px',
+            fontSize: 'var(--text-body-xs)',
             color: 'var(--color-text-muted)',
-            marginTop: '2px',
+            marginTop: 2,
           }}
           className="truncate"
         >
@@ -254,8 +184,8 @@ function ChallengeCard({ challenge }: { challenge: Challenge }) {
         </p>
 
         <div
-          className="mt-2 h-1.5 rounded-full overflow-hidden"
-          style={{ background: 'var(--color-surface-elevated)' }}
+          className="mt-2 h-1 rounded-full overflow-hidden"
+          style={{ background: 'var(--progress-v2-track)' }}
           role="progressbar"
           aria-valuenow={challenge.progress}
           aria-valuemin={0}
@@ -266,12 +196,9 @@ function ChallengeCard({ challenge }: { challenge: Challenge }) {
             initial={{ width: 0 }}
             whileInView={{ width: `${challenge.progress}%` }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
+            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
             className="h-full rounded-full"
-            style={{
-              background: 'var(--color-primary)',
-              boxShadow: '0 0 6px rgba(171,255,53,0.5)',
-            }}
+            style={{ background: 'var(--progress-v2-fill)' }}
           />
         </div>
       </div>
@@ -280,9 +207,9 @@ function ChallengeCard({ challenge }: { challenge: Challenge }) {
         <span
           style={{
             fontFamily: 'var(--font-display)',
-            fontWeight: 700,
-            fontSize: '16px',
-            color: challenge.daysLeft <= 1 ? '#FF6B35' : 'var(--color-primary)',
+            fontWeight: 600,
+            fontSize: 'var(--text-body-md)',
+            color: challenge.daysLeft <= 1 ? 'var(--color-warning)' : 'var(--color-primary)',
           }}
         >
           {challenge.progress}%
@@ -290,11 +217,11 @@ function ChallengeCard({ challenge }: { challenge: Challenge }) {
         <p
           style={{
             fontFamily: 'var(--font-body)',
-            fontSize: '10px',
+            fontSize: 'var(--text-body-2xs)',
             color: 'var(--color-text-muted)',
           }}
         >
-          {challenge.daysLeft}d left
+          {challenge.daysLeft}d
         </p>
       </div>
     </div>
@@ -305,50 +232,48 @@ function ChallengesSection() {
   const navigate = useNavigate()
   return (
     <motion.section
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-30px' }}
-      transition={{ duration: 0.45, ease: 'easeOut' }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
       aria-label="Desafíos activos"
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Target size={14} style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
           <h2
-            className="gradient-headline"
             style={{
               fontFamily: 'var(--font-display)',
-              fontWeight: 700,
-              fontSize: '16px',
+              fontWeight: 600,
+              fontSize: 'var(--text-display-sm)',
               color: 'var(--color-text)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.08em',
             }}
           >
-            DESAFÍOS ACTIVOS
+            Desafíos activos
           </h2>
         </div>
         <button
           onClick={() => navigate('/achievements')}
           style={{
-            fontFamily: 'var(--font-display)',
+            fontFamily: 'var(--font-body)',
             fontWeight: 600,
-            fontSize: '12px',
+            fontSize: 'var(--text-body-sm)',
             color: 'var(--color-primary)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.06em',
             background: 'none',
             border: 'none',
             cursor: 'pointer',
+            minHeight: 44,
+            display: 'flex',
+            alignItems: 'center',
           }}
           aria-label="Ver todos los desafíos"
         >
-          VER TODOS
+          Ver todos
         </button>
       </div>
 
       <div
-        className="rounded-2xl px-4 py-2 flex flex-col gap-3"
+        className="rounded-[var(--radius-lg)] px-4 py-2 flex flex-col gap-3"
         style={{
           background: 'var(--color-surface)',
           border: '1px solid var(--color-border)',
@@ -357,10 +282,10 @@ function ChallengesSection() {
         {ACTIVE_CHALLENGES.map((c, idx) => (
           <motion.div
             key={c.id}
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.35, delay: idx * 0.08, ease: 'easeOut' }}
+            transition={{ duration: 0.3, delay: idx * 0.06, ease: 'easeOut' }}
           >
             <ChallengeCard challenge={c} />
           </motion.div>
@@ -374,31 +299,31 @@ function ChallengesSection() {
 function HomeHeader() {
   const currentUser = useUserStore((s) => s.currentUser)
   const name = currentUser?.name?.trim()
-  const greeting = name && name.toLowerCase() !== 'bro' ? `Hola, ${name}` : 'Hola, Bro'
+  // copy v2: "Hola, {nombre}" — sin BRO
+  const greeting = name && name.toLowerCase() !== 'bro' ? `Hola, ${name}` : 'Hola'
   const xp = currentUser?.xp ?? 0
   const tier = getTierForXP(xp)
 
   return (
     <header
-      className="flex items-center justify-between px-6 pt-4 pb-3"
+      className="flex items-center justify-between px-[var(--page-padding-x)] pt-4 pb-3"
       style={{
-        background: 'color-mix(in srgb, var(--color-bg) 90%, transparent)',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
+        background: 'var(--nav-v2-bg)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
       }}
     >
       <div>
         <motion.h1
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          className="flex items-center gap-2"
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           style={{
             fontFamily: 'var(--font-display)',
-            fontWeight: 700,
-            fontSize: '22px',
+            fontWeight: 600,
+            fontSize: 'var(--text-display-md)',
             color: 'var(--color-text)',
-            lineHeight: '1.1',
+            lineHeight: 'var(--leading-snug)',
           }}
         >
           {greeting}
@@ -406,15 +331,15 @@ function HomeHeader() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
+          transition={{ duration: 0.35, delay: 0.15 }}
           style={{
             fontFamily: 'var(--font-body)',
-            fontSize: '14px',
+            fontSize: 'var(--text-body-sm)',
             color: 'var(--color-text-muted)',
-            marginTop: '2px',
+            marginTop: 2,
           }}
         >
-          Listo para romperla hoy
+          Listo para entrenar
         </motion.p>
       </div>
       <div className="flex items-center gap-3">
@@ -462,19 +387,10 @@ function useWeeklySparkData(): number[] {
   return buildSparkData(workouts, MODULE_LOAD_TS)
 }
 
-function useResolvedTheme(): 'dark' | 'light' {
-  const theme = useSettingsStore((s) => s.theme)
-  if (theme !== 'system') return theme
-  if (typeof window === 'undefined') return 'dark'
-  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
-}
-
 export default function Home() {
   const streak = useCurrentStreak()
   const weeklyVolume = useWeeklyVolume()
   const sparkData = useWeeklySparkData()
-  const resolvedTheme = useResolvedTheme()
-  const isLight = resolvedTheme === 'light'
   const workouts = useWorkouts()
 
   // Streak warning notification — once per day if streak > 0 and >18h since last workout
@@ -494,7 +410,6 @@ export default function Home() {
     const hoursAgo = (Date.now() - lastWorkout.completedAt) / (1000 * 60 * 60)
     if (hoursAgo < 18) return
 
-    // Days left before streak breaks (streak breaks if no workout today or yesterday)
     const todayStart = new Date()
     todayStart.setHours(0, 0, 0, 0)
     const trainedToday = workouts.some(
@@ -508,82 +423,36 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-full relative overflow-x-hidden">
-      {/* Aurora background — light mode only (handled internally by AuroraBackground) */}
-      <AuroraBackground zIndex={0} />
-
-      {/* Interactive background — dark mode canvas particles */}
-      {!isLight && (
-        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
-          <Suspense fallback={null}>
-            <InteractiveBackground particleCount={20} />
-          </Suspense>
-        </div>
-      )}
-
-      <div className="relative flex flex-col h-full overflow-x-hidden" style={{ zIndex: 1 }}>
-        {/* Safe-area top spacer — Marquee should NOT collide with Dynamic Island */}
+      <div className="relative flex flex-col h-full overflow-x-hidden">
+        {/* Safe-area top spacer */}
         <div
           aria-hidden="true"
           style={{ height: 'env(safe-area-inset-top, 0px)' }}
         />
-
-        {/* Motivational marquee banner — overflow-hidden contains the scrolling track */}
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="overflow-hidden w-full"
-          style={{ borderBottom: '1px solid rgba(171,255,53,0.08)' }}
-          aria-hidden="true"
-        >
-          <Marquee
-            speed="normal"
-            className="py-1.5"
-            style={{
-              background: isLight ? 'rgba(171,255,53,0.06)' : 'rgba(171,255,53,0.04)',
-            }}
-          >
-            <span
-              className={`inline-flex items-center gap-2 ${isLight ? 'marquee-gradient-text' : ''}`}
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontWeight: 600,
-                fontSize: '11px',
-                ...(isLight ? {} : { color: 'rgba(171,255,53,0.65)' }),
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-              }}
-            >
-              <Flame size={12} aria-hidden="true" style={{ flexShrink: 0 }} />
-              ENTRÁ A ROMPERLA · DALE DURO · UNA MÁS · SIN EXCUSAS · CONSTANCIA · GANÁ HOY
-              <DumbbellIcon size={12} aria-hidden="true" style={{ flexShrink: 0 }} />
-            </span>
-          </Marquee>
-        </motion.div>
 
         <HomeHeader />
 
         <PullToRefresh onRefresh={fakeRefresh} className="flex-1">
           <main
             id="main-content"
-            className="flex flex-col gap-4 px-6 pt-2"
+            className="flex flex-col gap-[var(--section-gap)] px-[var(--page-padding-x)] pt-3"
             style={{ paddingBottom: 'max(24px, calc(env(safe-area-inset-bottom, 0px) + 16px))' }}
           >
             {/* Stat cards row — stagger entrance */}
             <section aria-label="Estadísticas rápidas" className="flex gap-3">
               <motion.div
                 className="flex-1"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.35, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
               >
                 <StreakCard streak={streak} />
               </motion.div>
               <motion.div
                 className="flex-1"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.35, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
               >
                 <VolumeCard volume={weeklyVolume} sparkData={sparkData} />
               </motion.div>
@@ -592,11 +461,21 @@ export default function Home() {
             {/* Today's workout */}
             <motion.section
               aria-label="Entrenamiento de hoy"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="rounded-[var(--radius-xl)] card-glow-pulse"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             >
+              <h2
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontWeight: 600,
+                  fontSize: 'var(--text-display-sm)',
+                  color: 'var(--color-text)',
+                  marginBottom: 10,
+                }}
+              >
+                Hoy entrenás
+              </h2>
               <TodayWorkoutCard />
             </motion.section>
 

@@ -312,7 +312,7 @@ export const StickerCanvas = forwardRef<HTMLDivElement, StickerData>(
               textTransform: 'uppercase',
             }}
           >
-            BRO TIER {tierLevel} · {tierName}
+            Tier {tierLevel} · {tierName}
           </span>
         </div>
 

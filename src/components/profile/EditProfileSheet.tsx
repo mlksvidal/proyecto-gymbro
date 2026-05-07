@@ -18,16 +18,16 @@ interface EditProfileSheetProps {
 }
 
 const GOAL_OPTIONS: { value: Goal; label: string }[] = [
-  { value: 'strength',     label: 'FUERZA'         },
-  { value: 'hypertrophy',  label: 'HIPERTROFIA'    },
-  { value: 'fat-loss',     label: 'PÉRDIDA DE GRASA'},
-  { value: 'general',      label: 'GENERAL'         },
+  { value: 'strength',     label: 'Fuerza'          },
+  { value: 'hypertrophy',  label: 'Hipertrofia'     },
+  { value: 'fat-loss',     label: 'Pérdida de grasa'},
+  { value: 'general',      label: 'General'          },
 ]
 
 const LEVEL_OPTIONS: { value: ExperienceLevel; label: string }[] = [
-  { value: 'beginner',     label: 'PRINCIPIANTE' },
-  { value: 'intermediate', label: 'INTERMEDIO'   },
-  { value: 'advanced',     label: 'AVANZADO'     },
+  { value: 'beginner',     label: 'Principiante' },
+  { value: 'intermediate', label: 'Intermedio'   },
+  { value: 'advanced',     label: 'Avanzado'     },
 ]
 
 function ChipSelector<T extends string>({
@@ -200,7 +200,7 @@ export function EditProfileSheet({ open, onClose }: EditProfileSheetProps) {
                   letterSpacing: '0.05em',
                 }}
               >
-                Editar Perfil
+                Editar perfil
               </h2>
               <button
                 onClick={onClose}
@@ -217,7 +217,7 @@ export function EditProfileSheet({ open, onClose }: EditProfileSheetProps) {
 
               {/* Avatar picker */}
               <section aria-label="Avatar">
-                <SectionLabel>AVATAR</SectionLabel>
+                <SectionLabel>Avatar</SectionLabel>
                 <AvatarPicker
                   kind={avatarKind}
                   value={avatarValue}
@@ -228,7 +228,7 @@ export function EditProfileSheet({ open, onClose }: EditProfileSheetProps) {
 
               {/* Nombre */}
               <section aria-label="Nombre">
-                <SectionLabel>NOMBRE</SectionLabel>
+                <SectionLabel>Nombre</SectionLabel>
                 <input
                   type="text"
                   value={name}
@@ -255,7 +255,7 @@ export function EditProfileSheet({ open, onClose }: EditProfileSheetProps) {
 
               {/* Username */}
               <section aria-label="Username">
-                <SectionLabel>@TAG (OPCIONAL)</SectionLabel>
+                <SectionLabel>Usuario (opcional)</SectionLabel>
                 <div className="relative">
                   <span
                     className="absolute left-4 top-1/2 -translate-y-1/2 text-[15px]"
@@ -291,7 +291,7 @@ export function EditProfileSheet({ open, onClose }: EditProfileSheetProps) {
 
               {/* Objetivo */}
               <section aria-label="Objetivo">
-                <SectionLabel>OBJETIVO</SectionLabel>
+                <SectionLabel>Objetivo</SectionLabel>
                 <ChipSelector
                   options={GOAL_OPTIONS}
                   value={goal}
@@ -302,7 +302,7 @@ export function EditProfileSheet({ open, onClose }: EditProfileSheetProps) {
 
               {/* Nivel */}
               <section aria-label="Nivel de experiencia">
-                <SectionLabel>NIVEL DE EXPERIENCIA</SectionLabel>
+                <SectionLabel>Experiencia</SectionLabel>
                 <ChipSelector
                   options={LEVEL_OPTIONS}
                   value={experienceLevel}

@@ -406,9 +406,9 @@ export default function Welcome() {
         }}
       >
         <LightningCanvas
-          strikeIntervalMs={1600}
-          strikeVarianceMs={900}
-          maxBolts={3}
+          strikeIntervalMs={4000}
+          strikeVarianceMs={1200}
+          maxBolts={1}
           color={resolvedTheme === 'light' ? '#5C9914' : '#D8FF3D'}
           glowColor={resolvedTheme === 'light' ? '#3D7C0F' : '#ABFF35'}
           multicolor={resolvedTheme === 'light'}
@@ -533,7 +533,7 @@ export default function Welcome() {
             boxShadow: '0 0 32px rgba(171,255,53,0.45), 0 0 64px rgba(171,255,53,0.15)',
           }}
         >
-          COMENZAR
+          Empezar
         </Button>
         <p
           style={{

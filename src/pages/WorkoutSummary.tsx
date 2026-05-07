@@ -66,21 +66,21 @@ function LevelUpModal({
         </motion.div>
 
         <p
-          className="text-[14px] font-[var(--font-body)] uppercase tracking-widest mb-2"
+          className="text-[12px] font-[var(--font-body)] mb-2"
           style={{ color: 'var(--color-text-muted)' }}
         >
-          SUBISTE AL
+          Subiste al nivel
         </p>
 
         <h2
-          className="text-[48px] font-[var(--font-display)] font-bold uppercase leading-none"
+          className="text-[48px] font-[var(--font-display)] font-bold leading-none"
           style={{ color: 'var(--color-primary)' }}
         >
-          BRO TIER {tierLevel}
+          Tier {tierLevel}
         </h2>
 
         <p
-          className="text-[24px] font-[var(--font-display)] font-bold mt-1 uppercase tracking-wide"
+          className="text-[24px] font-[var(--font-display)] font-bold mt-1"
           style={{ color: 'var(--color-accent)' }}
         >
           {tierName}
@@ -271,7 +271,7 @@ export default function WorkoutSummary() {
         >
           <Check size={14} className="text-[var(--color-primary)]" />
           <span
-            className="text-[12px] font-[var(--font-body)] font-semibold uppercase tracking-widest"
+            className="text-[12px] font-[var(--font-body)] font-semibold"
             style={{ color: 'var(--color-primary)' }}
           >
             {workout.routineName}
@@ -279,17 +279,11 @@ export default function WorkoutSummary() {
         </div>
 
         <h1
-          className="text-[36px] font-[var(--font-display)] font-bold uppercase leading-none"
-          style={{ color: 'var(--color-primary)' }}
-        >
-          WORKOUT
-        </h1>
-        <h2
-          className="text-[36px] font-[var(--font-display)] font-bold uppercase leading-none"
+          className="text-[36px] font-[var(--font-display)] font-bold leading-none"
           style={{ color: 'var(--color-text)' }}
         >
-          COMPLETADO
-        </h2>
+          Sesión completa
+        </h1>
         <p
           className="text-[14px] font-[var(--font-body)] mt-2"
           style={{ color: 'var(--color-text-muted)' }}
@@ -309,7 +303,7 @@ export default function WorkoutSummary() {
           icon={Clock}
           label="Tiempo"
           value={
-            <p className="text-[22px] font-[var(--font-display)] font-bold text-white">
+            <p className="text-[22px] font-[var(--font-mono)] font-bold" style={{ color: 'var(--color-text)' }}>
               {durationStr}
             </p>
           }
@@ -318,7 +312,7 @@ export default function WorkoutSummary() {
           icon={BarChart3}
           label="Volumen"
           value={
-            <p className="text-[22px] font-[var(--font-display)] font-bold text-white">
+            <p className="text-[22px] font-[var(--font-mono)] font-bold" style={{ color: 'var(--color-text)' }}>
               {workout.totalVolumeKg}kg
             </p>
           }
@@ -327,7 +321,7 @@ export default function WorkoutSummary() {
           icon={Check}
           label="Sets"
           value={
-            <p className="text-[22px] font-[var(--font-display)] font-bold text-white">
+            <p className="text-[22px] font-[var(--font-mono)] font-bold" style={{ color: 'var(--color-text)' }}>
               {workout.setsCompleted}
             </p>
           }
@@ -336,7 +330,7 @@ export default function WorkoutSummary() {
           icon={Trophy}
           label="PRs"
           value={
-            <p className="text-[22px] font-[var(--font-display)] font-bold text-white">
+            <p className="text-[22px] font-[var(--font-mono)] font-bold" style={{ color: 'var(--color-text)' }}>
               {prCount}
             </p>
           }
@@ -352,7 +346,7 @@ export default function WorkoutSummary() {
       >
         <StatCard
           icon={Zap}
-          label="XP GANADO"
+          label="XP ganado"
           highlight
           value={
             <div className="flex items-baseline gap-1 justify-center">
@@ -434,7 +428,7 @@ export default function WorkoutSummary() {
           style={{ fontSize: 'clamp(13px, 3.8vw, 16px)' }}
         >
           <Camera size={18} className="flex-shrink-0" />
-          COMPARTIR EN HISTORIA
+          Compartir historia
         </Button>
 
         {/* Secondary actions row */}
@@ -446,7 +440,7 @@ export default function WorkoutSummary() {
             onClick={() => navigate('/stats')}
           >
             <BarChart3 size={16} className="flex-shrink-0" />
-            VER STATS
+            Ver stats
           </Button>
 
           <Button
@@ -456,7 +450,7 @@ export default function WorkoutSummary() {
             onClick={() => navigate('/')}
           >
             <Home size={16} className="flex-shrink-0" />
-            INICIO
+            Inicio
           </Button>
         </div>
       </motion.div>

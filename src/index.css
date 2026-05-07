@@ -1,5 +1,6 @@
 @import "tailwindcss";
-@import "./styles/tokens.css";
+@import "./styles/tokens.css";        /* v1 — coexiste */
+@import "./styles/tokens-v2.css";     /* v2 — override por orden */
 @import "./styles/base.css";
 @import "./styles/animations.css";
 

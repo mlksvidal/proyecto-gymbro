@@ -2,11 +2,10 @@ import { forwardRef, type ButtonHTMLAttributes, useCallback } from 'react'
 import { clsx } from 'clsx'
 
 // ============================================================
-// Button — Gymbro UI T40
-// - Ripple effect on click (pure CSS + DOM injection)
-// - Hover glow intensifying on primary (desktop)
-// - Active: scale 0.96 + stronger glow (100ms)
-// - Disabled: opacity 0.4, cursor not-allowed, no ripple
+// Button v2 — Gymbro Sprint 25.2
+// Inter semibold 600 en todos los tamaños.
+// Sin UPPERCASE. Glow solo en primary lg/xl.
+// Variantes: primary | secondary | ghost | danger
 // ============================================================
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
@@ -21,59 +20,59 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   primary: [
-    'bg-[var(--color-primary)] text-[var(--color-text-inverse)]',
-    'font-[var(--font-display)] font-bold tracking-[var(--tracking-wide)]',
-    'shadow-[var(--shadow-glow-primary)]',
-    'hover:bg-[var(--color-primary-bright)] hover:shadow-[var(--shadow-glow-primary-strong)]',
-    'active:bg-[var(--color-primary-dim)] active:shadow-[var(--btn-primary-active-shadow)] active:scale-[0.96]',
-    // Disabled: ghosted lima — bg transparent, border lima 30%, text lima 50%
-    // NO se usa opacity global (causa el color olive/army)
+    'bg-[var(--btn-v2-primary-bg)] text-[var(--btn-v2-primary-color)]',
+    'font-[var(--font-body)] font-semibold',
+    'hover:bg-[var(--btn-v2-primary-hover-bg)]',
+    'active:bg-[var(--btn-v2-primary-active-bg)] active:scale-[0.98]',
     'disabled:bg-transparent disabled:border disabled:border-[rgba(171,255,53,0.3)] disabled:text-[rgba(171,255,53,0.5)] disabled:shadow-none',
-    'transition-[background-color,box-shadow,transform,border-color,color] duration-[150ms]',
-    // Light mode: animated gradient bg override applied via CSS below
+    'transition-[background-color,box-shadow,transform] duration-[180ms]',
   ].join(' '),
 
   secondary: [
-    'bg-[var(--color-surface-elevated)] text-[var(--color-text)]',
-    'border border-[var(--color-border)]',
-    'font-[var(--font-body)] font-medium',
-    'hover:bg-[var(--color-surface-hover)] hover:border-[var(--color-primary)]',
-    'active:bg-[var(--color-surface)] active:scale-[0.97]',
-    'disabled:bg-[var(--color-surface)]',
-    'transition-all duration-[150ms]',
+    'bg-[var(--btn-v2-secondary-bg)] text-[var(--btn-v2-secondary-color)]',
+    'border border-[var(--btn-v2-secondary-border)]',
+    'font-[var(--font-body)] font-semibold',
+    'hover:bg-[var(--btn-v2-secondary-hover-bg)]',
+    'active:scale-[0.98]',
+    'disabled:opacity-40',
+    'transition-[background-color,transform] duration-[180ms]',
   ].join(' '),
 
   ghost: [
-    'bg-transparent text-[var(--color-primary)]',
+    'bg-[var(--btn-v2-ghost-bg)] text-[var(--btn-v2-ghost-color)]',
     'font-[var(--font-body)] font-medium',
-    'hover:bg-[rgba(171,255,53,0.08)]',
-    'active:bg-[rgba(171,255,53,0.04)] active:scale-[0.97]',
-    'transition-all duration-[150ms]',
+    'hover:text-[var(--btn-v2-ghost-hover-color)]',
+    'active:scale-[0.98]',
+    'disabled:opacity-40',
+    'transition-[color,transform] duration-[180ms]',
   ].join(' '),
 
   danger: [
-    'bg-[var(--color-danger)] text-white',
+    'bg-[var(--btn-v2-danger-bg)] text-[var(--btn-v2-danger-color)]',
+    'border border-[var(--btn-v2-danger-border)]',
     'font-[var(--font-body)] font-semibold',
-    'shadow-[var(--shadow-glow-danger)]',
-    'hover:bg-[var(--btn-danger-hover-bg)]',
-    'active:bg-[var(--color-danger-dim)] active:scale-[0.97]',
-    'transition-all duration-[150ms]',
+    'hover:bg-[var(--btn-v2-danger-hover-bg)]',
+    'active:scale-[0.98]',
+    'disabled:opacity-40',
+    'transition-[background-color,transform] duration-[180ms]',
   ].join(' '),
 }
 
 const SIZE_CLASSES: Record<ButtonSize, string> = {
-  // sm: min-h-[44px] para touch target WCAG — visually compact con padding
-  sm:  'min-h-[44px] px-4 text-sm rounded-[var(--radius-md)] min-w-[44px]',
-  md:  'h-11 px-6 text-base rounded-[var(--radius-md)] min-w-[44px]',
-  lg:  'h-14 px-8 text-lg rounded-[var(--radius-lg)] min-w-[44px]',
-  xl:  'h-16 px-8 text-xl rounded-[var(--radius-xl)] min-w-[44px]',
+  sm:  'h-8 px-3 text-[var(--text-body-sm)] rounded-[var(--radius-md)] min-w-[44px] min-h-[44px]',
+  md:  'h-10 px-4 text-[var(--text-body-md)] rounded-[var(--radius-md)] min-w-[44px] min-h-[44px]',
+  lg:  'h-12 px-5 text-[var(--text-body-lg)] rounded-[var(--radius-md)] min-w-[44px]',
+  xl:  'h-14 px-6 text-[var(--text-display-sm)] rounded-[var(--radius-md)] w-full min-w-[44px]',
 }
 
-// Lima ripple for primary, white-5% for others
+// Glow shadow solo en primary lg/xl
+const GLOW_SIZES: Set<ButtonSize> = new Set(['lg', 'xl'])
+
+// Ripple colors
 const RIPPLE_COLOR: Record<ButtonVariant, string> = {
   primary:   'rgba(0, 0, 0, 0.18)',
   secondary: 'rgba(171, 255, 53, 0.2)',
-  ghost:     'rgba(171, 255, 53, 0.15)',
+  ghost:     'rgba(171, 255, 53, 0.1)',
   danger:    'rgba(255, 255, 255, 0.2)',
 }
 
@@ -124,6 +123,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       onClick,
       onMouseDown,
       onTouchStart,
+      style,
       ...props
     },
     ref
@@ -146,6 +146,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       [isDisabled, variant, onTouchStart]
     )
 
+    // Glow shadow: solo primary lg/xl
+    const glowStyle =
+      variant === 'primary' && GLOW_SIZES.has(size)
+        ? { boxShadow: 'var(--btn-v2-primary-shadow-lg)', ...style }
+        : style
+
     return (
       <button
         ref={ref}
@@ -154,24 +160,24 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
         onClick={onClick}
+        style={glowStyle}
         className={clsx(
           // Base
           'inline-flex items-center justify-center gap-2',
           'select-none cursor-pointer',
-          'whitespace-nowrap', // prevent text wrapping mid-button
-          'relative overflow-hidden', // needed for ripple containment
-          // Uppercase for display font variants
-          variant === 'primary' && 'uppercase',
-          // Variant
+          'whitespace-nowrap',
+          'relative overflow-hidden',
+          // Variante
           VARIANT_CLASSES[variant],
-          // Size
+          // Tamaño
           SIZE_CLASSES[size],
           // Width
-          fullWidth && 'w-full',
-          // Disabled — opacity solo para variantes que no tienen disabled override propio
-          // primary tiene su propio disabled: ghosted lima (no opacity-40 = no olive)
+          (fullWidth || size === 'xl') && 'w-full',
+          // Disabled
           variant !== 'primary' && 'disabled:opacity-40',
           'disabled:cursor-not-allowed disabled:active:scale-100 disabled:pointer-events-none',
+          // Focus ring
+          'focus-visible:outline-2 focus-visible:outline-[var(--color-primary)] focus-visible:outline-offset-2',
           className
         )}
         {...props}

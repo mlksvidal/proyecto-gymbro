@@ -1,7 +1,6 @@
 // ============================================================
-// GYMBRO — Workouts Library Page (T19 + HYPE MODE A1)
+// GYMBRO — Workouts Library Page — Sprint 25.2 v2 — Clean Fitness Pro
 // Route: /workouts
-// HYPE: stagger entrance with whileInView (safety: content visible by default)
 // ============================================================
 
 import { useNavigate } from 'react-router-dom'
@@ -36,10 +35,10 @@ export default function Workouts() {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="text-[28px] font-[var(--font-display)] font-bold uppercase tracking-wider"
+          className="text-[28px] font-[var(--font-display)] font-bold"
           style={{ color: 'var(--color-text)' }}
         >
-          TUS RUTINAS
+          Tus rutinas
         </motion.h1>
 
         <motion.div
@@ -51,9 +50,8 @@ export default function Workouts() {
             variant="primary"
             size="sm"
             onClick={handleQuickStart}
-            className="uppercase tracking-widest text-xs"
           >
-            EMPEZAR RÁPIDO
+            Empezar rápido
           </Button>
         </motion.div>
       </div>
@@ -82,8 +80,7 @@ export default function Workouts() {
                   ease: [0.16, 1, 0.3, 1],
                 }}
                 whileHover={{
-                  scale: 1.03,
-                  boxShadow: '0 0 24px rgba(171,255,53,0.25)',
+                  scale: 1.02,
                   transition: { duration: 0.2 },
                 }}
                 whileTap={{ scale: 0.97 }}
@@ -106,10 +103,10 @@ export default function Workouts() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.35 }}
-              className="text-[18px] font-[var(--font-display)] font-bold uppercase tracking-wide"
+              className="text-[11px] font-[var(--font-body)] font-semibold uppercase tracking-widest"
               style={{ color: 'var(--color-text-muted)' }}
             >
-              RECIENTES
+              Recientes
             </motion.h2>
 
             <div className="space-y-2">
@@ -130,7 +127,7 @@ export default function Workouts() {
                     style={{ background: 'var(--color-surface)' }}
                   >
                     <div>
-                      <p className="text-[14px] font-[var(--font-body)] font-medium text-white">
+                      <p className="text-[14px] font-[var(--font-body)] font-medium" style={{ color: 'var(--color-text)' }}>
                         {workout.routineName}
                       </p>
                       <p className="text-[12px] font-[var(--font-body)] text-[var(--color-text-muted)]">

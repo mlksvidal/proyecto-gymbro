@@ -139,7 +139,7 @@ export function LevelUpModal({ open, tier, xpEarned = 0, onClose }: LevelUpModal
           }}
           role="dialog"
           aria-modal="true"
-          aria-label={`Subiste al BRO TIER ${tier.level}: ${tier.name}`}
+          aria-label={`Subiste al Tier ${tier.level}: ${tier.name}`}
         >
           {/* Glow orb */}
           <motion.div
@@ -162,7 +162,7 @@ export function LevelUpModal({ open, tier, xpEarned = 0, onClose }: LevelUpModal
             SUBISTE AL
           </p>
 
-          {/* BRO TIER X */}
+          {/* Tier X */}
           <h1
             ref={titleRef}
             className="text-[56px] md:text-[72px] font-[var(--font-display)] font-bold uppercase leading-none mb-2"
@@ -172,7 +172,7 @@ export function LevelUpModal({ open, tier, xpEarned = 0, onClose }: LevelUpModal
               opacity: prefersReduced ? 1 : 0,
             }}
           >
-            BRO TIER {tier.level}
+            Tier {tier.level}
           </h1>
 
           {/* Tier name */}
@@ -207,13 +207,13 @@ export function LevelUpModal({ open, tier, xpEarned = 0, onClose }: LevelUpModal
             </div>
           )}
 
-          {/* DALE button */}
+          {/* CTA button */}
           <div
             ref={btnRef}
             style={{ opacity: prefersReduced ? 1 : 0 }}
           >
             <Button variant="primary" size="xl" onClick={onClose}>
-              ¡DALE!
+              Continuar
             </Button>
           </div>
 

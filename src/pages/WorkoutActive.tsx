@@ -61,8 +61,8 @@ function AbandonDialog({
         className="w-full max-w-sm rounded-3xl p-6 space-y-4"
         style={{ background: 'var(--color-surface-elevated)' }}
       >
-        <h3 className="text-[20px] font-[var(--font-display)] font-bold text-white uppercase">
-          ¿ABANDONAR EL WORKOUT?
+        <h3 className="text-[20px] font-[var(--font-display)] font-bold" style={{ color: 'var(--color-text)' }}>
+          ¿Abandonar el workout?
         </h3>
         <p className="text-[14px] font-[var(--font-body)] text-[var(--color-text-muted)]">
           Perderás el progreso de esta sesión.

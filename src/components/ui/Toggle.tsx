@@ -5,10 +5,9 @@ import { useAudio } from '@/hooks/useAudio'
 import { useSettingsStore } from '@/store/settingsStore'
 
 // ============================================================
-// Toggle — T40 micro-interactions
-// - Track: smooth color transition gray → lima
-// - Knob: spring physics slide (framer-motion)
-// - Sound: tickButton on toggle
+// Toggle v2 — Gymbro Sprint 25.2
+// Track: 48x28px. Knob: 22px. Spring ease. Sin glow en off.
+// API backwards-compatible.
 // ============================================================
 
 const REDUCED_MOTION =
@@ -38,14 +37,17 @@ export function Toggle({ checked, onChange, label, disabled = false, id, classNa
     onChange(!checked)
   }
 
+  // knob: track(48) - knob(22) - margins(4) = 22px translate
+  const knobTranslate = checked ? 22 : 3
+
   return (
     <div className={clsx('flex items-center gap-3', className)}>
       {label && (
         <label
           htmlFor={toggleId}
           className={clsx(
-            'text-sm font-[var(--font-body)] text-[var(--color-text)] cursor-pointer select-none',
-            disabled && 'opacity-50 cursor-not-allowed'
+            'text-[var(--text-body-md)] font-[var(--font-body)] text-[var(--color-text)] cursor-pointer select-none',
+            disabled && 'opacity-[0.38] cursor-not-allowed'
           )}
         >
           {label}
@@ -62,36 +64,35 @@ export function Toggle({ checked, onChange, label, disabled = false, id, classNa
         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
         className={clsx(
           'relative inline-flex items-center',
-          'w-[52px] h-[30px] rounded-full',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)]',
           'cursor-pointer',
-          disabled && 'opacity-50 cursor-not-allowed'
+          disabled && 'opacity-[0.38] cursor-not-allowed'
         )}
         style={{
-          background: checked ? 'var(--color-primary)' : 'var(--color-surface-elevated)',
-          transition: 'background 0.25s ease',
-          boxShadow: checked ? 'var(--shadow-glow-primary)' : 'none',
+          width: 48,
+          height: 28,
+          borderRadius: 'var(--radius-full)',
+          background: checked ? 'var(--toggle-v2-track-on)' : 'var(--toggle-v2-track-off)',
+          border: checked ? 'none' : '1px solid var(--toggle-v2-border-off)',
+          transition: 'background 0.28s var(--ease-spring), border 0.28s var(--ease-spring)',
         }}
       >
-        {/* Knob — spring physics slide */}
+        {/* Knob — spring slide */}
         <motion.span
-          layout
-          animate={
-            REDUCED_MOTION
-              ? { x: checked ? 23 : 3 }
-              : { x: checked ? 23 : 3 }
-          }
+          animate={{ x: knobTranslate }}
           transition={
             REDUCED_MOTION
               ? { duration: 0 }
               : { type: 'spring', stiffness: 600, damping: 30 }
           }
-          className="absolute top-[3px] w-6 h-6 rounded-full bg-white shadow-md"
+          className="absolute rounded-full"
           aria-hidden="true"
           style={{
-            boxShadow: checked
-              ? '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(171,255,53,0.2)'
-              : '0 2px 6px rgba(0,0,0,0.3)',
+            width: 22,
+            height: 22,
+            top: 2,
+            background: 'var(--toggle-v2-knob)',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
           }}
         />
       </motion.button>
