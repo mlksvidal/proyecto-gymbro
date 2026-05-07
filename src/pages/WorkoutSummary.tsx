@@ -17,6 +17,7 @@ import { useCurrentStreak } from '@/hooks/useDb'
 import { haptics } from '@/lib/haptics'
 import { CounterRolling } from '@/components/ui/CounterRolling'
 import { Button } from '@/components/ui/Button'
+import { BroMascot } from '@/components/illustrations'
 import type { Workout } from '@/types'
 
 // Lazy load the share modal — only loaded when user taps share button
@@ -237,6 +238,16 @@ export default function WorkoutSummary() {
         className="pt-safe"
         style={{ paddingTop: 'max(24px, env(safe-area-inset-top))' }}
       />
+
+      {/* Victory mascot */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.7, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+        className="flex justify-center mb-2"
+      >
+        <BroMascot variant="victory" size={140} animated={false} />
+      </motion.div>
 
       {/* Hero text */}
       <motion.div

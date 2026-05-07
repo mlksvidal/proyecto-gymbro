@@ -1,16 +1,11 @@
 // ============================================================
-// GYMBRO — RoutineCard (T19)
-// Magazine-style card with gradient overlay
+// GYMBRO — RoutineCard (Sprint 19 — Mascota Bro SVG)
+// Magazine-style card con ilustración SVG vectorial
 // ============================================================
 
 import { motion } from 'framer-motion'
 import type { Routine } from '@/types'
-
-const ROUTINE_IMAGES: Record<string, string> = {
-  'routine-ppl': '/images/routine-push.png',
-  'routine-upper-lower': '/images/routine-pull.png',
-  'routine-fullbody': '/images/routine-fullbody.png',
-}
+import { RoutineCoverIllustration } from '@/components/illustrations'
 
 const DIFFICULTY_LABELS: Record<string, string> = {
   beginner: 'Principiante',
@@ -30,7 +25,6 @@ interface RoutineCardProps {
 }
 
 export function RoutineCard({ routine, onClick }: RoutineCardProps) {
-  const imageUrl = ROUTINE_IMAGES[routine.id] ?? routine.imageUrl ?? '/images/routine-push.png'
   const diffColor = DIFFICULTY_COLORS[routine.difficulty] ?? '#ABFF35'
   const diffLabel = DIFFICULTY_LABELS[routine.difficulty] ?? routine.difficulty
 
@@ -43,19 +37,28 @@ export function RoutineCard({ routine, onClick }: RoutineCardProps) {
       style={{ minHeight: 180 }}
       aria-label={`Abrir rutina ${routine.name}`}
     >
-      {/* Background image */}
+      {/* Background — dark surface con SVG illustration */}
       <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${imageUrl})` }}
+        className="absolute inset-0"
+        style={{ background: 'var(--color-surface, #1A1A1A)' }}
         aria-hidden="true"
       />
+
+      {/* SVG Cover Illustration — positioned top-right */}
+      <div
+        className="absolute top-0 right-0 h-full"
+        style={{ width: '55%', opacity: 0.55 }}
+        aria-hidden="true"
+      >
+        <RoutineCoverIllustration routineId={routine.id} className="w-full h-full" />
+      </div>
 
       {/* Dark overlay + bottom gradient */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0.92) 100%)',
+            'linear-gradient(to right, rgba(0,0,0,0.92) 35%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0.1) 100%), linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.85) 100%)',
         }}
         aria-hidden="true"
       />

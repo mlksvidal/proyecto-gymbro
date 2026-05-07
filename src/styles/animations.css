@@ -544,6 +544,28 @@
 }
 
 /* ==========================================================================
+   SPRINT 19 — BRO MASCOT IDLE ANIMATION
+   Subtle vertical bob for the exercise mascot.
+   Respeta prefers-reduced-motion via override abajo.
+   ========================================================================== */
+
+@keyframes mascot-idle {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-3px); }
+}
+
+.anim-mascot-idle {
+  animation: mascot-idle 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-mascot-idle {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
    WELCOME — Lightning bolts flicker + soft pulse glow
    Used in: src/pages/onboarding/Welcome.tsx
    ========================================================================== */

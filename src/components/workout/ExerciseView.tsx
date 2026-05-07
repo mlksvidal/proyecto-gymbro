@@ -1,110 +1,14 @@
 // ============================================================
-// GYMBRO — ExerciseView (Sprint 6)
-// - Exercise illustration SVG (bench press / muscle group)
-// - Swipe horizontal with Framer Motion drag
+// GYMBRO — ExerciseView (Sprint 19 — Mascota Bro SVG)
+// - ExerciseIllustration: mascot SVG por ejerciseId
+// - Swipe horizontal con Framer Motion drag
 // - Dot indicators
 // ============================================================
 
 import { useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { ActiveExerciseData } from '@/types'
-
-// ── Exercise illustrations — geometric SVG by muscle group ───
-function BenchPressSVG() {
-  return (
-    <svg width="140" height="100" viewBox="0 0 140 100" fill="none" aria-hidden="true">
-      {/* Bench */}
-      <rect x="20" y="65" width="100" height="8" rx="3" fill="rgba(171,255,53,0.12)" stroke="rgba(171,255,53,0.3)" strokeWidth="1.5" />
-      <rect x="28" y="73" width="6" height="18" rx="2" fill="rgba(171,255,53,0.2)" />
-      <rect x="106" y="73" width="6" height="18" rx="2" fill="rgba(171,255,53,0.2)" />
-      {/* Person lying */}
-      {/* Body */}
-      <rect x="45" y="50" width="50" height="14" rx="5" fill="rgba(171,255,53,0.12)" stroke="rgba(171,255,53,0.35)" strokeWidth="1.5" />
-      {/* Head */}
-      <circle cx="102" cy="57" r="8" fill="rgba(171,255,53,0.12)" stroke="rgba(171,255,53,0.35)" strokeWidth="1.5" />
-      {/* Arms up */}
-      <line x1="55" y1="50" x2="55" y2="28" stroke="rgba(171,255,53,0.45)" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="75" y1="50" x2="75" y2="28" stroke="rgba(171,255,53,0.45)" strokeWidth="2.5" strokeLinecap="round" />
-      {/* Bar */}
-      <line x1="25" y1="28" x2="115" y2="28" stroke="rgba(171,255,53,0.6)" strokeWidth="3" strokeLinecap="round" />
-      {/* Weights left */}
-      <rect x="20" y="22" width="8" height="12" rx="2" fill="rgba(171,255,53,0.55)" />
-      {/* Weights right */}
-      <rect x="112" y="22" width="8" height="12" rx="2" fill="rgba(171,255,53,0.55)" />
-    </svg>
-  )
-}
-
-function PullSVG() {
-  return (
-    <svg width="140" height="100" viewBox="0 0 140 100" fill="none" aria-hidden="true">
-      {/* Bar overhead */}
-      <line x1="30" y1="15" x2="110" y2="15" stroke="rgba(171,255,53,0.6)" strokeWidth="3" strokeLinecap="round" />
-      <rect x="24" y="10" width="8" height="10" rx="2" fill="rgba(171,255,53,0.55)" />
-      <rect x="108" y="10" width="8" height="10" rx="2" fill="rgba(171,255,53,0.55)" />
-      {/* Arms up */}
-      <line x1="55" y1="15" x2="50" y2="38" stroke="rgba(171,255,53,0.45)" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="85" y1="15" x2="90" y2="38" stroke="rgba(171,255,53,0.45)" strokeWidth="2.5" strokeLinecap="round" />
-      {/* Body */}
-      <rect x="55" y="38" width="30" height="28" rx="6" fill="rgba(171,255,53,0.12)" stroke="rgba(171,255,53,0.35)" strokeWidth="1.5" />
-      {/* Head */}
-      <circle cx="70" cy="30" r="8" fill="rgba(171,255,53,0.12)" stroke="rgba(171,255,53,0.35)" strokeWidth="1.5" />
-      {/* Legs hanging */}
-      <line x1="64" y1="66" x2="60" y2="88" stroke="rgba(171,255,53,0.35)" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="76" y1="66" x2="80" y2="88" stroke="rgba(171,255,53,0.35)" strokeWidth="2.5" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function SquatSVG() {
-  return (
-    <svg width="140" height="100" viewBox="0 0 140 100" fill="none" aria-hidden="true">
-      {/* Bar on shoulders */}
-      <line x1="28" y1="30" x2="112" y2="30" stroke="rgba(171,255,53,0.6)" strokeWidth="3" strokeLinecap="round" />
-      <rect x="20" y="25" width="10" height="10" rx="2" fill="rgba(171,255,53,0.55)" />
-      <rect x="110" y="25" width="10" height="10" rx="2" fill="rgba(171,255,53,0.55)" />
-      {/* Body leaning forward */}
-      <rect x="58" y="30" width="24" height="20" rx="5" fill="rgba(171,255,53,0.12)" stroke="rgba(171,255,53,0.35)" strokeWidth="1.5" />
-      {/* Head */}
-      <circle cx="70" cy="22" r="8" fill="rgba(171,255,53,0.12)" stroke="rgba(171,255,53,0.35)" strokeWidth="1.5" />
-      {/* Thighs */}
-      <line x1="62" y1="50" x2="50" y2="72" stroke="rgba(171,255,53,0.45)" strokeWidth="3" strokeLinecap="round" />
-      <line x1="78" y1="50" x2="90" y2="72" stroke="rgba(171,255,53,0.45)" strokeWidth="3" strokeLinecap="round" />
-      {/* Shins */}
-      <line x1="50" y1="72" x2="55" y2="92" stroke="rgba(171,255,53,0.35)" strokeWidth="3" strokeLinecap="round" />
-      <line x1="90" y1="72" x2="85" y2="92" stroke="rgba(171,255,53,0.35)" strokeWidth="3" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function GenericDumbbellSVG() {
-  return (
-    <svg width="140" height="100" viewBox="0 0 140 100" fill="none" aria-hidden="true">
-      {/* Dumbbell */}
-      <rect x="10" y="44" width="18" height="12" rx="3" fill="rgba(171,255,53,0.55)" />
-      <rect x="28" y="47" width="84" height="6" rx="3" fill="rgba(171,255,53,0.4)" />
-      <rect x="112" y="44" width="18" height="12" rx="3" fill="rgba(171,255,53,0.55)" />
-      {/* Person */}
-      <circle cx="70" cy="28" r="10" fill="rgba(171,255,53,0.12)" stroke="rgba(171,255,53,0.35)" strokeWidth="1.5" />
-      <rect x="58" y="38" width="24" height="22" rx="5" fill="rgba(171,255,53,0.12)" stroke="rgba(171,255,53,0.35)" strokeWidth="1.5" />
-      <line x1="62" y1="60" x2="58" y2="82" stroke="rgba(171,255,53,0.35)" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="78" y1="60" x2="82" y2="82" stroke="rgba(171,255,53,0.35)" strokeWidth="2.5" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-const MUSCLE_ILLUSTRATIONS: Record<string, React.FC> = {
-  chest:      BenchPressSVG,
-  triceps:    BenchPressSVG,
-  back:       PullSVG,
-  biceps:     PullSVG,
-  legs:       SquatSVG,
-  glutes:     SquatSVG,
-  calves:     SquatSVG,
-  shoulders:  GenericDumbbellSVG,
-  core:       GenericDumbbellSVG,
-  'full-body': GenericDumbbellSVG,
-}
+import { ExerciseIllustration } from '@/components/illustrations'
 
 interface ExerciseViewProps {
   exercises: ActiveExerciseData[]
@@ -126,8 +30,6 @@ export function ExerciseView({
   const THRESHOLD = 100
 
   if (!exercise) return null
-
-  const Illustration = MUSCLE_ILLUSTRATIONS[exercise.muscleGroup] ?? GenericDumbbellSVG
 
   return (
     <div className="flex flex-col items-center select-none">
@@ -154,12 +56,21 @@ export function ExerciseView({
           transition={{ duration: 0.22, ease: 'easeOut' }}
           className="w-full flex flex-col items-center px-4 pt-3 pb-1 cursor-grab active:cursor-grabbing"
         >
-          {/* Illustration container */}
+          {/* Illustration container — mascot Bro SVG */}
           <div
-            className="w-36 h-28 rounded-3xl flex items-center justify-center mb-3"
-            style={{ background: 'rgba(171,255,53,0.05)', border: '1px solid rgba(171,255,53,0.12)' }}
+            className="rounded-3xl flex items-center justify-center mb-3"
+            style={{
+              background: 'rgba(171,255,53,0.05)',
+              border: '1px solid rgba(171,255,53,0.12)',
+              width: 160,
+              height: 160,
+            }}
           >
-            <Illustration />
+            <ExerciseIllustration
+              exerciseId={exercise.exerciseId}
+              size={144}
+              animated
+            />
           </div>
 
           {/* Exercise name */}

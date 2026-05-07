@@ -3,6 +3,7 @@ import { useRoutines } from '@/hooks/useDb'
 import { Button } from '@/components/ui/Button'
 import { useAudio } from '@/hooks/useAudio'
 import { Zap } from 'lucide-react'
+import { BroMascot, RoutineCoverIllustration } from '@/components/illustrations'
 
 const IS_DESKTOP =
   typeof window !== 'undefined'
@@ -18,45 +19,16 @@ const IS_DESKTOP =
 // - CTA: "COMENZAR ENTRENAMIENTO"
 // ============================================================
 
-const PPL_MAP: Record<number, { image: string; label: string; day: 'push' | 'pull' | 'legs' }> = {
-  0: { image: '/images/routine-push.png', label: 'PECHO Y TRÍCEPS', day: 'push' },
-  1: { image: '/images/routine-pull.png', label: 'ESPALDA Y BÍCEPS', day: 'pull' },
-  2: { image: '/images/routine-legs.png', label: 'PIERNAS Y GLÚTEOS', day: 'legs' },
+const PPL_MAP: Record<number, { label: string; routineId: string }> = {
+  0: { label: 'PECHO Y TRÍCEPS', routineId: 'routine-ppl-push' },
+  1: { label: 'ESPALDA Y BÍCEPS', routineId: 'routine-ppl-pull' },
+  2: { label: 'PIERNAS Y GLÚTEOS', routineId: 'routine-ppl-legs' },
 }
 
 const DIFFICULTY_ZAPS: Record<string, number> = {
   beginner: 1,
   intermediate: 2,
   advanced: 3,
-}
-
-// Simple SVG mascot — person doing dumbbell press (geometric, minimalista)
-function MascotSVG() {
-  return (
-    <svg
-      width="72"
-      height="72"
-      viewBox="0 0 72 72"
-      fill="none"
-      aria-hidden="true"
-      className="flex-shrink-0"
-    >
-      {/* Body */}
-      <rect x="28" y="30" width="16" height="20" rx="4" fill="rgba(171,255,53,0.15)" stroke="rgba(171,255,53,0.4)" strokeWidth="1.5" />
-      {/* Head */}
-      <circle cx="36" cy="24" r="7" fill="rgba(171,255,53,0.15)" stroke="rgba(171,255,53,0.4)" strokeWidth="1.5" />
-      {/* Arms extended */}
-      <line x1="12" y1="38" x2="28" y2="38" stroke="rgba(171,255,53,0.5)" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="44" y1="38" x2="60" y2="38" stroke="rgba(171,255,53,0.5)" strokeWidth="2.5" strokeLinecap="round" />
-      {/* Dumbbells left */}
-      <rect x="6" y="34" width="6" height="8" rx="2" fill="rgba(171,255,53,0.6)" />
-      {/* Dumbbells right */}
-      <rect x="60" y="34" width="6" height="8" rx="2" fill="rgba(171,255,53,0.6)" />
-      {/* Legs */}
-      <line x1="32" y1="50" x2="28" y2="64" stroke="rgba(171,255,53,0.4)" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="40" y1="50" x2="44" y2="64" stroke="rgba(171,255,53,0.4)" strokeWidth="2.5" strokeLinecap="round" />
-    </svg>
-  )
 }
 
 export function TodayWorkoutCard() {
@@ -66,11 +38,14 @@ export function TodayWorkoutCard() {
 
   const today = new Date()
   const daySlot = today.getDay() % 3
-  const ppl = PPL_MAP[daySlot]
+  const ppl = PPL_MAP[daySlot]!
 
   // Try to find PPL routine from DB
   const pplRoutine = routines.find((r) => r.type === 'ppl')
   const activeRoutine = pplRoutine ?? routines[0]
+
+  // routineId for cover illustration — use active routine or ppl slot
+  const coverRoutineId = activeRoutine?.id ?? ppl.routineId
 
   // Determine day info
   const routineDayIndex = today.getDay() % 3
@@ -92,21 +67,29 @@ export function TodayWorkoutCard() {
       aria-label={`Entrenamiento de hoy: ${dayLabel}`}
       onMouseEnter={IS_DESKTOP ? () => playHover() : undefined}
     >
-      {/* Background image */}
-      <img
-        src={ppl.image}
-        alt=""
-        width={600}
-        height={300}
-        className="absolute inset-0 w-full h-full object-cover"
+      {/* Background — dark surface */}
+      <div
+        className="absolute inset-0"
+        style={{ background: 'var(--color-surface, #1A1A1A)' }}
         aria-hidden="true"
       />
 
-      {/* Darker gradient overlay (mockup has more darkness) */}
+      {/* Background SVG cover illustration */}
+      <div
+        className="absolute inset-0 flex items-center justify-end"
+        style={{ opacity: 0.35 }}
+        aria-hidden="true"
+      >
+        <div style={{ width: '70%', height: '100%' }}>
+          <RoutineCoverIllustration routineId={coverRoutineId} className="w-full h-full" />
+        </div>
+      </div>
+
+      {/* Dark overlay + bottom gradient */}
       <div
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.92) 100%)',
+          background: 'linear-gradient(to right, rgba(0,0,0,0.85) 30%, rgba(0,0,0,0.1) 80%), linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.88) 100%)',
         }}
         aria-hidden="true"
       />
@@ -133,8 +116,8 @@ export function TodayWorkoutCard() {
             ENTRENAMIENTO HOY
           </span>
 
-          {/* Mascot SVG */}
-          <MascotSVG />
+          {/* Mascot SVG — idle bro */}
+          <BroMascot variant="idle" size={72} animated />
         </div>
 
         {/* Exercise name */}
