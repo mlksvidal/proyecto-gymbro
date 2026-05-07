@@ -26,7 +26,7 @@ export default function Workouts() {
     <div className="flex flex-col min-h-screen bg-[var(--color-bg)]">
       {/* Sticky header */}
       <div
-        className="sticky top-0 z-20 px-5 pb-3 flex items-center justify-between"
+        className="sticky top-0 z-20 px-6 pb-3 flex items-center justify-between"
         style={{
           background: 'var(--color-bg)',
           paddingTop: 'max(16px, env(safe-area-inset-top))',
@@ -58,7 +58,7 @@ export default function Workouts() {
         </motion.div>
       </div>
 
-      <div className="px-5 pb-28 space-y-6">
+      <div className="px-6 pb-28 space-y-6">
         {/* Routine grid — stagger entrance */}
         {routines.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">

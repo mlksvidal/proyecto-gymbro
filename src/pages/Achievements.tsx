@@ -97,7 +97,7 @@ export default function Achievements() {
 
       {/* Header */}
       <div
-        className="sticky top-0 z-10 flex items-center gap-3 px-5"
+        className="sticky top-0 z-10 flex items-center gap-3 px-6"
         style={{
           background: 'color-mix(in srgb, var(--color-bg) 92%, transparent)',
           backdropFilter: 'blur(12px)',
@@ -127,7 +127,7 @@ export default function Achievements() {
         </div>
       </div>
 
-      <div className="px-5 py-4 space-y-5 relative" style={{ zIndex: 1 }}>
+      <div className="px-6 py-4 space-y-5 relative" style={{ zIndex: 1 }}>
         {/* ── Hero counter ─────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
@@ -222,7 +222,7 @@ export default function Achievements() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.15 }}
-          className="flex gap-2 overflow-x-auto pb-1 -mx-5 px-5"
+          className="flex gap-2 overflow-x-auto pb-1 -mx-5 px-6"
           role="group"
           aria-label="Filtrar logros"
           style={{ scrollbarWidth: 'none' }}

@@ -183,7 +183,7 @@ export default function Stats() {
 
       {/* Header */}
       <div
-        className="sticky top-0 z-10 flex items-center gap-2 px-5"
+        className="sticky top-0 z-10 flex items-center gap-2 px-6"
         style={{
           background: 'color-mix(in srgb, var(--color-bg) 92%, transparent)',
           backdropFilter: 'blur(12px)',
@@ -200,7 +200,7 @@ export default function Stats() {
         </h1>
       </div>
 
-      <div className="px-5 pt-3 space-y-5 relative" style={{ zIndex: 1 }}>
+      <div className="px-6 pt-3 space-y-5 relative" style={{ zIndex: 1 }}>
         {/* ── Animated period tabs ─────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
