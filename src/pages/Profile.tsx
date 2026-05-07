@@ -6,7 +6,7 @@
 import { lazy, Suspense, useState, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ChevronRight, Dumbbell, Trophy, RotateCcw, ChevronLeft, ChevronRight as ChevronRightSmall } from 'lucide-react'
+import { ChevronRight, Dumbbell, Trophy, RotateCcw, ChevronLeft, ChevronRight as ChevronRightSmall, Check } from 'lucide-react'
 import { useUserStore } from '@/store/userStore'
 import { useWorkouts, usePRs, useAchievementRecords, useCurrentStreak } from '@/hooks/useDb'
 import { ProfileHeroCinema } from '@/components/profile/ProfileHeroCinema'
@@ -189,7 +189,7 @@ function WorkoutCarousel({ workouts }: { workouts: { id: string; startedAt: numb
               className="flex items-center justify-center w-8 h-8 rounded-full"
               style={{ background: 'rgba(171,255,53,0.12)' }}
             >
-              <span style={{ fontSize: '16px' }}>✓</span>
+              <Check size={16} style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
             </div>
           </div>
 
@@ -463,6 +463,10 @@ export default function Profile() {
           streak={streak}
           totalVolumeKg={totalVolume}
           prCount={allPRs.length}
+          avatarKind={currentUser?.avatarKind ?? 'mascot'}
+          avatarValue={currentUser?.avatarValue ?? 'idle'}
+          username={currentUser?.username}
+          createdAt={currentUser?.createdAt}
         />
 
         {/* ── Workout carousel ─────────────────────────── */}
@@ -665,8 +669,9 @@ export default function Profile() {
 
         {/* App version */}
         <div className="text-center py-4">
-          <p className="text-[11px] font-[var(--font-body)]" style={{ color: 'var(--color-text-disabled)' }}>
-            Gymbro v0.1.0 · Hecho con 💪
+          <p className="text-[11px] font-[var(--font-body)] inline-flex items-center gap-1.5" style={{ color: 'var(--color-text-disabled)' }}>
+            Gymbro v0.1.0 · Hecho con
+            <Dumbbell size={11} aria-hidden="true" />
           </p>
         </div>
       </div>

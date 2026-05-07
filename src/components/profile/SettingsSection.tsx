@@ -7,14 +7,17 @@
 // ============================================================
 
 import { useRef, useState, useCallback } from 'react'
-import { Volume2, VolumeX, Smartphone, Palette, Globe, Download, Upload, CheckCircle, AlertCircle, Sun, Moon, Monitor } from 'lucide-react'
+import { Volume2, VolumeX, Smartphone, Palette, Globe, Download, Upload, CheckCircle, AlertCircle, Sun, Moon, Monitor, Scale, Timer, Play, Calendar, Vibrate } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Toggle } from '@/components/ui/Toggle'
 import { Button } from '@/components/ui/Button'
 import { useSettingsStore } from '@/store/settingsStore'
+import { useUserStore } from '@/store/userStore'
 import { useAudio } from '@/hooks/useAudio'
+import { haptics } from '@/lib/haptics'
 import { exportData, importData } from '@/lib/backup'
 import { useThemeTransition } from '@/components/ui/ThemeTransition'
+import type { VibrationIntensity } from '@/types'
 
 interface SettingsSectionProps {
   /** Reset is exposed once in Profile's Zona Peligrosa, not here. Prop kept for API stability. */
@@ -167,6 +170,182 @@ function ThemePicker() {
   )
 }
 
+// ── Segmented control ─────────────────────────────────────────
+interface SegmentOption<T extends string | number> {
+  value: T
+  label: string
+}
+
+function SegmentedControl<T extends string | number>({
+  options,
+  value,
+  onChange,
+  ariaLabel,
+}: {
+  options: SegmentOption<T>[]
+  value: T
+  onChange: (v: T) => void
+  ariaLabel: string
+}) {
+  return (
+    <div
+      className="flex rounded-xl overflow-hidden"
+      style={{ background: 'var(--color-surface-elevated)' }}
+      role="radiogroup"
+      aria-label={ariaLabel}
+    >
+      {options.map((opt) => {
+        const active = value === opt.value
+        return (
+          <button
+            key={String(opt.value)}
+            role="radio"
+            aria-checked={active}
+            onClick={() => onChange(opt.value)}
+            className="flex-1 py-2 text-[11px] font-semibold uppercase tracking-wide transition-all duration-200 min-h-[36px]"
+            style={{
+              fontFamily: 'var(--font-body)',
+              background: active ? 'var(--color-primary)' : 'transparent',
+              color: active ? '#000' : 'var(--color-text-muted)',
+              border: 'none',
+              cursor: 'pointer',
+              letterSpacing: '0.05em',
+            }}
+          >
+            {opt.label}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+// ── Training preferences section ──────────────────────────────
+function TrainingSection() {
+  const { currentUser, updateProfile } = useUserStore()
+  const { vibrationEnabled } = useSettingsStore()
+  const { play } = useAudio()
+
+  const units = currentUser?.units ?? 'kg'
+  const defaultRest = currentUser?.defaultRestSeconds ?? 90
+  const autoStart = currentUser?.autoStartTimer ?? true
+  const daysGoal = currentUser?.daysPerWeekGoal ?? 4
+  const vibIntensity = currentUser?.vibrationIntensity ?? 'medium'
+
+  const handleChange = async <K extends keyof import('@/types').User>(key: K, val: import('@/types').User[K]) => {
+    updateProfile({ [key]: val } as Partial<import('@/types').User>)
+    await play('tickButton').catch(() => {})
+    if (vibrationEnabled && 'vibrate' in navigator) navigator.vibrate(30)
+  }
+
+  const handleVibIntensityChange = (intensity: VibrationIntensity) => {
+    updateProfile({ vibrationIntensity: intensity })
+    play('tickButton').catch(() => {})
+    haptics.test(intensity)
+  }
+
+  return (
+    <div>
+      <SectionTitle>Entrenamiento</SectionTitle>
+      <div
+        className="rounded-2xl overflow-hidden px-4"
+        style={{ background: 'var(--color-surface)' }}
+      >
+        {/* Unidades */}
+        <div className="py-3 border-b" style={{ borderColor: 'var(--color-border-subtle)' }}>
+          <div className="flex items-center gap-3 mb-2">
+            <Scale size={18} style={{ color: 'var(--color-text-muted)', flexShrink: 0 }} aria-hidden="true" />
+            <p className="text-[14px] font-[var(--font-body)]" style={{ color: 'var(--color-text)' }}>
+              Unidades
+            </p>
+          </div>
+          <SegmentedControl
+            options={[
+              { value: 'kg' as const, label: 'kg' },
+              { value: 'lb' as const, label: 'lb' },
+            ]}
+            value={units}
+            onChange={(v) => handleChange('units', v)}
+            ariaLabel="Unidades de peso"
+          />
+        </div>
+
+        {/* Descanso default */}
+        <div className="py-3 border-b" style={{ borderColor: 'var(--color-border-subtle)' }}>
+          <div className="flex items-center gap-3 mb-2">
+            <Timer size={18} style={{ color: 'var(--color-text-muted)', flexShrink: 0 }} aria-hidden="true" />
+            <p className="text-[14px] font-[var(--font-body)]" style={{ color: 'var(--color-text)' }}>
+              Descanso default
+            </p>
+          </div>
+          <SegmentedControl
+            options={[
+              { value: 60,  label: '60s'  },
+              { value: 90,  label: '90s'  },
+              { value: 120, label: '120s' },
+            ]}
+            value={defaultRest}
+            onChange={(v) => handleChange('defaultRestSeconds', v)}
+            ariaLabel="Tiempo de descanso por defecto"
+          />
+        </div>
+
+        {/* Auto-start timer */}
+        <SettingRow>
+          <SettingLabel icon={Play} label="Iniciar timer automático" sub="Al marcar un set como completo" />
+          <Toggle
+            checked={autoStart}
+            onChange={(v) => handleChange('autoStartTimer', v)}
+            aria-label="Iniciar timer automáticamente"
+          />
+        </SettingRow>
+
+        {/* Días por semana */}
+        <div className="py-3 border-b" style={{ borderColor: 'var(--color-border-subtle)' }}>
+          <div className="flex items-center gap-3 mb-2">
+            <Calendar size={18} style={{ color: 'var(--color-text-muted)', flexShrink: 0 }} aria-hidden="true" />
+            <p className="text-[14px] font-[var(--font-body)]" style={{ color: 'var(--color-text)' }}>
+              Días de entrenamiento
+            </p>
+          </div>
+          <SegmentedControl
+            options={[
+              { value: 3, label: '3' },
+              { value: 4, label: '4' },
+              { value: 5, label: '5' },
+              { value: 6, label: '6' },
+            ]}
+            value={daysGoal}
+            onChange={(v) => handleChange('daysPerWeekGoal', v)}
+            ariaLabel="Días de entrenamiento por semana"
+          />
+        </div>
+
+        {/* Intensidad vibración */}
+        <div className="py-3">
+          <div className="flex items-center gap-3 mb-2">
+            <Vibrate size={18} style={{ color: 'var(--color-text-muted)', flexShrink: 0 }} aria-hidden="true" />
+            <p className="text-[14px] font-[var(--font-body)]" style={{ color: 'var(--color-text)' }}>
+              Intensidad háptica
+            </p>
+          </div>
+          <SegmentedControl
+            options={[
+              { value: 'off'    as const, label: 'OFF'    },
+              { value: 'soft'   as const, label: 'Suave'  },
+              { value: 'medium' as const, label: 'Medio'  },
+              { value: 'strong' as const, label: 'Fuerte' },
+            ]}
+            value={vibIntensity}
+            onChange={handleVibIntensityChange}
+            ariaLabel="Intensidad de la vibración"
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function SettingsSection(_props: SettingsSectionProps) {
   const { soundEnabled, setSoundEnabled, vibrationEnabled, setVibrationEnabled, volume, setVolume } =
     useSettingsStore()
@@ -302,6 +481,9 @@ export function SettingsSection(_props: SettingsSectionProps) {
           </SettingRow>
         </div>
       </div>
+
+      {/* Entrenamiento */}
+      <TrainingSection />
 
       {/* Appearance */}
       <div>

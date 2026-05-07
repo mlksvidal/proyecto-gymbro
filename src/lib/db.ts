@@ -43,6 +43,37 @@ class GymbroDB extends Dexie {
       achievementRecords: '&id, unlockedAt',
       settings:           '&id',
     })
+
+    // v3: add personalization + training preference fields to users (Sprint 22)
+    // No schema change needed — Dexie adds optional fields transparently.
+    // We bump version to trigger the upgrade hook which sets defaults.
+    this.version(3).stores({
+      users:              '&id, createdAt',
+      exercises:          '&id, muscleGroup, equipment',
+      routines:           '&id, type, difficulty, createdAt',
+      workouts:           '&id, routineId, startedAt, completedAt',
+      sets:               '&id, workoutId, exerciseId, completedAt',
+      prs:                '&id, exerciseId, achievedAt, weight',
+      achievements:       '&id, type, unlockedAt',
+      achievementRecords: '&id, unlockedAt',
+      settings:           '&id',
+    }).upgrade(async (trans) => {
+      // Apply defaults to existing users — non-destructive
+      const users = await trans.table('users').toArray()
+      for (const user of users) {
+        const patch: Record<string, unknown> = {}
+        if (user.avatarKind === undefined) patch.avatarKind = 'mascot'
+        if (user.avatarValue === undefined) patch.avatarValue = 'idle'
+        if (user.units === undefined) patch.units = 'kg'
+        if (user.defaultRestSeconds === undefined) patch.defaultRestSeconds = 90
+        if (user.autoStartTimer === undefined) patch.autoStartTimer = true
+        if (user.daysPerWeekGoal === undefined) patch.daysPerWeekGoal = 4
+        if (user.vibrationIntensity === undefined) patch.vibrationIntensity = 'medium'
+        if (Object.keys(patch).length > 0) {
+          await trans.table('users').update(user.id, patch)
+        }
+      }
+    })
   }
 }
 

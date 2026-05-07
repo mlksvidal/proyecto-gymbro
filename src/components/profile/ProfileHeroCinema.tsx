@@ -1,19 +1,24 @@
 // ============================================================
-// ProfileHeroCinema — Sprint 9 WOW MODE
-// Avatar circular gigante 140x140 con:
+// ProfileHeroCinema — Sprint 9 WOW MODE + Sprint 22 dynamic avatar
+// Avatar circular 140x140 con:
 // - Anillo conic-gradient rotando 360°
 // - SVG ring de progreso XP alrededor del avatar
 // - Glow pulse expandiendo
+// - Avatar dinámico (mascot | icon | initials) clickeable
 // - 4 stat chips horizontales con CounterRolling
 // - TierBadge con shine sweep
 // ============================================================
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Flame, Trophy, Dumbbell, Zap } from 'lucide-react'
+import { Flame, Trophy, Dumbbell, Zap, Pencil } from 'lucide-react'
 import { getTierBreakdown } from '@/lib/tiers'
 import { TierBadge } from '@/components/ui/TierBadge'
 import { CounterRolling } from '@/components/ui/CounterRolling'
+import { UserAvatar } from './UserAvatar'
+import { EditProfileSheet } from './EditProfileSheet'
 import type { TierInfo } from '@/lib/tiers'
+import type { AvatarKind } from '@/types'
 
 interface ProfileHeroCinemaProps {
   name: string
@@ -23,6 +28,10 @@ interface ProfileHeroCinemaProps {
   streak: number
   totalVolumeKg: number
   prCount: number
+  avatarKind?: AvatarKind
+  avatarValue?: string
+  username?: string
+  createdAt?: number
 }
 
 // ── SVG XP Progress Ring ──────────────────────────────────────
@@ -143,9 +152,20 @@ export function ProfileHeroCinema({
   streak,
   totalVolumeKg,
   prCount,
+  avatarKind = 'mascot',
+  avatarValue = 'idle',
+  username,
+  createdAt,
 }: ProfileHeroCinemaProps) {
   const breakdown = getTierBreakdown(xp)
   const tierColor = tier.color
+  const [editOpen, setEditOpen] = useState(false)
+  // Snapshot now once on mount — avoids calling impure Date.now() during render
+  const [nowMs] = useState(() => Date.now())
+
+  const daysSinceCreation = createdAt
+    ? Math.floor((nowMs - createdAt) / (1000 * 60 * 60 * 24))
+    : 0
 
   return (
     <div className="flex flex-col items-center gap-5 pt-4 pb-2">
@@ -180,28 +200,52 @@ export function ProfileHeroCinema({
           size={160}
         />
 
-        {/* Avatar circle — absolute centered */}
+        {/* Avatar circle — absolute centered, clickable */}
         <div
           className="absolute rounded-full flex items-center justify-center overflow-hidden"
           style={{
             inset: '10px',
             zIndex: 4,
-            background: `radial-gradient(circle at 30% 30%, ${tierColor}25, ${tierColor}08 70%, rgba(0,0,0,0.8))`,
+            background: avatarKind === 'mascot'
+              ? `radial-gradient(circle at 30% 30%, ${tierColor}18, transparent 70%)`
+              : 'transparent',
             border: `1px solid ${tierColor}40`,
             boxShadow: `0 0 24px ${tierColor}40, 0 0 48px ${tierColor}18, inset 0 0 20px rgba(0,0,0,0.4)`,
-            // CSS var for CSS pulse-glow-tier keyframe
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ['--tier-glow' as any]: tierColor,
             animation: 'pulse-glow-tier 3s ease-in-out infinite',
           }}
         >
-          <span style={{ fontSize: '52px', lineHeight: '1', userSelect: 'none' }} role="img" aria-label="Avatar">
-            💪
-          </span>
+          <UserAvatar
+            avatarKind={avatarKind}
+            avatarValue={avatarValue}
+            name={name}
+            size={132}
+            tierColor={tierColor}
+            onClick={() => setEditOpen(true)}
+          />
         </div>
+
+        {/* Edit pencil badge */}
+        <button
+          onClick={() => setEditOpen(true)}
+          className="absolute flex items-center justify-center rounded-full z-10 transition-all active:scale-90"
+          style={{
+            right: 6,
+            bottom: 6,
+            width: 30,
+            height: 30,
+            background: 'var(--color-primary)',
+            border: '2px solid var(--color-bg)',
+            boxShadow: `0 0 8px ${tierColor}60`,
+          }}
+          aria-label="Editar perfil"
+        >
+          <Pencil size={13} color="#000" strokeWidth={2.5} aria-hidden="true" />
+        </button>
       </motion.div>
 
-      {/* ── Name ─────────────────────────────────────────────── */}
+      {/* ── Name + username ───────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -222,6 +266,32 @@ export function ProfileHeroCinema({
         >
           {name}
         </h1>
+
+        {username && (
+          <p
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '13px',
+              color: 'var(--color-text-muted)',
+              marginTop: '3px',
+            }}
+          >
+            @{username}
+          </p>
+        )}
+
+        {daysSinceCreation > 0 && (
+          <p
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '11px',
+              color: 'var(--color-text-muted)',
+              marginTop: username ? '2px' : '3px',
+            }}
+          >
+            Entrenando hace {daysSinceCreation} día{daysSinceCreation !== 1 ? 's' : ''}
+          </p>
+        )}
 
         {/* Tier badge with shine */}
         <div className="mt-3 flex justify-center">
@@ -259,6 +329,21 @@ export function ProfileHeroCinema({
             {breakdown.xpToNext} XP para {breakdown.next.name}
           </motion.p>
         )}
+
+        {/* Edit button */}
+        <button
+          onClick={() => setEditOpen(true)}
+          className="mt-3 px-4 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-wide transition-all active:scale-95"
+          style={{
+            fontFamily: 'var(--font-display)',
+            background: 'var(--color-surface)',
+            color: 'var(--color-text-muted)',
+            border: '1px solid var(--color-border)',
+            letterSpacing: '0.06em',
+          }}
+        >
+          EDITAR PERFIL
+        </button>
       </motion.div>
 
       {/* ── Stat chips ───────────────────────────────────────── */}
@@ -268,6 +353,9 @@ export function ProfileHeroCinema({
         <StatChip icon={Zap} value={Math.round(totalVolumeKg / 1000 * 10) / 10 || Math.round(totalVolumeKg)} label={totalVolumeKg >= 1000 ? 'Ton total' : 'Vol kg'} tierColor={tierColor} delay={0.39} compact />
         <StatChip icon={Trophy} value={prCount} label="PRs" tierColor={tierColor} delay={0.46} />
       </div>
+
+      {/* EditProfileSheet */}
+      <EditProfileSheet open={editOpen} onClose={() => setEditOpen(false)} />
     </div>
   )
 }

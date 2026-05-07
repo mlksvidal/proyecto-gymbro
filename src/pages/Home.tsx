@@ -1,8 +1,10 @@
 import { lazy, Suspense } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Bell, Trophy, Flame, Zap, Target } from 'lucide-react'
+import { Bell, Trophy, Flame, Zap, Target, Dumbbell as DumbbellIcon } from 'lucide-react'
 import { useUserStore } from '@/store/userStore'
+import { UserAvatar } from '@/components/profile/UserAvatar'
+import { getTierForXP } from '@/lib/tiers'
 import { useCurrentStreak, useWeeklyVolume, useWorkouts } from '@/hooks/useDb'
 import { TodayWorkoutCard } from '@/components/home/TodayWorkoutCard'
 import { PullToRefresh } from '@/components/ui/PullToRefresh'
@@ -371,6 +373,8 @@ function HomeHeader() {
   const currentUser = useUserStore((s) => s.currentUser)
   const name = currentUser?.name?.trim()
   const greeting = name && name.toLowerCase() !== 'bro' ? `Hola, ${name}` : 'Hola, Bro'
+  const xp = currentUser?.xp ?? 0
+  const tier = getTierForXP(xp)
 
   return (
     <header
@@ -396,7 +400,6 @@ function HomeHeader() {
           }}
         >
           {greeting}
-          <span className="anim-wave" role="img" aria-label="saludo" style={{ fontSize: '20px' }}>👋</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0 }}
@@ -420,14 +423,13 @@ function HomeHeader() {
         >
           <Bell size={18} className="text-[var(--color-text-muted)]" aria-hidden="true" />
         </button>
-        <div
-          className="w-10 h-10 rounded-full flex items-center justify-center text-xl select-none"
-          style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
-          aria-label="Avatar"
-          role="img"
-        >
-          💪
-        </div>
+        <UserAvatar
+          avatarKind={currentUser?.avatarKind ?? 'mascot'}
+          avatarValue={currentUser?.avatarValue ?? 'idle'}
+          name={currentUser?.name ?? 'G'}
+          size={40}
+          tierColor={tier.color}
+        />
       </div>
     </header>
   )
@@ -510,7 +512,7 @@ export default function Home() {
             }}
           >
             <span
-              className={isLight ? 'marquee-gradient-text' : ''}
+              className={`inline-flex items-center gap-2 ${isLight ? 'marquee-gradient-text' : ''}`}
               style={{
                 fontFamily: 'var(--font-display)',
                 fontWeight: 600,
@@ -520,7 +522,9 @@ export default function Home() {
                 textTransform: 'uppercase',
               }}
             >
-              🔥 ENTRÁ A ROMPERLA · DALE DURO · UNA MÁS · SIN EXCUSAS · 💪 CONSTANCIA · GANÁ HOY ·
+              <Flame size={12} aria-hidden="true" style={{ flexShrink: 0 }} />
+              ENTRÁ A ROMPERLA · DALE DURO · UNA MÁS · SIN EXCUSAS · CONSTANCIA · GANÁ HOY
+              <DumbbellIcon size={12} aria-hidden="true" style={{ flexShrink: 0 }} />
             </span>
           </Marquee>
         </motion.div>

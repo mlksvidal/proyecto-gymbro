@@ -9,6 +9,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Check } from 'lucide-react'
 import type { ActiveSetData } from '@/types'
 import { NumberStepper } from './NumberStepper'
+import { toDisplayWeight, stepForUnit } from '@/lib/units'
+import { useUserStore } from '@/store/userStore'
 
 interface SetRowProps {
   set: ActiveSetData
@@ -31,6 +33,10 @@ export function SetRow({
   onComplete,
   onUpdate,
 }: SetRowProps) {
+  const units = useUserStore((s) => s.currentUser?.units ?? 'kg')
+  const displayWeight = toDisplayWeight(set.actualWeight, units)
+  const weightStep = stepForUnit(units)
+
   const handleCheckbox = () => {
     if (!set.completed) {
       onComplete()
@@ -135,16 +141,20 @@ export function SetRow({
         aria-hidden="true"
       />
 
-      {/* Weight stepper */}
+      {/* Weight stepper — display in user's preferred unit */}
       <div className={`flex-1 transition-opacity duration-300 ${set.completed ? 'line-through opacity-70' : ''}`}>
         <NumberStepper
-          value={set.actualWeight}
-          onChange={(v) => onUpdate({ actualWeight: v })}
+          value={displayWeight}
+          onChange={(v) => {
+            // Convert display value back to kg for storage
+            const kgValue = units === 'lb' ? Math.round((v / 2.20462) * 100) / 100 : v
+            onUpdate({ actualWeight: kgValue })
+          }}
           min={0}
-          max={500}
-          step={2.5}
+          max={units === 'lb' ? 1100 : 500}
+          step={weightStep}
           label="Peso"
-          unit="kg"
+          unit={units}
           disabled={set.completed}
         />
       </div>

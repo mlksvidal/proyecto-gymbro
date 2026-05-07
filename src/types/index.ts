@@ -46,6 +46,10 @@ export type AchievementType =
 // Core Entities
 // ============================================================
 
+export type AvatarKind = 'icon' | 'mascot' | 'initials'
+
+export type VibrationIntensity = 'off' | 'soft' | 'medium' | 'strong'
+
 export interface User {
   id: string
   name: string
@@ -55,6 +59,16 @@ export interface User {
   xp: number
   createdAt: number
   onboardingComplete: boolean
+  // Personalization fields (Sprint 22)
+  avatarKind?: AvatarKind            // default 'mascot'
+  avatarValue?: string                // mascot variant or icon name
+  username?: string                   // optional @tag
+  // Training preferences (Sprint 22)
+  units?: 'kg' | 'lb'                 // default 'kg'
+  defaultRestSeconds?: number         // 60 | 90 | 120, default 90
+  autoStartTimer?: boolean            // default true
+  daysPerWeekGoal?: number            // 3-6, default 4
+  vibrationIntensity?: VibrationIntensity  // default 'medium'
 }
 
 export interface Exercise {

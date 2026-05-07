@@ -105,6 +105,10 @@ export default function WorkoutActive() {
   const { shake } = useScreenShake()
   const { currentUser } = useUserStore()
 
+  // Training preferences
+  const userDefaultRest = currentUser?.defaultRestSeconds ?? 90
+  const autoStartTimer = currentUser?.autoStartTimer ?? true
+
   const [showAbandon, setShowAbandon] = useState(false)
   const [prToast, setPrToast] = useState<{ weight: number; reps: number } | null>(null)
   const isSavingRef = useRef(false)
@@ -312,9 +316,11 @@ export default function WorkoutActive() {
     const isLastSetOfExercise = activeSetIndex === currentExercise.sets.length - 1
 
     if (!isLastSetOfExercise) {
-      // Not last set → start rest timer
-      await play('restStart')
-      startRest(currentExercise.restSeconds)
+      if (autoStartTimer) {
+        // Not last set → start rest timer (use user preference as fallback)
+        await play('restStart')
+        startRest(currentExercise.restSeconds > 0 ? currentExercise.restSeconds : userDefaultRest)
+      }
     } else if (!isLastExercise) {
       // Last set, more exercises → auto-swipe + reset
       await new Promise((r) => setTimeout(r, 300))
@@ -336,6 +342,8 @@ export default function WorkoutActive() {
     play,
     shake,
     vibrationEnabled,
+    autoStartTimer,
+    userDefaultRest,
     startRest,
     goToNextExercise,
     endRest,
@@ -423,7 +431,7 @@ export default function WorkoutActive() {
             style={{ background: 'rgba(10,10,10,0.95)' }}
           >
             <RestTimer
-              initialDuration={restDurationSeconds}
+              initialDuration={restDurationSeconds > 0 ? restDurationSeconds : userDefaultRest}
               onComplete={handleRestComplete}
               onSkip={handleRestSkip}
             />
@@ -460,7 +468,7 @@ export default function WorkoutActive() {
               className="flex-1 text-center text-[11px] font-[var(--font-display)] uppercase tracking-widest"
               style={{ color: 'var(--color-text-muted)' }}
             >
-              KG
+              {(currentUser?.units ?? 'kg').toUpperCase()}
             </span>
             <span
               className="flex-1 text-center text-[11px] font-[var(--font-display)] uppercase tracking-widest"

@@ -1,7 +1,8 @@
 import { clsx } from 'clsx'
+import { Flame } from 'lucide-react'
 
 // ============================================================
-// StreakBadge — chip flame con racha actual.
+// StreakBadge — chip flame con racha actual. (Sprint 22: Flame icon)
 // Flame color escala: 0-7 amarillo, 8-30 naranja, 30+ lima.
 // Animación CSS keyframes flicker.
 // ============================================================
@@ -44,16 +45,16 @@ export function StreakBadge({ streak, className }: StreakBadgeProps) {
         aria-label={`Racha actual: ${streak} días`}
       >
         <span
-          className="flame-anim text-base"
+          className="flame-anim"
           style={{
+            display: 'inline-flex',
             color: flameColor,
-            display: 'inline-block',
             animation: 'flame-flicker 1.5s ease-in-out infinite',
             filter: `drop-shadow(0 0 4px ${flameColor})`,
           }}
           aria-hidden="true"
         >
-          🔥
+          <Flame size={16} />
         </span>
         <span
           className="text-sm font-[var(--font-body)] font-semibold"

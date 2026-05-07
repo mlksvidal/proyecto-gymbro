@@ -14,7 +14,7 @@ interface UserState {
 
   // Actions
   setUser: (user: User) => void
-  updateProfile: (updates: Partial<Pick<User, 'name' | 'goal' | 'experienceLevel'>>) => void
+  updateProfile: (updates: Partial<User>) => void
   addXP: (amount: number) => void
   resetUser: () => void
 
@@ -32,6 +32,13 @@ const DEFAULT_USER: User = {
   xp: 0,
   createdAt: Date.now(),
   onboardingComplete: false,
+  avatarKind: 'mascot',
+  avatarValue: 'idle',
+  units: 'kg',
+  defaultRestSeconds: 90,
+  autoStartTimer: true,
+  daysPerWeekGoal: 4,
+  vibrationIntensity: 'medium',
 }
 
 export const useUserStore = create<UserState>()(
@@ -42,11 +49,14 @@ export const useUserStore = create<UserState>()(
       setUser: (user) => set({ currentUser: user }),
 
       updateProfile: (updates) =>
-        set((state) => ({
-          currentUser: state.currentUser
+        set((state) => {
+          const updatedUser = state.currentUser
             ? { ...state.currentUser, ...updates }
-            : { ...DEFAULT_USER, ...updates },
-        })),
+            : { ...DEFAULT_USER, ...updates }
+          // Sync to Dexie non-blocking
+          db.users.put(updatedUser).catch(() => {})
+          return { currentUser: updatedUser }
+        }),
 
       addXP: (amount) =>
         set((state) => {
